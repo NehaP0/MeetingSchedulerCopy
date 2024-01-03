@@ -1,0 +1,21 @@
+<body>
+    
+    <div class="container">
+        <h1>User Login</h1>
+
+        <form #userForm="ngForm" (submit)="loginUser(userForm)">
+
+            <label for="Email">Email ID:</label>
+            <input type="text" name="EmailID" ngModel required>
+
+            <label for="Password">Password:</label>
+            <input type="password" name="Password" ngModel required>
+
+            <button type="submit">Login</button>
+
+            <span>Do not have an account?</span>
+            <button  (click)="goToRegisterPage()">Create account</button>
+        </form>
+    
+    </div>
+</body>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Meeting Scheduled email.</title>
+</head>
+<body>
+  <h2>Hello, {{name}}! </h2>
+  <p>{{company}} has scheduled a meet with you.</p>
+
+  <p>Details:</p>
+    <ul>
+        <li>Event Name: {{eventName}}</li>
+        {{!-- <li>Event Description: {{eventDecription}}</li> --}}
+        {{!-- <li>Event Date: {{eventDate}}</li> --}}
+        <li>Event Start Time: {{eventStartTime}}</li>
+        <li>Event End Time: {{eventEndTime}}</li>
+        <li>Meeting Link: {{meetingLink}}</li>
+    </ul>
+</body>
+</html>

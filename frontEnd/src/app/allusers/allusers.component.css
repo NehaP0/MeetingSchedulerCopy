@@ -1,0 +1,37 @@
+body {
+    background-color: black;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    color: lightgreen;
+  }
+  div{
+      width: 80%;
+  }
+  
+  table {
+    background-color: black;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    border: 1px solid lightgreen;
+    padding: 10px;
+  }
+  
+  button {
+    background-color: lightgreen;
+    color: black;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: darkgreen;
+    color : white;
+  }
+  

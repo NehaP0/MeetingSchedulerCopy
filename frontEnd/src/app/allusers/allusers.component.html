@@ -1,0 +1,30 @@
+<body>    
+    <div>
+        <h1>All Users</h1>
+
+        <table>
+            <thead>
+                <tr>
+                <th>User Name</th>
+                <th>Email ID</th>
+                <th>Action</th>
+                <th>Calendar shareable link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="users.length">
+                <tr *ngFor="let user of users; let i = index">
+                    <td>{{user.name}}</td>
+                    <td>{{user.emailID}}</td>
+                    <td>
+                    <button (click)="goToCalendarPage(user.name, user.emailID)">Schedule Meet</button>
+                    <td> <a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td>
+                </tr>
+                </ng-container>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+

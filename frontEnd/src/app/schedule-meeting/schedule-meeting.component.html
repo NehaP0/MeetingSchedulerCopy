@@ -1,0 +1,66 @@
+<h1>Schedule Meeting</h1>
+<h1  *ngIf="userName" >with {{userName}}</h1>
+
+<form #meetingForm="ngForm" (submit)="scheduleMeet(meetingForm)">
+    <label for="EventName">Event Name:</label>
+    <input type="text" name="eventName" ngModel required>
+    
+    <label for="Decription">Description:</label>
+    <input type="text"  name="eventDecription" ngModel required>  
+    
+    
+    <p>Choose Date</p>
+    <div class="container">
+        <div class="row">
+          <div class="col-xs-12 col-12 col-md-4 form-group">
+            <input type="text" name="DatePicker"
+                  [(ngModel)]="dateValue"
+                  placeholder="Datepicker"
+                  class="form-control"
+                  bsDatepicker
+                  [bsConfig]="{ isAnimated: true }">
+          </div>
+    
+          <select name="TimePicker" [(ngModel)]="timeValue">
+            <option value="">Choose Time</option>
+            <option value="10am">10 am</option>
+            <option value="10:30am">10:30 am</option>
+            <option value="11am">11 am</option>
+            <option value="11:30am">11:30 am</option>
+            <option value="12pm">12 pm</option>
+            <option value="12:30pm">12:30 pm</option>
+            <option value="1pm">1 pm</option>
+            <option value="1:30pm">1:30 pm</option>
+            <option value="2pm">2 pm</option>
+            <option value="2:30pm">2:30 pm</option>
+            <option value="3pm">3 pm</option>
+            <option value="3:30pm">3:30 pm</option>
+            <option value="4pm">4 pm</option>
+            <option value="4:30pm">4:30 pm</option>
+            <option value="5pm">5 pm</option>
+            <option value="5:30pm">5:30 pm</option>
+            <option value="6pm">6 pm</option>
+            <option value="6:30pm">6:30 pm</option>
+            <option value="7pm">7 pm</option>
+            <option value="7:30pm">7:30 pm</option>
+            <option value="8pm">8 pm</option>
+            <option value="8:30pm">8:30 pm</option>
+            <option value="9pm">9 pm</option>
+            <option value="9:30pm">9:30 pm</option>
+            <option value="10pm">10 pm</option>
+            <option value="10:30pm">10:30 pm</option>
+            <option value="11pm">11 pm</option>
+          </select>
+    
+          <!-- <button (click)="goBackToSchedulePage()">Confirm Date and Time</button> -->
+        </div>
+      </div>
+    
+    
+  
+
+    
+    <!-- <a [routerLink]="'/calendar'">Choose date and time</a> -->
+
+    <button type="submit">Create Meeting</button>
+</form>

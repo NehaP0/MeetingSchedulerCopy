@@ -1,0 +1,24 @@
+<body>
+    <div class="container">
+        <h1>Create Account</h1>
+
+        <form #userForm="ngForm" (submit)="registerUser(userForm)">
+            <label for="Name">Name:</label>
+            <input type="text" name="Name" ngModel required>
+            
+            <label for="Email">Email ID:</label>
+            <input type="text"  name="EmailID" ngModel required>
+            
+            <label for="Password">Password:</label>
+            <input type="password"  name="Password" ngModel required>
+
+            <button type="submit">Register User</button>
+
+            <span>Already have an account?</span>
+            <button  (click)="goToLoginPage()">Login</button>
+
+        </form>
+    </div>
+</body>
+
+
