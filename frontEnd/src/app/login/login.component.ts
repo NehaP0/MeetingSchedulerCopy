@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { APIService } from '../api.service';
 import {NgForm} from '@angular/forms'
 import { ActivatedRoute, Router} from '@angular/router';
+import { Location } from '@angular/common'
+
+
 
 
 @Component({
@@ -15,11 +18,15 @@ export class LoginComponent implements OnInit{
 
 
 
-  constructor(private apiService: APIService, private route:ActivatedRoute,private router:Router){}
+  constructor(private apiService: APIService, private route:ActivatedRoute,private router:Router, private location: Location){}
 
   ngOnInit(){}
 
   loginUser(userForm : NgForm){
+
+    // console.log("prev location ", this.location.historyGo)
+    // this.location.back()
+
 
     if(userForm.valid){
       const user = {
@@ -35,7 +42,9 @@ export class LoginComponent implements OnInit{
         localStorage.setItem("token", token.token)
         
         alert('Login Successful')
-        userForm.resetForm()     
+        userForm.resetForm()       
+
+        
         this.router.navigate(['/users'])  
         console.log("After login ", this.userLoggedIn);
          
@@ -54,7 +63,4 @@ export class LoginComponent implements OnInit{
   goToRegisterPage(){
     this.router.navigate(['/registeration'])
   }
-
-
-
 }

@@ -34,4 +34,8 @@ body {
     background-color: darkgreen;
     color : white;
   }
+
+  a:hover{
+    cursor: pointer;
+  }
   

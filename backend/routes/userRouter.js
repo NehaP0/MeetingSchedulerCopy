@@ -1,6 +1,6 @@
 const express = require('express')
 // const User = require('../models/user')
-const {User} = require('../models/userAndMeeting')
+const {User, Meeting} = require('../models/userAndMeeting')
 const bcrypt= require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -14,10 +14,17 @@ userRoute.post("/postuser", async(req, res)=>{
     const {name,emailID,password} = req.body
     try{
 
-        const hashedPassword = await bcrypt.hash(password, 5)
-        // console.log(hashedPassword)
+        console.log(name,emailID,password);
 
-        const user = await User.create({name , emailID, password:hashedPassword})
+        const hashedPassword = await bcrypt.hash(password, 5)
+        console.log(hashedPassword)
+
+        const meeting =  await Meeting.create({Subject: "fillingSub", StartTime:"2019-01-18T09:00:00+05:30", EndTime:"2019-01-18T09:30:00+05:30"}) 
+
+        const user = await User.create({name , emailID, password:hashedPassword,  meetings: [meeting] })
+
+        console.log(user);
+
         return res.send({message : "User added"})
     }
     catch(err){

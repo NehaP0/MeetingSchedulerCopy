@@ -14,6 +14,7 @@ export class APIService {
   private meetingArraySubject = new BehaviorSubject<any[]>([]);
   private usersSubject = new BehaviorSubject<object[]>([]);
   private formattedMeetingsSubject = new BehaviorSubject<any[]>([]);
+  private formattedMeetingsHideSubject = new BehaviorSubject<any[]>([]);
   private userLoggedInSubject = new BehaviorSubject<boolean>(false);
  
 
@@ -24,6 +25,7 @@ export class APIService {
   public meetingArray$ = this.meetingArraySubject.asObservable();
   public users$ = this.usersSubject.asObservable();
   public formattedMeetings$ = this.formattedMeetingsSubject.asObservable();
+  public formattedMeetingsHide$ = this.formattedMeetingsHideSubject.asObservable();
   public userLoggedIn$ = this.userLoggedInSubject.asObservable();
 
 
@@ -75,6 +77,13 @@ export class APIService {
     
     // console.log(meet);    
     return this.httpClient.post(`${this.API_URL}/meeting/createMeeting`, meet)     
+  }
+
+  scheduleMeetByCalendarLink(meet){
+    console.log("scheduleMeetByCalendarLink functn called and meet details", meet);
+    
+    // console.log(meet);    
+    return this.httpClient.post(`${this.API_URL}/calendarLink/`, meet)     
   }
 
   setUserName(userName: string) {
@@ -150,8 +159,41 @@ export class APIService {
       }));
 
       this.formattedMeetingsSubject.next(formattedMeetings);
-    }
-
-    
+    }    
   }
+
+
+     // --------------------------------------------------------
+     async getMeetingsHide(name, id) {
+       
+      // const response = await this.httpClient.get(`${this.API_URL}/calendarLink/`).toPromise();
+  
+      //  console.log("response bro",response);
+
+       
+      const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+  
+      const users =  usersObj["users"]
+      console.log("users", users);
+     
+
+      
+      
+      
+      const userName = name
+      
+      
+      const user = (users as any[]).find((u) => u.name === userName);
+  
+      if (user && user.meetings) {
+        const formattedMeetingsHide = user.meetings.map(meeting => ({
+          Id: meeting._id,
+          Subject: "Unavailable",
+          StartTime: new Date(meeting.StartTime),
+          EndTime: new Date(meeting.EndTime),
+        }));
+  
+        this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
+      }    
+    }
 }

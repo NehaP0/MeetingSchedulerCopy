@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema({
         type : String,
         required : true
     } ,
-    meetings: [meetingSchema],   
+    meetings: [meetingSchema]
 })
 
 const User = mongoose.model('User', userSchema)

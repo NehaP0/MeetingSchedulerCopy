@@ -37,6 +37,16 @@ export class AllusersComponent implements OnInit{
     this.router.navigate(['/calendar'])
   }
 
+  goToCalendarLinkPage(name, emailID){
+    console.log("clicked, clicked");  
+    // console.log("I am called");      
+    this.apiService.setUserName(name);
+    this.apiService.setUserEmailId(emailID);
+    
+
+    this.router.navigate(['/calendarbylink'])
+  }
+
   // setUserName(name) {
   //   console.log(name);  
   //   console.log("I am called");      

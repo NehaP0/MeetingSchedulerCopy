@@ -83,10 +83,10 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
                      { name: user },
                      { $push: { meetings: meeting } } 
                  )
-                 await User.updateOne(
-                    { emailID: importedloggedInUserEmail },
-                    { $push: { meetings: meeting } } 
-                )
+                //  await User.updateOne(
+                //     { emailID: importedloggedInUserEmail },
+                //     { $push: { meetings: meeting } } 
+                // )
 
                 
                  console.log("User line 68", meeting);

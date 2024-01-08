@@ -14,7 +14,9 @@ import { Subscription, combineLatest, take } from 'rxjs';
 @Component({
   selector: 'app-calendar',
   template:   `
+  <ng-container *ngIf="formattedMeetings.length > 0">
     <ejs-schedule #scheduleObj height="850" width="1250" [currentView]="setView" [selectedDate]='selectedDate' [eventSettings]='eventObject' (actionComplete)="onActionComplete($event)"></ejs-schedule>
+  </ng-container>
   `
   
   ,
@@ -61,9 +63,7 @@ ngOnInit(){
       console.log('Formatted Meetings:', formattedMeetings);
     this.formattedMeetings = formattedMeetings;
     this.eventObject.dataSource = formattedMeetings;
-    console.log("dataSource", this.eventObject.dataSource);
-
-   
+    console.log("dataSource", this.eventObject.dataSource);  
 
   });
 
