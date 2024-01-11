@@ -47,7 +47,7 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
     else{
 
         console.log("gotten body data", req.body);
-    console.log("meeting will be scheduled with ", userEmail);
+        console.log("meeting will be scheduled with ", userEmail);
 
 
     try{
@@ -62,10 +62,14 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
         else{
             console.log("User found", findUser)
             let meetingsArray = await findUser[0].meetings
+            let loggedInUsermeetingsArray = await findLoggedInUser[0].meetings
+
 
             console.log("meetingsArray", meetingsArray);
 
             let userAvailable = true
+            let loggedInuserAvailable = true
+
             for(let i=0; i<meetingsArray.length; i++){
                 if(StartTime >= meetingsArray[i]["StartTime"] && EndTime <= meetingsArray[i]["EndTime"]){
                     res.send({message: "User Unavailable at this date and time."})
@@ -73,8 +77,18 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
                     break;
                 }
             }
-
             if(userAvailable){
+                for(let i=0; i<loggedInUsermeetingsArray.length; i++){
+                    if(StartTime >= loggedInUsermeetingsArray[i]["StartTime"] && EndTime <= loggedInUsermeetingsArray[i]["EndTime"]){
+                        res.send({message: "You have an event scheduled at this date and time, please select some other time."})
+                        loggedInuserAvailable = false
+                        break;
+                    }
+                }
+            }
+
+
+            if(userAvailable && loggedInuserAvailable){
                 const meeting =  await Meeting.create({Subject, StartTime:StartTime, EndTime:EndTime})    
                 //  console.log(meeting);
                  
@@ -83,10 +97,10 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
                      { name: user },
                      { $push: { meetings: meeting } } 
                  )
-                //  await User.updateOne(
-                //     { emailID: importedloggedInUserEmail },
-                //     { $push: { meetings: meeting } } 
-                // )
+                 await User.updateOne(
+                    { emailID: importedloggedInUserEmail },
+                    { $push: { meetings: meeting } } 
+                )
 
                 
                  console.log("User line 68", meeting);
@@ -122,7 +136,6 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
     //  --------------------
                 // meeting link creation
 
-                // Load client secrets from a file, downloaded from the Google Cloud Console
     async function createMeetingLink() {
         return new Promise((resolve, reject) => {    
             fs.readFile('credentials.json', (err, content) => {
@@ -207,7 +220,7 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
             }
         );
         }
-        console.log("meeting link created"); 
+        // console.log("meeting link created"); 
                              
 
  

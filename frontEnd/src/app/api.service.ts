@@ -87,11 +87,15 @@ export class APIService {
   }
 
   setUserName(userName: string) {
+    console.log("username set by link ",userName);
     this.userNameSubject.next(userName);
+    
   }
 
   setUserEmailId(emailId: string) {
+    console.log("id set by link ",emailId);
     this.emailIdSubject.next(emailId);
+
   }
 
   setUserMeetings() {

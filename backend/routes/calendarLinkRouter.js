@@ -23,7 +23,7 @@ const nodemailer = require('nodemailer')
 const path = require('path')
 
 
-//to get only by link
+//to get calendar by link
 calendarLinkRoute.get("/", async(req, res)=>{
     const {name, id} = req.query
 
@@ -42,106 +42,108 @@ calendarLinkRoute.get("/", async(req, res)=>{
 
 
 calendarLinkRoute.post("/", async(req, res)=>{
-    // console.log(req);
 
     let meetLink;
 
     let importedloggedInUserEmail = getLoggedInUserEmail();
     console.log("loggedInUsers imported EmailId is ",importedloggedInUserEmail);
 
-    if(!importedloggedInUserEmail){
-        // res.redirect('http://localhost:4200/login')
-        res.send({"message": "Please login first."})
-        // alert("Please login first")
+
+    let {Subject, StartTime, EndTime, user, userEmail} = req.body
+    StartTime = moment.utc(StartTime).tz('Asia/Calcutta').format();
+    EndTime = moment.utc(EndTime).tz('Asia/Calcutta').format();
+    let currentDateTime = new Date();
+    currentDateTime = moment.utc(currentDateTime).tz('Asia/Calcutta').format();
+
+    console.log(currentDateTime , StartTime  , EndTime, "and " ,StartTime<currentDateTime , EndTime < currentDateTime)
+
+    if(StartTime<currentDateTime || EndTime < currentDateTime){
+        res.send({message: "Meetings cannot be scheduled earlier than the current date and time"})
     }
+
     else{
 
-        let {Subject, StartTime, EndTime} = req.body
-        StartTime = moment.utc(StartTime).tz('Asia/Calcutta').format();
-        EndTime = moment.utc(EndTime).tz('Asia/Calcutta').format();
-        let currentDateTime = new Date();
-        currentDateTime = moment.utc(currentDateTime).tz('Asia/Calcutta').format();
-    
-        console.log(currentDateTime , StartTime  , EndTime, "and " ,StartTime<currentDateTime , EndTime < currentDateTime)
-    
-        if(StartTime<currentDateTime || EndTime < currentDateTime){
-            res.send({message: "Meetings cannot be scheduled earlier than the current date and time"})
+        console.log("gotten body data", req.body);
+        console.log("meeting will be scheduled with ", userEmail);
+
+
+    try{
+        let findUser = await User.find({name:user})
+        let findLoggedInUser = await User.find({emailID : importedloggedInUserEmail})
+        let loggedInUserName = findLoggedInUser[0].name
+
+
+        if(findUser.length ==0){
+            console.log("User doesn't exists");
         }
-    
         else{
-    
-            console.log("gotten body data", req.body);
-        console.log("meeting will be scheduled with ", id);
-    
-    
-        try{
-            let findUser = await User.find({name:name})
-            let findLoggedInUser = await User.find({emailID : importedloggedInUserEmail})
-            let loggedInUserName = findLoggedInUser[0].name
-    
-    
-            if(findUser.length ==0){
-                console.log("User doesn't exists");
+            console.log("User found", findUser)
+            let meetingsArray = await findUser[0].meetings
+            let loggedInUsermeetingsArray = await findLoggedInUser[0].meetings
+
+
+
+            console.log("meetingsArray", meetingsArray);
+
+            let userAvailable = true
+            let loggedInuserAvailable = true
+
+            for(let i=0; i<meetingsArray.length; i++){
+                if(StartTime >= meetingsArray[i]["StartTime"] && EndTime <= meetingsArray[i]["EndTime"]){
+                    res.send({message: "User Unavailable at this date and time."})
+                    userAvailable = false
+                    break;
+                }
             }
-            else{
-                console.log("User found", findUser)
-                let meetingsArray = await findUser[0].meetings
-    
-                console.log("meetingsArray", meetingsArray);
-    
-                let userAvailable = true
-                for(let i=0; i<meetingsArray.length; i++){
-                    if(StartTime >= meetingsArray[i]["StartTime"] && EndTime <= meetingsArray[i]["EndTime"]){
-                        res.send({message: "User Unavailable at this date and time."})
-                        userAvailable = false
+            if(userAvailable){
+                for(let i=0; i<loggedInUsermeetingsArray.length; i++){
+                    if(StartTime >= loggedInUsermeetingsArray[i]["StartTime"] && EndTime <= loggedInUsermeetingsArray[i]["EndTime"]){
+                        res.send({message: "You have an event scheduled at this date and time, please select some other time."})
+                        loggedInuserAvailable = false
                         break;
                     }
                 }
-    
-                if(userAvailable){
-                    const meeting =  await Meeting.create({Subject, StartTime:StartTime, EndTime:EndTime})    
-                    //  console.log(meeting);
-                     
-                     // Update the user document to include the new meeting
-                     await User.updateOne(
-                         { name: name },
-                         { $push: { meetings: meeting } } 
-                     )
-                     await User.updateOne(
-                        { emailID: importedloggedInUserEmail },
-                        { $push: { meetings: meeting } } 
-                    )
-    
-                    
-                     console.log("User line 68", meeting);
-    
-                    // --------new code--------
-    
-                    try {
-                        meetLink = await createMeetingLink();
-                        console.log("Meeting link created:", meetLink);
-    
-                        // Continue with nodemailer code
-                        await sendMail(meetLink, loggedInUserName, importedloggedInUserEmail);
-    
-                        return res.status(200).json({ message: "Meeting Created" });
-                    } catch (err) {
-                        console.log("Error creating meeting link:", err);
-                        return res.status(500).json({ message: `Meeting creation failed: ${err}` });
-                    }
-                    // --------new code ends--------
+            }
+
+            if(userAvailable && loggedInuserAvailable){
+                const meeting =  await Meeting.create({Subject, StartTime:StartTime, EndTime:EndTime})    
+                //  console.log(meeting);
+                 
+                 // Update the user document to include the new meeting
+                 await User.updateOne(
+                     { name: user },
+                     { $push: { meetings: meeting } } 
+                 )
+                 await User.updateOne(
+                    { emailID: importedloggedInUserEmail },
+                    { $push: { meetings: meeting } } 
+                )
+
+                
+                 console.log("User line 68", meeting);
+
+                // --------new code--------
+
+                try {
+                    meetLink = await createMeetingLink();
+                    console.log("Meeting link created:", meetLink);
+
+                    // Continue with nodemailer code
+                    await sendMail(meetLink, loggedInUserName, importedloggedInUserEmail);
+
+                    return res.status(200).json({ message: "Meeting Created" });
+                } catch (err) {
+                    console.log("Error creating meeting link:", err);
+                    return res.status(500).json({ message: `Meeting creation failed: ${err}` });
                 }
-                      
-        }
+                // --------new code ends--------
+            }
+                  
     }
-        catch(err){
-            return res.status(500).json({message : `Meeting creation failed : ${err}`})
-        }
-
+}
+    catch(err){
+        return res.status(500).json({message : `Meeting creation failed : ${err}`})
     }
-
-
-
 
     }
 
@@ -236,7 +238,7 @@ calendarLinkRoute.post("/", async(req, res)=>{
             }
         );
         }
-        console.log("meeting link created"); 
+        // console.log("meeting link created"); 
                              
 
  
@@ -285,17 +287,17 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
 
                          // let userFound = await User.find( { "name": usersName} )
                          // if (userFound.length!==0) {
-                             console.log("I'll send mail to ", id);
+                             console.log("I'll send mail to ", userEmail);
                          const mailOptions1 = {
                              from: '"My Company"', // sender address
                              template: "email1", // the name of the template file, i.e., email.handlebars
                              // to: userFound.emailID,
-                             to: id,
+                             to: userEmail,
                              // subject: `Hi, ${userFound.name}`,
                              subject: `Meeting Scheduled`,
                              context: {
                              //   name: userFound.name,
-                             name: name,
+                             name: user,
                              company: loggedInUserName,
                              eventName: Subject, 
                              // eventDecription: eventDecription, 
@@ -315,7 +317,7 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                             context: {
                             //   name: userFound.name,
                             name: loggedInUserName,
-                            company: name,
+                            company: user,
                             eventName: Subject, 
                             // eventDecription: eventDecription, 
                             // eventDate: eventDate, 
@@ -327,9 +329,9 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                          try {
                              await transporter.sendMail(mailOptions1);
                              await transporter.sendMail(mailOptions2);
-                             console.log(`Email sent to ${name}`);
+                             console.log(`Email sent to ${user}`);
                          } catch (error) {
-                             console.log(`Nodemailer error sending email to ${name}`, error);
+                             console.log(`Nodemailer error sending email to ${user}`, error);
                          }
                      }
                      
@@ -337,8 +339,7 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                 
                     // -----------------mailsending ends-------------
 
-
-})
+    })
 
 module.exports = calendarLinkRoute
 

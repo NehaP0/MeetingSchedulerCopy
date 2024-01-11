@@ -5,22 +5,26 @@ import { Subscription, combineLatest, take } from 'rxjs';
 import { ActivatedRoute, Router} from '@angular/router';
 
 
+// <ng-container *ngIf="formattedMeetingsHide.length > 0">
+// <ejs-schedule #scheduleObj height="700" width="700" [currentView]="setView" [selectedDate]='selectedDate' [eventSettings]='eventObject' (popupOpen)='onPopupOpen($event)' (actionComplete)="onActionComplete($event)"></ejs-schedule>
+// </ng-container>
+
 @Component({
   selector: 'app-calendar-by-link',
   template:   `
   <ng-container *ngIf="formattedMeetingsHide.length > 0">
-    <ejs-schedule #scheduleObj height="700" width="700" [currentView]="setView" [selectedDate]='selectedDate' [eventSettings]='eventObject' (popupOpen)='onPopupOpen($event)' (actionComplete)="onActionComplete($event)"></ejs-schedule>
+    <ejs-schedule #scheduleObj height="850" width="1250" [currentView]="setView" [selectedDate]='selectedDate' [eventSettings]='eventObject' (actionComplete)="onActionComplete($event)"></ejs-schedule>
     </ng-container>
   `,
   // templateUrl: './calendar-by-link.component.html',
   styleUrl: './calendar-by-link.component.css'  
 })
-export class CalendarByLinkComponent {
+export class CalendarByLinkComponent implements OnInit {
 
   userName: string = '';
   emailId : string = '';
   // meetingArray : any[] = [];
-  formattedMeetingsHide : object[] = []
+  formattedMeetingsHide : object[] = [];
   public scheduleObj: ScheduleComponent;
 
   // trialArray : Array<any> = []
@@ -56,6 +60,12 @@ ngOnInit(){
     const name = params['name'];
     const id = params['id'];
 
+    console.log("ng oninit called");
+    
+
+    this.apiService.setUserName(name);
+    this.apiService.setUserEmailId(id);
+
     
     console.log('Name:', name);
     console.log('ID:', id);
@@ -84,35 +94,7 @@ ngOnInit(){
 }
 
 
-onPopupOpen(args: PopupOpenEventArgs): void {
-  console.log("called");
-  
-  if (args.type === 'Editor') {
-      console.log(args.data)
-      console.log("called again");
 
-      // {StartTime: Thu Jan 18 2024 00:00:00 GMT+0530 (India Standard Time), EndTime: Fri Jan 19 2024 00:00:00 GMT+0530 (India Standard Time), IsAllDay: true, Timezone: false}
-      // args.data['IsAllDay'] = false
-
-      console.log("this.scheduleObj.eventWindow", this.scheduleObj.eventWindow);
-      
-
-      (this.scheduleObj.eventWindow as any).recurrenceEditor.frequencies = [
-        "daily"
-      ];
-      // (document.querySelector(
-      //   ".e-repeat-interval"
-      // ) as any).ej2_instances[0].max = 1;
-      // let end = (document.querySelector(".e-end-on-element") as any)
-      //   .ej2_instances[0];
-      // end.query = new Query().where("value", "equal", "never");
-      // end.setProperties(
-      //   { query: new Query().where("value", "equal", "never") },
-      //   true
-      // );
-      // end.dataBind();
-  }
-}
 
 
   title = 'frontEnd';
@@ -120,8 +102,19 @@ onPopupOpen(args: PopupOpenEventArgs): void {
   public setView: View = 'Month';
   public selectedDate: Date = new Date(2023, 12, 10);
   public eventObject: EventSettingsModel = {
-    dataSource: []
+    dataSource: [],
+    fields: {
+      id: 'Id',
+      subject: { name: 'Subject', title: 'Event Name', validation: { required: true } },
+      location: { name: 'Location', title: 'Event Location'},
+      description: { name: 'Description', title: 'Event Description' },
+      startTime: { name: 'StartTime', title: 'Start Duration', validation: { required: true }  },
+      endTime: { name: 'EndTime', title: 'End Duration'  , validation: { required: true } }
+  }
+
+  
 };
+
 
 
  // Access the details of the created or changed event after the user interacts with the editor
@@ -199,3 +192,61 @@ onPopupOpen(args: PopupOpenEventArgs): void {
     }
 
 }
+
+
+
+
+
+
+
+
+
+// onPopupOpen(args: PopupOpenEventArgs): void {
+//   console.log("called");
+
+//   console.log(args.type);
+  
+  
+//   if (args.type === 'Editor') {
+//       console.log(args.data)
+
+//       // args.data = {StartTime: Sun Jan 21 2024 00:00:00 GMT+0530 (India Standard Time), EndTime: Mon Jan 22 2024 00:00:00 GMT+0530 (India Standard Time), IsAllDay: true, Timezone: false}
+//       console.log("called again");
+
+//       // let clock = document.querySelector("e-datetimepicker")
+//       // console.log("clock ", clock);
+
+//       console.log("scheduleObj ", document.querySelector('.e-datetimepicker'));
+//       // <input class="e-start e-field e-control e-datetimepicker e-lib e-keyboard" type="text" name="StartTime" value="" id="StartTime" aria-labelledby="label_StartTime" aria-atomic="true" aria-expanded="false" role="combobox" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-invalid="false" aria-label="datetimepicker" aria-disabled="false" tabindex="0">
+      
+
+
+//       // -------------------------------
+//       // Assuming `scheduleObj` is your ejs-schedule instance
+//             // const dateTimePickerInstance = scheduleObj.element.querySelector('.e-datetimepicker').ej2_instances[0];
+
+//             // // Now you can use the dateTimePickerInstance to manipulate the DateTimePicker
+//             // dateTimePickerInstance.value = new Date();  // Example: Set the value of DateTimePicker
+//       // -------------------------------
+      
+
+//       // {StartTime: Thu Jan 18 2024 00:00:00 GMT+0530 (India Standard Time), EndTime: Fri Jan 19 2024 00:00:00 GMT+0530 (India Standard Time), IsAllDay: true, Timezone: false}
+//       // args.data['IsAllDay'] = false
+
+//       console.log("this.scheduleObj.eventWindow", this.scheduleObj.eventWindow);
+      
+
+ 
+//       // (document.querySelector(
+//       //   ".e-repeat-interval"
+//       // ) as any).ej2_instances[0].max = 1;
+//       // let end = (document.querySelector(".e-end-on-element") as any)
+//       //   .ej2_instances[0];
+//       // end.query = new Query().where("value", "equal", "never");
+//       // end.setProperties(
+//       //   { query: new Query().where("value", "equal", "never") },
+//       //   true
+//       // );
+//       // end.dataBind();
+//   }
+// }
