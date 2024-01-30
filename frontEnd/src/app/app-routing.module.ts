@@ -6,6 +6,10 @@ import { AllusersComponent } from './allusers/allusers.component';
 import { ScheduleMeetingComponent } from './schedule-meeting/schedule-meeting.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarByLinkComponent } from './calendar-by-link/calendar-by-link.component';
+import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
+import { CustomiseComponent } from './customise/customise.component';
+
+
 
 
 // import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
@@ -18,8 +22,10 @@ const routes: Routes = [
   {path : 'login', component: LoginComponent},
   {path : 'users', component: AllusersComponent},
   {path : 'schedulemeet', component: ScheduleMeetingComponent},
-  {path : 'calendar', component: CalendarComponent},
-  {path : 'calendarByLink', component: CalendarByLinkComponent}
+  {path : 'calendarByLink', component: CalendarByLinkComponent},
+  {path : 'calendar', component: CalendarComponentComponent},
+  {path : 'customise', component: CustomiseComponent}
+
 ];
 
 

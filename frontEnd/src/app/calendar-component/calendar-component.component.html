@@ -1,4 +1,4 @@
-<div id="parentDiv">
+<div>
 
     <div>
       <h3 *ngIf="loading" id="loading">Meeting creation in progress....</h3>
@@ -6,7 +6,7 @@
 
     <div class="container">
         <!-- <ng-container  *mcRerender="trigger">  -->
-          <full-calendar id="calendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0" [options]="calendarOptions" plugins={[dayGridPlugin]}></full-calendar>
+          <full-calendar defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0" [options]="calendarOptions" plugins={[dayGridPlugin]}></full-calendar>
         <!-- </ng-container> -->
         <div *ngIf="displayTimeDiv" class="timeDiv">
           <div id="timeLeftDIv">

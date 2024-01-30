@@ -1,29 +1,41 @@
 <body>    
-    <div>
-        <h1>All Users</h1>
+    <div id="usersDiv">
+        <h2>All Users</h2>
 
-        <table>
+        <table id="table">
             <thead>
                 <tr>
                 <th>User Name</th>
                 <th>Email ID</th>
                 <th>Action</th>
-                <th>Calendar shareable link</th>
+                <!-- <th>Calendar shareable link</th> -->
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngIf="users.length">
-                <tr *ngFor="let user of users; let i = index">
+                <ng-container *ngIf="usersWOloggedInUser.length">
+                <tr *ngFor="let user of usersWOloggedInUser; let i = index">
                     <td>{{user.name}}</td>
                     <td>{{user.emailID}}</td>
                     <td>
-                    <button (click)="goToCalendarPage(user.name, user.emailID)">Schedule Meet</button>
-                    <td><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td>
+                    <!-- <button (click)="goToCalendarPage(user.name, user.emailID)">Schedule Meet</button> -->
+                    <button><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">Schedule Meet</a> </button>
+
+                    <!-- <td><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td> -->
                 </tr>
                 </ng-container>
             </tbody>
         </table>
 
+    </div>
+
+    <div id="myCalendarDiv">
+        <h2>My Calendar</h2>
+        <full-calendar defaultView="dayGridMonth" *ngIf="formattedMeetingsOfLoggedInUser.length > 0" [options]="calendarOptions" plugins={[dayGridPlugin]}></full-calendar>
+        <div id="calendarSharableLink">
+            <button class="linkButton" (click)="changeShowLink()" *ngIf="!showLink">Show my calendar sharable link</button>
+            <button class="linkButton" (click)="changeShowLink()" *ngIf="showLink">Hide calendar sharable link</button>
+            <ng-container *ngIf="showLink"><p>http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}</p></ng-container>
+        </div>
     </div>
 
 </body>

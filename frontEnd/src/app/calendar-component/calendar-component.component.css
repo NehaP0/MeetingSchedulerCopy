@@ -2,9 +2,6 @@
     background-color: black;
     color: green;
 }
-#parentDiv{
-    height: 100vh;
-}
 .container{
     /* border: 1px solid red; */
     display: flex; 
@@ -33,5 +30,4 @@ full-calendar{
 }
 #loading{
     text-align: center;
-
 }

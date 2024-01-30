@@ -21,12 +21,11 @@ export class RegisterationComponent implements OnInit{
         name : userForm.value.Name,
         emailID : userForm.value.EmailID,
         password : userForm.value.Password
-      } 
-     
+      }      
 
       this.apiService.registerUser(user).subscribe((response)=>{
         console.log(response); 
-        alert('Account Created')
+        alert(response["message"])
         userForm.resetForm()
         this.router.navigate(['/login'])
       },

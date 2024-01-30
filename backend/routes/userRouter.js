@@ -11,17 +11,17 @@ let loggedInUserEmail;
 
 userRoute.post("/postuser", async(req, res)=>{
     console.log("create user called");
-    const {name,emailID,password} = req.body
+    const {name,emailID,password,userAvailability} = req.body
     try{
 
-        console.log(name,emailID,password);
+        console.log(name,emailID,password,userAvailability);
 
         const hashedPassword = await bcrypt.hash(password, 5)
         console.log(hashedPassword)
 
-        const meeting =  await Meeting.create({Subject: "fillingSub", StartTime:"2019-01-18T09:00:00+05:30", EndTime:"2019-01-18T09:30:00+05:30"}) 
+        const meeting =  await Meeting.create({title: "fillingSub", start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30"}) 
 
-        const user = await User.create({name , emailID, password:hashedPassword,  meetings: [meeting] })
+        const user = await User.create({name , emailID, password:hashedPassword,  meetings: [meeting], userAvailability : userAvailability })
 
         console.log(user);
 
@@ -31,6 +31,25 @@ userRoute.post("/postuser", async(req, res)=>{
         return res.send({message : `User creation failed : ${err}`})
     }
 })
+
+userRoute.patch("/patchuser", async(req, res)=>{
+    console.log("patch user called");
+    const {emailID,userAvailability} = req.body
+    console.log("body ", req.body);
+    try{
+        await User.updateOne(
+            { emailID: emailID },
+            { userAvailability: userAvailability } 
+        )
+
+        return res.send({message : "Availability Updated"})
+    }
+    catch(err){
+        return res.send({message : `User availability updation : ${err}`})
+    }
+})
+
+
 
 userRoute.post("/login", async(req, res)=>{
 

@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit{
     // console.log("prev location ", this.location.historyGo)
     // this.location.back()
 
-
     if(userForm.valid){
       const user = {
         emailID : userForm.value.EmailID,
@@ -38,6 +37,10 @@ export class LoginComponent implements OnInit{
         console.log(response);
         const token = response['token']
         // this.apiService.setAuthorizationHeader(token)
+
+        localStorage.setItem("emailID", user.emailID);
+
+
         console.log(token.token);
         localStorage.setItem("token", token.token)
         
@@ -46,8 +49,7 @@ export class LoginComponent implements OnInit{
 
         
         this.router.navigate(['/users'])  
-        console.log("After login ", this.userLoggedIn);
-         
+        console.log("After login ", this.userLoggedIn);         
       },
       (error)=>{
         alert('Invalid Credentials')

@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
 
 const meetingSchema = mongoose.Schema({
-    Subject:{
+    title:{
         type : String,
         required : true
     },
-    StartTime: {
+    start: {
         type : String,
     },
-    EndTime :{ 
+    end :{ 
         type : String,
         required : true
     },
@@ -16,6 +16,13 @@ const meetingSchema = mongoose.Schema({
     //     type : String,
     //     required : true
     // }
+})
+
+const availabilitySchema = mongoose.Schema({
+    duration:{type : Object, required : true},
+    workingHrs : {type : Object, required: true},
+    workingDays : {type : Array, required: true},
+    nonWorkingDays : {type : Array, required: true}
 })
 
 
@@ -33,11 +40,17 @@ const userSchema = mongoose.Schema({
         type : String,
         required : true
     } ,
-    meetings: [meetingSchema]
+    meetings: [meetingSchema],
+    userAvailability : { 
+        type: availabilitySchema, 
+        required: true 
+    }
 })
 
 const User = mongoose.model('User', userSchema)
 
 const Meeting = mongoose.model('Meeting', meetingSchema)
 
-module.exports = { User, Meeting };
+const Availability = mongoose.model('Availability', availabilitySchema)
+
+module.exports = { User, Meeting, Availability };

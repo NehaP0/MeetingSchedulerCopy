@@ -46,18 +46,19 @@ calendarLinkRoute.post("/", async(req, res)=>{
     let meetLink;
 
     let importedloggedInUserEmail = getLoggedInUserEmail();
+    // let importedloggedInUserEmail = "nehaphadtare334@gmail.com"
     console.log("loggedInUsers imported EmailId is ",importedloggedInUserEmail);
 
 
-    let {Subject, StartTime, EndTime, user, userEmail} = req.body
-    StartTime = moment.utc(StartTime).tz('Asia/Calcutta').format();
-    EndTime = moment.utc(EndTime).tz('Asia/Calcutta').format();
+    let {title, start, end, user, userEmail} = req.body
+    start = moment.utc(start).tz('Asia/Calcutta').format();
+    end = moment.utc(end).tz('Asia/Calcutta').format();
     let currentDateTime = new Date();
     currentDateTime = moment.utc(currentDateTime).tz('Asia/Calcutta').format();
 
-    console.log(currentDateTime , StartTime  , EndTime, "and " ,StartTime<currentDateTime , EndTime < currentDateTime)
+    console.log(currentDateTime , start  , end, "and " ,start<currentDateTime , end < currentDateTime)
 
-    if(StartTime<currentDateTime || EndTime < currentDateTime){
+    if(start<currentDateTime || end < currentDateTime){
         res.send({message: "Meetings cannot be scheduled earlier than the current date and time"})
     }
 
@@ -69,6 +70,9 @@ calendarLinkRoute.post("/", async(req, res)=>{
 
     try{
         let findUser = await User.find({name:user})
+
+        console.log("findUser ", findUser);
+
         let findLoggedInUser = await User.find({emailID : importedloggedInUserEmail})
         let loggedInUserName = findLoggedInUser[0].name
 
@@ -88,25 +92,25 @@ calendarLinkRoute.post("/", async(req, res)=>{
             let userAvailable = true
             let loggedInuserAvailable = true
 
-            for(let i=0; i<meetingsArray.length; i++){
-                if(StartTime >= meetingsArray[i]["StartTime"] && EndTime <= meetingsArray[i]["EndTime"]){
-                    res.send({message: "User Unavailable at this date and time."})
-                    userAvailable = false
-                    break;
-                }
-            }
-            if(userAvailable){
-                for(let i=0; i<loggedInUsermeetingsArray.length; i++){
-                    if(StartTime >= loggedInUsermeetingsArray[i]["StartTime"] && EndTime <= loggedInUsermeetingsArray[i]["EndTime"]){
-                        res.send({message: "You have an event scheduled at this date and time, please select some other time."})
-                        loggedInuserAvailable = false
-                        break;
-                    }
-                }
-            }
+            // for(let i=0; i<meetingsArray.length; i++){
+            //     if(StartTime >= meetingsArray[i]["StartTime"] && EndTime <= meetingsArray[i]["EndTime"]){
+            //         res.send({message: "User Unavailable at this date and time."})
+            //         userAvailable = false
+            //         break;
+            //     }
+            // }
+            // if(userAvailable){
+            //     for(let i=0; i<loggedInUsermeetingsArray.length; i++){
+            //         if(StartTime >= loggedInUsermeetingsArray[i]["StartTime"] && EndTime <= loggedInUsermeetingsArray[i]["EndTime"]){
+            //             res.send({message: "You have an event scheduled at this date and time, please select some other time."})
+            //             loggedInuserAvailable = false
+            //             break;
+            //         }
+            //     }
+            // }
 
-            if(userAvailable && loggedInuserAvailable){
-                const meeting =  await Meeting.create({Subject, StartTime:StartTime, EndTime:EndTime})    
+            // if(userAvailable && loggedInuserAvailable){
+                const meeting =  await Meeting.create({title, start, end})    
                 //  console.log(meeting);
                  
                  // Update the user document to include the new meeting
@@ -137,7 +141,7 @@ calendarLinkRoute.post("/", async(req, res)=>{
                     return res.status(500).json({ message: `Meeting creation failed: ${err}` });
                 }
                 // --------new code ends--------
-            }
+            // }
                   
     }
 }
@@ -207,13 +211,13 @@ calendarLinkRoute.post("/", async(req, res)=>{
         const calendar = google.calendar({ version: 'v3', auth });
     
         const event = {
-            summary: Subject,
+            summary: title,
             start: {
-            dateTime: StartTime,
+            dateTime: start,
             timeZone: 'Asia/Kolkata',
             },
             end: {
-            dateTime: EndTime,
+            dateTime: end,
             timeZone: 'Asia/Kolkata',
             },
             conferenceData: {
@@ -299,11 +303,11 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                              //   name: userFound.name,
                              name: user,
                              company: loggedInUserName,
-                             eventName: Subject, 
+                             eventName: title, 
                              // eventDecription: eventDecription, 
                              // eventDate: eventDate, 
-                             eventStartTime: StartTime,
-                             eventEndTime: EndTime,
+                             eventStartTime: start,
+                             eventEndTime: end,
                              meetingLink : meetingLink
                              },
                          };
@@ -318,11 +322,11 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                             //   name: userFound.name,
                             name: loggedInUserName,
                             company: user,
-                            eventName: Subject, 
+                            eventName: title, 
                             // eventDecription: eventDecription, 
                             // eventDate: eventDate, 
-                            eventStartTime: StartTime,
-                            eventEndTime: EndTime,
+                            eventStartTime: start,
+                            eventEndTime: end,
                             meetingLink : meetingLink
                             },
                         };

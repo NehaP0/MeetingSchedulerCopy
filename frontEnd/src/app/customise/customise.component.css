@@ -1,0 +1,70 @@
+*{
+    background-color: black;
+    color: lightgreen;
+    /* border: 2px solid red; */    
+}
+#parentDiv{
+    border: 3px solid black;
+    display: flex;
+    width: 100%;
+    height: 100vh;    
+}
+#availabilityDiv{
+    /* border: 2px solid green; */
+    width: 80%;
+    margin: auto;
+}
+button {
+    background-color: lightgreen;
+    color: black;
+    padding: 5px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline;
+    margin: 2px;
+}
+
+#availabilityDiv p {
+    display: inline;
+}
+button:focus{
+    /* background-color: green; */
+    color: white;
+}
+#durationDiv{
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+input{
+    width: 50px;
+    border: none;
+    margin: 2px;
+}
+input:hover{
+    border: 1px solid green;
+}
+#weeklyHoursDiv{
+    width: 100%;
+    margin: 10px;
+}
+table{
+    width: 80%;
+}
+table, tr, td, thead, th{
+    border: 1px solid green;
+}
+td, th{
+    padding: 10px 10px;
+}
+#durationDiv, #weeklyHoursDiv{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.unavailable{
+    color: gray;
+}
+select{
+    border: none;
+}

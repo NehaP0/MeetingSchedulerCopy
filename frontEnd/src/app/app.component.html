@@ -3,6 +3,15 @@
 
 <a [routerLink]="'/registeration'">Registeration</a>
 <a [routerLink]="'/login'">Login</a>
+<!-- <ng-container *ngIf="showAvailibilityOnNav"><a [routerLink]="'/customise'">My Availability</a></ng-container>
+<ng-container *ngIf="showAvailibilityOnNav"><a [routerLink]="'/users'">All users</a></ng-container> -->
+<ng-container *ngIf="loggedInEmailId"><a [routerLink]="'/customise'">My Availability</a></ng-container>
+<ng-container *ngIf="loggedInEmailId"><a [routerLink]="'/users'">All users</a></ng-container>
+<!-- <ng-container *ngIf="loggedInEmailId"><button (click)="logOutUser()">Logout</button></ng-container> -->
+
+<!-- <ng-container *ngIf="showAvailibilityOnNav"><button>Log Out</button></ng-container> -->
+
+
 <!-- <a [routerLink]="'/users'">Users</a> -->
 <!-- <a [routerLink]="'/calendar'">Calendar</a> -->
 

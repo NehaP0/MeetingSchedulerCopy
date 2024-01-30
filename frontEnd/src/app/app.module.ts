@@ -15,7 +15,11 @@ import { LoginComponent } from './login/login.component';
 import { ScheduleMeetingComponent } from './schedule-meeting/schedule-meeting.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarByLinkComponent } from './calendar-by-link/calendar-by-link.component';
+import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
 // import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CustomiseComponent } from './customise/customise.component';
+
 
 @NgModule({
   declarations: [
@@ -26,6 +30,8 @@ import { CalendarByLinkComponent } from './calendar-by-link/calendar-by-link.com
     ScheduleMeetingComponent,
     CalendarComponent,
     CalendarByLinkComponent,
+    CalendarComponentComponent,
+    CustomiseComponent,
     // CalendarComponentComponent
   ],
   imports: [
@@ -37,6 +43,7 @@ import { CalendarByLinkComponent } from './calendar-by-link/calendar-by-link.com
     BrowserAnimationsModule,
     ScheduleModule,
     RecurrenceEditorModule,
+    FullCalendarModule,
     BsDatepickerModule.forRoot()
   ],
   providers: [
