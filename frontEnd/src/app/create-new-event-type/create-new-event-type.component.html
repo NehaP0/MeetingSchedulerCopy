@@ -1,0 +1,65 @@
+<body>
+    <div id="leftDiv">
+        <a href="/createNewEventType">< Cancel</a>
+        <h4>New Event Type</h4>
+
+        <hr>
+        <p>Event name</p>
+        <input [(ngModel)]="inputText" type="text" id="eventName" placeholder="Name your event" name="eventName" #eventName>
+        <label id="redWarning" *ngIf="showWarning">Please provide an event name.</label>
+
+        <p>Duration</p>
+        <div>
+            <label for="hrs">Hours</label>
+            <input [(ngModel)]="hours" type="number" name="hrs" placeholder="0" #hrs>
+
+            <label for="min">Minutes</label>
+            <input [(ngModel)]="minutes" type="number" name="min" placeholder="30" #min>
+        </div>
+
+        <p>Location</p>
+        <div id="zoom">
+            <ng-icon id="zoomIcon" name="heroVideoCamera"></ng-icon>
+            <p id="zoomP">Zoom</p>
+        </div>
+
+        <div id="bottomDiv">
+            <!-- <hr> -->
+            <div>
+                <button>Cancel</button>
+                <!-- <button (click)="continueFunctn(eventName.value, hrs.value, min.value)"><a href="http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}">Continue</a></button> -->
+                <button (click)="continueFunctn(eventName.value, hrs.value, min.value)">Continue</button>
+
+            </div>
+        </div>
+    </div>
+    <div id="rightDiv">
+        <div id="eventDeets">
+            <div id="greyStrip">
+                <p>This is a preview. </p>
+                <p>To book an event, share a link with your invitees.</p>
+            </div>
+            <div id="belowGreyStrip">
+                <p>{{loggedInName}}</p>
+                <p>{{inputText || "Event name here"}}</p>
+                <div id="timeAndLocation">
+                    <div>
+                        <ng-icon name="bootstrapClock"></ng-icon>
+                        <span>{{hours || ""}}</span><span *ngIf="hours"> hrs </span>
+                        <span>{{minutes || ""}} </span><span *ngIf="minutes"> mins </span>
+                    </div>
+                    <div>
+                        <ng-icon name="octLocation"></ng-icon>
+                        <p id="locationP">Zoom</p>
+                    </div>
+                </div>
+                <hr>
+                <div id="previewDiv">
+                    <p id="previewP">
+                        A preview of your availability will show on the next step
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

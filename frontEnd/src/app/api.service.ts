@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, take } from 'rxjs';
+import { BehaviorSubject, take, Observable } from 'rxjs';
+import { ActivatedRoute, Router} from '@angular/router';
 
 
 @Injectable({
@@ -25,8 +26,9 @@ export class APIService {
   private durationSubject = new BehaviorSubject<object>({"hrs":0, "minutes":30});
   private workingHrsSubject = new BehaviorSubject<object>({1:{start: '09:00:00', end: '17:00:00'}, 2:{start: '09:00:00', end: '17:00:00'}, 3:{start: '09:00:00', end: '17:00:00'}, 4:{start: '09:00:00', end: '17:00:00'}, 5:{start: '09:00:00', end: '17:00:00'}});
   private selectedUserAvailabilityObjSubject = new BehaviorSubject<object>({});
-
-
+  private eventsArraySubject = new BehaviorSubject<object[]>([]);
+  private eventTypeSubject = new BehaviorSubject<string>(''); 
+  private getMeetingsforUserToSeeSubject = new BehaviorSubject<any[]>([]);
 
   public userName$ = this.userNameSubject.asObservable();
   public emailId$ = this.emailIdSubject.asObservable();
@@ -46,16 +48,16 @@ export class APIService {
   public duration$ = this.durationSubject.asObservable()
   public workingHrs$ = this.workingHrsSubject.asObservable()
   public selectedUserAvailabilityObj$ = this.selectedUserAvailabilityObjSubject.asObservable()
-
-
-
-
+  public eventsArray$ = this.eventsArraySubject.asObservable()
+  public eventType$ = this.eventTypeSubject.asObservable()
+  public getMeetingsforUserToSee$ = this.getMeetingsforUserToSeeSubject.asObservable()
+  
 
   API_URL = 'http://localhost:3000'
   
   private headers : HttpHeaders = new HttpHeaders()
   
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private router:Router) { }
 
  
 
@@ -88,15 +90,50 @@ export class APIService {
     return this.httpClient.post(`${this.API_URL}/user/postuser`, user)
   }
 
+  async findLoggedInName(email){
+    const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+  
+    const users =  usersObj["users"]
+    console.log("users", users); 
+    
+    
+    const user = (users as any[]).find((u) => u.emailID === email);
+    const name = user.name
+    localStorage.setItem("userLoggedInName", name)
+    this.userLoggedInNameSubject.next(name)
+    
+  }
+
   loginUser(user){
     console.log("user ",user);
     this.userLoggedInSubject.next(true);
     this.userLoggedInEmailIdSubject.next(user.emailID);
-    // this.userLoggedInNameSubject.next(user.name);
+    // this.userLoggedInNameSubject.next(user.name); 
+    console.log("id value after login ",this.userLoggedInEmailIdSubject);
+      
+
+    this.findLoggedInName(user.emailID)
 
     console.log("userLoggedIn api service ts", this.userLoggedIn$);    
     return this.httpClient.post(`${this.API_URL}/user/login`, user)    
   }
+
+
+  // loginUser(user) : Observable<{token: string}>{
+  //   console.log("user ",user);
+  //   // console.log("token ", token);
+    
+  //   this.userLoggedInSubject.next(true);
+  //   this.userLoggedInEmailIdSubject.next(user.emailID);
+  //   // this.userLoggedInNameSubject.next(user.name); 
+  //   console.log("id value after login ",this.userLoggedInEmailIdSubject);
+      
+
+  //   this.findLoggedInName(user.emailID)
+
+  //   console.log("userLoggedIn api service ts", this.userLoggedIn$);    
+  //   return this.httpClient.post<{token: string}>(`${this.API_URL}/user/login`, user)    
+  // }
 
 
   logoutUser(){ 
@@ -123,6 +160,13 @@ export class APIService {
     console.log("scheduleMeetByCalendarLink functn called and meet details", meet);    
     // console.log(meet);    
     return this.httpClient.post(`${this.API_URL}/calendarLink/`, meet)     
+  }
+
+  scheduleMeetBymakeMeetingPage(meet){
+    console.log("scheduleMeetByCalendarLink functn called and meet details", meet);    
+    console.log("meet from apiservice ",meet); 
+    // return meet   
+    return this.httpClient.post(`${this.API_URL}/calendarLink/postMeetFromMeetPage`, meet)     
   }
 
   setUserName(userName: string) {
@@ -167,34 +211,192 @@ export class APIService {
 
 
   // --------------------------------------------------------
-  async getMeetingsHide(name, id) {
-       
-      // const response = await this.httpClient.get(`${this.API_URL}/calendarLink/`).toPromise();
+  async getMeetingsHide(id) {
+              
+      // const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
   
-      //  console.log("response bro",response);
+      // const users =  usersObj["users"]
+      // console.log("users", users);      
+      
+      // const userName = name
+      
+      
+      // const user = (users as any[]).find((u) => u.name === userName);
+  
+      // if (user && user.meetings) {
+      //   const formattedMeetingsHide = user.meetings.map(meeting => ({
+      //     Id: meeting._id,
+      //     title: "Unavailable",
+      //     // title: meeting.title,
+      //     start: meeting.start,
+      //     end: meeting.end,
+      //   }));
+  
+      //   this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
+      // } 
 
-       
+
+
       const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
   
       const users =  usersObj["users"]
       console.log("users", users);      
       
-      const userName = name
+      const userId = id
+
+      console.log("userId ", userId);
       
       
-      const user = (users as any[]).find((u) => u.name === userName);
+      
+      const user = (users as any[]).find((u) => u.emailID === userId);
+      console.log("found user", user);
+      
+      const userEventsArray = user.events
+
+      console.log("userEventsArray ", userEventsArray);
+      
+      // let formattedMeetingsHide = []
+      // for(let i=0; i<userEventsArray.length; i++){
+      //   let userMeetings = userEventsArray[i]
+      //   for(let j=0; j<userMeetings.length; j++){
+      //     formattedMeetingsHide.push(userMeetings[j])
+      //   }
+      // }
+
+      // console.log(formattedMeetingsHide);
+      
+      
+      // if (user && user.meetings) {
+        // } 
+
+        //----------- commented now-----
+        // const formattedMeetingsHide = user.events[0].meetings.map(meeting => ({
+        //   Id: meeting._id,
+        //   // title: "Unavailable",
+        //   title: meeting.title,
+        //   start: meeting.start,
+        //   end: meeting.end,
+        // }));
   
-      if (user && user.meetings) {
-        const formattedMeetingsHide = user.meetings.map(meeting => ({
-          Id: meeting._id,
-          title: "Unavailable",
-          // title: meeting.title,
-          start: meeting.start,
-          end: meeting.end,
-        }));
+        // this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
+        //----------  commented now
+
+        console.log("user events ", user.events);
+        
+        let meetings = []
+        for(let i=0; i<user.events.length; i++){
+          console.log("event ",user.events[i],"particular event meetings ", user.events[i].meetings);
+          let meetingsArr = user.events[i].meetings
+          // const formattedMeetingsHide = user.events[i].meetings.map(meeting => ({
+          //   Id: meeting._id,
+          //   // title: "Unavailable",
+          //   // title: "",
+          //   start: meeting.start,
+          //   end: meeting.end,
+          // }));
+
+          for(let j=0; j<meetingsArr.length; j++){
+            let oneMeetObj = {
+              Id: meetingsArr[j]._id,
+              // title: "Unavailable",
+              // title: "",
+              start: meetingsArr[j].start,
+              end: meetingsArr[j].end,
+            }
+            meetings.push(oneMeetObj)
+          }
+
+          
+          // meetings = [...meetings, formattedMeetingsHide]
+          
+        }
+        for(let i=0; i<user.meetingsWtOthers.length; i++){
+          let oneMeetObj = {
+            Id: user.meetingsWtOthers[i]._id,
+            // title: "Unavailable",
+            // title: "",
+            start: user.meetingsWtOthers[i].start,
+            end: user.meetingsWtOthers[i].end,
+          }
+          meetings.push(oneMeetObj)
+        }
+        
+        console.log("meetings ", meetings)
+
+        this.formattedMeetingsHideSubject.next(meetings);
+      
+
+}
+
+
+
+async getMeetingsforUserToSee(id) {
+
+  const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+
+  const users =  usersObj["users"]
+  console.log("users", users);      
   
-        this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
-      }    
+  const userId = id
+
+  console.log("userId ", userId);
+  
+  
+  
+  const user = (users as any[]).find((u) => u.emailID === userId);
+  console.log("found user", user);
+  
+  const userEventsArray = user.events
+
+  console.log("userEventsArray ", userEventsArray);
+
+
+    console.log("user events ", user.events);
+    
+    let allMeetings = []
+    for(let i=0; i<user.events.length; i++){
+      console.log("event ",user.events[i],"particular event meetings ", user.events[i].meetings);
+      let meetingsArr = user.events[i].meetings
+
+      // let meetInOneEvent = []
+      for(let j=0; j<meetingsArr.length; j++){
+        let oneMeetObj = {
+          Id: meetingsArr[j]._id,
+          name: meetingsArr[j].user, 
+          emailId: meetingsArr[j].userEmail,
+          evName: meetingsArr[j].evName,
+          evType : user.events[i].evType,
+          currentDate: meetingsArr[j].currentDate,
+          start: meetingsArr[j].start,
+          end: meetingsArr[j].end,
+        }
+        // meetInOneEvent.push(oneMeetObj)
+        // allMeetings.push(user.events[i])
+        allMeetings.push(oneMeetObj)
+      }      
+      // meetings = [...meetings, formattedMeetingsHide]      
+    }
+    for(let i=0; i<user.meetingsWtOthers.length; i++){
+      let oneMeetObj = {
+        Id: user.meetingsWtOthers[i]._id,
+        name:  user.meetingsWtOthers[i].user,
+        emailId: user.meetingsWtOthers[i].userEmail,
+        evName : user.meetingsWtOthers[i].evName,
+        evType: user.meetingsWtOthers[i].evType,
+        currentDate : user.meetingsWtOthers[i].currentDate,
+        // title: "Unavailable",
+        // title: "",
+        start: user.meetingsWtOthers[i].start,
+        end: user.meetingsWtOthers[i].end,
+      }
+      allMeetings.push(oneMeetObj)
+    }
+    
+    console.log("allMeetings ", allMeetings)
+
+    this.getMeetingsforUserToSeeSubject.next(allMeetings);
+  
+  
 }
 
 
@@ -272,13 +474,15 @@ patchUserAvailability(){
     console.log("pathUserAvailability called");
     
     //     this.userLoggedInEmailIdSubject.next(user.emailID);
-    let emailID = ""
+    let emailID = localStorage.getItem('emailID')
     // let userAvailability = {};
     let userAvailability = {duration :{}, workingHrs:{}, workingDays: [], nonWorkingDays: []}  
 
-    this.userLoggedInEmailId$.subscribe((userLoggedInEmailIdValue) => {
-      emailID = userLoggedInEmailIdValue;
-    });
+    
+    // this.userLoggedInEmailId$.subscribe((userLoggedInEmailIdValue) => {
+    //   emailID = userLoggedInEmailIdValue;
+    // });
+    // console.log("log in id ",this.userLoggedInEmailId$);
 
     console.log(this.duration$, this.workingHrs$);
     
@@ -341,6 +545,86 @@ async getSelectedUsersAvailaibilityObj(){
       }
     }
   
+}
+
+
+
+async getEvents(){
+  console.log("get events called");
+  
+  const response = await this.httpClient.get(`${this.API_URL}/event/getEvents`).toPromise();
+  console.log("events ",response["message"]);
+  const events = response["message"]
+  this.eventsArraySubject.next(events)
+}
+
+updateEventType(evType){//tells the type of event, like one-on-one
+  console.log("called updateEventType");
+  console.log("evType ",evType);  
+  this.eventTypeSubject.next(evType)
+  this.eventType$.subscribe((eventTypeValue)=>{
+    console.log( "eventTypeValue in updateEventType is ",  eventTypeValue);    
+  })
+}
+
+async createNewEvent(eventName:string,hrs:string,min:string, location:string){
+  // let {evName, evType, evDuration, evLocation} = req.body
+  
+  let loggedInName = localStorage.getItem("userLoggedInName" || "")
+  let loggedInEmailId = localStorage.getItem("emailID" || "")
+
+  let evType = localStorage.getItem("evType")
+  // this.eventType$.subscribe((eventTypeValue)=>{
+  //   evType = eventTypeValue
+  // })
+  // evType = this.eventType$
+  
+  
+  console.log("createNewEvtn called", eventName,hrs,min, location, evType);
+  
+  let event = {evName:eventName, evType:evType, evDuration:{"hrs": hrs,"minutes":min}, evLocation: location }
+  // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
+
+  console.log(event);
+
+
+  const response = await this.httpClient.post(`${this.API_URL}/event/createEvent`, event).toPromise();      
+  console.log("gotten response ",response["message"]);
+  if(response["message"]=="Event created"){
+    localStorage.setItem("eventName", eventName)
+    localStorage.setItem("evDurHrs", hrs)
+    localStorage.setItem("evDurMins", min)
+    localStorage.setItem("eventLocation", location)
+    // console.log(loggedInName, loggedInEmailId);
+    
+    // console.log(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`);
+    
+    window.open(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`)
+
+  }
+  else{
+    alert(response["message"])
+  }
+
+}
+
+
+deleteEvent(id : string){
+  console.log("delete called in api");
+  
+  return this.httpClient.delete(`${this.API_URL}/event/deleteEvent?id=${id}`)
+  .subscribe(
+  (response) => {
+    console.log(response);
+    alert(response["message"])
+    window.location.reload()
+
+  },
+  (error) => {
+    console.error(error);
+  }
+);
+
 }
 
 

@@ -1,0 +1,98 @@
+<div>
+    <div id="content">
+        <h1>Scheduled events</h1>
+        <div id="events">
+            <!-- <div id="schedNav">
+                <p>Upcoming</p>
+                <p>Past</p>
+            </div> -->
+            <!-- <table>
+                <tbody *ngFor="let meeting of formattedMeetingsHide; let i = index">
+                    <div id="oneMeet">
+                        <tr id="date">{{meeting.start[8]}}{{meeting.start[9]}}/{{meeting.start[5]}}{{meeting.start[6]}}/{{meeting.start[0]}}{{meeting.start[1]}}{{meeting.start[2]}}{{meeting.start[3]}}</tr>
+                        <tr>{{formattedMeetingsHide}}</tr> 
+                         <tr>{{meeting.Id}}</tr> 
+                        <tr>
+                            <td>{{meeting.start[11]}}{{meeting.start[12]}}:{{meeting.start[14]}}{{meeting.start[15]}} - {{meeting.end[11]}}{{meeting.end[12]}}:{{meeting.end[14]}}{{meeting.end[15]}}</td>
+                            <td>
+                                <p>{{meeting.name}} with you.</p> 
+                                <p>Event type {{meeting.evType}}.</p>
+                            </td>
+                            <td>
+                                <button (click)="setEventId(meeting.Id)" [hidden]="showDeetsFor==meeting.Id" class="deetCloseBtn">Details</button>
+                                <button [hidden]="showDeetsFor!=meeting.Id" (click)="closeDeets()" class="deetCloseBtn">Close</button>
+                            </td>
+                        </tr>
+                        <tr id="extraDetails" [hidden]="showDeetsFor!=meeting.Id" >
+                            <td></td>
+                            <td>
+                                <h4>Email</h4>
+                                <p>{{meeting.emailId}}</p>
+                                <h4>Location</h4>
+                                <p>Zoom</p>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table> -->
+
+            <!-- <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
+                <h4>Meeting details</h4>
+                <ng-container *ngIf="selectedDateMeets.length">
+                    <div *ngFor="let meet of selectedDateMeets; let i = index">
+                        <div><span>Meeting with: </span><span>{{meet.name}}</span></div>
+                        <div> <span>Event type: </span> <span>{{meet.evType}}</span> </div>
+                        <div><span>Date: </span><span>{{meet.date}}</span></div>
+                        <div><span>Time: </span><span>{{meet.startTime}} to {{meet.endTime}}</span></div>
+                        <div><span>Email Id: </span><span>{{meet.emailId}}</span></div>
+                        <hr>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!selectedDateMeets.length">
+                    <p>No meetings.</p>
+                </ng-container>
+                <button (click)="closePopUp()" id="closeBtn">Close</button>
+            </div> -->
+
+
+            <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
+                <h4>Meeting details: </h4>
+                <!-- <ng-container *ngIf="newObj"> -->
+                    <!-- <div *ngFor="let meet of selectedDateMeets; let i = index"> -->
+                        <div><span class="title">Meeting with : </span><span>{{newObj.name}}</span></div>
+                        <div> <span class="title">Event type : </span> <span>{{newObj.evType}}</span> </div>
+                        <div><span class="title">Date : </span><span>{{newObj.date}}</span></div>
+                        <div><span class="title">Time : </span><span>{{newObj.startTime}} to {{newObj.endTime}}</span></div>
+                        <div><span class="title">Email Id : </span><span>{{newObj.emailId}}</span></div>
+                        <hr>
+                    <!-- </div> -->
+                <!-- </ng-container> -->
+                <button (click)="closePopUp()" id="closeBtn">Close</button>
+            </div>
+
+            <div id="calendars">
+                <div>
+                    <full-calendar id="monthCalendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
+                        [options]="calendarOptionsMonth" plugins={[dayGridPlugin]}>
+                        <!-- <ng-template #eventContent let-arg>
+                            <b>{{ arg.event.title }}</b>
+                        </ng-template> -->
+                        <!-- <a #eventTitle> this </a> -->
+                        <!-- <a #eventTitle>{{ arg.event.title }}</a> -->
+                    </full-calendar>
+                </div>
+    
+                <div>
+                    <full-calendar id="weekCalendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
+                            [options]="calendarOptionsWeek" plugins={[dayGridPlugin]}></full-calendar>
+                </div>
+    
+                <div>
+                    <full-calendar id="dayCalendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
+                                [options]="calendarOptionsDay" plugins={[dayGridPlugin]}></full-calendar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

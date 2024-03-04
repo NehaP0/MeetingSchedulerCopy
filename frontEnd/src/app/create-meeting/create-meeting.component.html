@@ -1,0 +1,68 @@
+<div id="parentDiv">
+
+  <!-- <div>
+    <h3 *ngIf="loading" id="loading">Meeting creation in progress....</h3>
+  </div> -->
+
+
+  <div id="eventDeets">
+        <!-- <div id="greyStrip">
+          <p>This is a preview. </p>
+          <p>To book an event, share a link with your invitees.</p>
+        </div> -->
+        <div id="belowGreyStrip">
+          <p>{{loggedInName}}</p>
+          <p>{{evName || "Event name here"}}</p>
+          <div id="timeAndLocation">
+            <div>
+              <ng-icon name="bootstrapClock"></ng-icon>
+              <span *ngIf="evDurHrs">{{evDurHrs}}</span><span *ngIf="evDurHrs"> hrs </span>
+              <span  *ngIf="evDurMins">{{evDurMins}} </span> <span *ngIf="evDurMins"> mins </span>
+              <!-- <p>{{"" || "15 mins"}}</p> -->
+            </div>
+            <div>
+              <ng-icon name="octLocation"></ng-icon>
+              <p id="locationP">{{"zoom" || "Add a location for it to show here"}}</p>
+            </div>
+          </div>
+          <hr>
+        </div>
+    
+
+    <!-- --------------------------------------------------------------------------------------------- -->
+    <div id="divForCalendarAndTime">
+      <full-calendar id="calendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
+        [options]="calendarOptions" plugins={[dayGridPlugin]}>
+    </full-calendar>
+      <div *ngIf="displayTimeDiv" class="timeDiv">
+      <!-- <div class="timeDiv"> -->
+        <div id="timeLeftDIv">
+
+          <p>{{dateSelected}}</p>
+
+          <!-- <button class="confirmEvent" (click)="createEvent(EventName.value)">Confirm Event</button> -->
+
+          <!-- <label for="EventName">Event Name</label> -->
+          <!-- <input type="text" id="EventName" name="EventName" #EventName> -->
+
+          <!-- <label for="EventDesc">Event Description</label> -->
+          <!-- <input type="text" id="EventDesc" name="EventDesc" #EventDesc> -->
+
+          <div id="times">
+            <div *ngFor="let oneTime of userAvailaibleArray; let i = index">
+              <button class="oneTime" (click)="setEventTime(oneTime)" [hidden]="showNextFor==oneTime">{{oneTime}}</button> 
+              <button class="oneTimeHidden" [hidden]="showNextFor!=oneTime">{{oneTime}}</button> 
+              <button class="nextBtn" [hidden]="showNextFor!=oneTime" (click)="nextButton(evName, evDurHrs, evDurMins, oneTime)">Next</button>      
+            </div>
+          </div>
+
+        <!-- <div id="timeRightDIv">
+          <button (click)="changeDisplayTimeDiv()">X</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  
+
+</div>
+</div>

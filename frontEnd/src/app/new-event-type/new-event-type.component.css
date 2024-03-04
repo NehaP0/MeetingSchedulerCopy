@@ -1,0 +1,240 @@
+#body{    
+    display: flex;
+    /* border: 1px solid green; */
+    font-family : "Be Vietnam Pro", sans-serif;
+    font-size: 14px;
+    height : 100vh;
+    color: #1A1A1A;
+    /* font-family: sans-serif, */
+    /* padding: 20px; */
+    /* border: 5px solid red; */
+}
+
+#verticalNav{
+    border-right: 1px solid lightgray;
+    width: 5%;
+    /* border: 5px solid blueviolet; */
+    padding: 20px 5px; 
+    /* position: fixed; */
+   
+}
+#verticalNav:hover{
+    width: 20%;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    transition: all 0.5s;
+    padding: 10px 5px;    
+
+}
+
+.showme{ 
+    display: none;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+.showhim:hover .showme{
+    display : block;
+    
+}
+.showhim:hover .ok{
+display : none;
+}
+#lowerDiv, #lowerDivHover{
+    margin-top: 50px;
+    /* border: 1px solid red; */
+}
+#verticalNav ng-icon{
+    margin: auto;
+    /* border: 1px solid red; */
+    margin-bottom: 30px;
+}
+#upperDivHover p, #upperDivHover ng-icon, #lowerDivHover p, #lowerDivHover ng-icon{
+    display: inline;
+}
+#upperDivHover button{
+    width: 100%;
+    padding: 10px 10px;
+    /* border: 1px solid red; */
+}
+#upperDivHover p, #lowerDivHover p{
+    margin-left: 20px;
+}
+#upperDivHover>div, #lowerDivHover>div{
+    width:90%;
+    /* background-color: red; */
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    /* justify-content: space-evenly; */
+    padding : 10px;
+    font-weight: bold;
+}
+#upperDivHover>div:hover{
+    background-color: #F2F8FF;
+}
+#upperDivHover button{
+    
+}
+.showme{
+    height: 100vh;
+}
+#logo, #plusSign, #logoExpand{
+    font-size: 30px;
+    color: #0069FF;
+}
+#logoDivExpand{
+    color: #0069FF;
+    font-size: 20px;
+}
+#plusSign{
+    font-size: 40px;
+}
+#plusSignExpand{
+    /* text-align: center; */
+    background-color: #0069FF;
+    color: white;
+    font-size: 16px;
+}
+.commonSizeIcon{
+    font-size: 20px;
+}
+/* #attachIcon{
+    color: #0069FF;
+} */
+#makeBold, #makeBoldExpand{
+    font-size: 25px;
+}
+#verticalNav:hover + #content{
+    /* margin: 0px; */
+    /* width: 100%; */
+}
+ng-icon{
+    /* height: 50px; */
+    display: flex;
+    /* border: 1px solid red; */
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+
+#content{
+    /* border: 1px solid black; */
+    width: 95%;
+    padding: 30px;
+    /* border: 5px solid green; */  
+}
+.firstChar{
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    background-color: #cccccc;
+    /* margin: auto; */
+}
+.firstChar>p{
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0px;
+    /* margin: auto; */
+}
+button{
+    /* display: flex; */
+    border-radius: 50px;
+    border: 1px solid #0069FF;
+    /* margin: auto; */
+    padding: 0px 10px ;
+}
+#lookAround, #inviteUser{
+    display: flex;
+
+}
+#parentOfHori{
+    display: flex;
+    justify-content:flex-end;
+    font-size: 14px;
+    /* font-weight: bold; */
+}
+#horiNav{
+    /* display:flex; */
+    /* width: 28%; */
+    /* border: 1px solid red; */
+    /* justify-content: space-between; */
+    font-size: 12px;
+}
+#firstCharBtn{
+    border: none;
+    background-color: white;
+    display: flex;
+}
+#firstCharBtn>ng-icon{
+    /* display: flex; */
+    margin-top: 15px;
+}
+#firstCharBtn>.firstChar, #firstCharDiv>.firstChar{
+    padding-top: 10px;
+}
+#firstCharDiv>.firstChar{
+    text-align: center;
+}
+#horiNav > #lookAround, #horiNav > #inviteUser{
+    color: #0069FF;
+    font-weight: bold;
+}
+a{
+    color: #0069FF;
+    text-decoration: none;
+}
+
+
+
+/* ------------------------------------------------------------------------------------------------ */
+#backUrl{
+    font-weight: bold;
+}
+h3{
+    margin-bottom: 30px;
+}
+h4{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+#callCardsDiv{
+    width: 50%  ;  
+}
+.oneCard{
+    border: 1px solid rgb(173, 173, 173);
+    display: flex; 
+    justify-content: space-evenly;
+    border-radius: 5px;
+    background-color: #ffffff;
+    padding: 20px;
+}
+.oneCard:hover{
+    border: 1px solid #0069FF;
+}
+img{
+    border: 1px solid red;
+    width: 50px;
+    height : 50px
+}
+.EventTypeName{
+    font-size: 20px;
+    font-weight: bold;
+}
+.AboutEventType{
+    font-size: 16px;
+    font-weight: bold;
+}
+.greyLine{
+    font-size: 12px;
+    color: #1A1A1A9C;
+}
+.arrowDiv{
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+}
+.arrowDiv ng-icon{
+    font-size: 25px;
+    /* border: 1px solid black; */
+}

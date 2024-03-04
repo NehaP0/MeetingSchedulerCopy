@@ -6,8 +6,8 @@
   <title>Meeting Scheduled email.</title>
 </head>
 <body>
-  <h2>Hello, {{name}}! </h2>
-  <p>{{company}} has scheduled a meet with you.</p>
+  <h2>Hello,  </h2>
+  <p>You have been invited to a meet with {{company}}.</p>
 
   <p>Details:</p>
     <ul>
@@ -17,6 +17,7 @@
         <li>Event Start Time: {{eventStartTime}}</li>
         <li>Event End Time: {{eventEndTime}}</li>
         <li>Meeting Link: {{meetingLink}}</li>
+        <li *ngIf="additionalInfo">Note: {{additionalInfo}} </li>
     </ul>
 </body>
 </html>

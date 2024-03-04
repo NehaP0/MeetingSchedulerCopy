@@ -1,0 +1,88 @@
+<body id="body"> 
+
+    <div class="showhim" id="verticalNav" >
+        <div  class="ok">
+            <div id="upperDiv">
+                <ng-icon id="logo" name="bootstrapCCircleFill"></ng-icon>
+                <ng-icon id="plusSign" name="bootstrapPlusCircleFill"></ng-icon>
+                <ng-icon class="commonSizeIcon" id="attachIcon" name="typAttachmentOutline"></ng-icon>
+                <ng-icon class="commonSizeIcon" name="remixCalendar2Line"></ng-icon>
+                <ng-icon class="commonSizeIcon" name="remixStackshareLine"></ng-icon>
+                <ng-icon id="makeBold" name="circumRoute"></ng-icon>
+            </div>
+            <div id="lowerDiv">
+                <ng-icon class="commonSizeIcon" name="bootstrapClock"></ng-icon>
+                <ng-icon class="commonSizeIcon" name="octApps"></ng-icon>
+                <ng-icon class="commonSizeIcon" name="iconoirCrown"></ng-icon>
+                <ng-icon class="commonSizeIcon" name="bootstrapQuestionCircle"></ng-icon>
+            </div>
+        </div>
+        <div class="showme" >
+            <div id="upperDivHover">
+                <div id="logoDivExpand"><a href="/home"><ng-icon id="logoExpand" name="bootstrapCCircleFill"></ng-icon><p>Calendly</p></a></div>
+                <div><a href="/createNewEventType"><button id="plusSignExpand" name="bootstrapPlusCircleFill">+ Create</button></a></div>
+                <div><a href="/home"><ng-icon class="commonSizeIcon" id="attachIconExpand" name="typAttachmentOutline"></ng-icon><p>Event Types</p></a></div>
+                <div><a href="/scheduledEvents"><ng-icon class="commonSizeIcon" name="remixCalendar2Line"></ng-icon><p>Scheduled events</p></a></div>
+                <div><ng-icon class="commonSizeIcon" name="remixStackshareLine"></ng-icon><p>Workflows</p></div>
+                <div><ng-icon id="makeBoldExpand" name="circumRoute"></ng-icon><p>Routing</p></div>
+            </div>
+            <div id="lowerDivHover">
+                <div><a href="/customise"><ng-icon href="" class="commonSizeIcon" name="bootstrapClock"></ng-icon><p>Availability</p></a></div>
+                <div><ng-icon class="commonSizeIcon" name="octApps"></ng-icon><p>Integration & apps</p></div>
+                <div><ng-icon class="commonSizeIcon" name="iconoirCrown"></ng-icon><p>Admin center</p></div>
+                <div><ng-icon class="commonSizeIcon" name="bootstrapQuestionCircle"></ng-icon><p>Help</p></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ---------------------------------------------------------------------------------------- -->
+    
+    <div id="content">
+
+        <div id="parentOfHori">
+            <div id="horiNav">
+                <!-- <p id="lookAround"><ng-icon name="bootstrapStars"></ng-icon>Take a look around</p>
+                <button id="inviteUser"><ng-icon name="remixUserAddLine"></ng-icon><p>Invite User</p></button> -->
+                <button id="firstCharBtn" ><p class="firstChar"> {{firstChar}} </p><ng-icon id="downArrow" name="bootstrapCaretDownFill"></ng-icon></button>
+            </div>
+        </div>
+
+        <a href="/home" id="backUrl"> < Back</a>
+        <h4>Create New Event Type</h4>   
+        <div id="callCardsDiv">
+            <div class="oneCard" (click)="goToEventPage('One-on-One')">
+                <div>image</div>
+                <!-- frontEnd/src/app/new-event-type/vector.png -->
+                <div>
+                    <p class="EventTypeName">One-on-One</p>
+                    <p class="AboutEventType">One host with one invitee</p>
+                    <p class="greyLine">Good for: coffee chats, 1:1 interviews, etc</p>
+                </div>
+                <div class="arrowDiv"><ng-icon name="remixArrowRightSLine"></ng-icon></div>
+            </div>
+
+            <div class="oneCard" (click)="goToEventPage('Group')">
+                <div>image</div>
+                <div>
+                    <p class="EventTypeName">Group</p>
+                    <p class="AboutEventType">One host with group of invitees</p>
+                    <p class="greyLine">Good for: webinars, online classes, etc</p>
+                </div>
+                <div class="arrowDiv"><ng-icon name="remixArrowRightSLine"></ng-icon></div>
+            </div>
+
+            <div class="oneCard" (click)="goToEventPage('Collective')">
+                <div>image</div>
+                <div>
+                    <p class="EventTypeName">Collective</p>
+                    <p class="AboutEventType">More than one host with one invitee</p>
+                    <p class="greyLine">Good for: panel interview , group sales calls, etc</p>
+                </div>
+                <div class="arrowDiv"><ng-icon name="remixArrowRightSLine"></ng-icon></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+

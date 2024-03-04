@@ -34,25 +34,30 @@ export class LoginComponent implements OnInit{
       }
 
       this.apiService.loginUser(user).subscribe((response)=>{
-        console.log(response);
+        console.log("login function called");
+        
+        console.log("response ",response);
         const token = response['token']
         // this.apiService.setAuthorizationHeader(token)
 
         localStorage.setItem("emailID", user.emailID);
 
 
-        console.log(token.token);
+        console.log("token ",token.token);
         localStorage.setItem("token", token.token)
+        localStorage.setItem("isAuth", "true")
         
-        alert('Login Successful')
+        alert(response['message'])
         userForm.resetForm()       
 
         
-        this.router.navigate(['/users'])  
+        this.router.navigate(['/home'])  
         console.log("After login ", this.userLoggedIn);         
       },
       (error)=>{
         alert('Invalid Credentials')
+        localStorage.setItem("isAuth", "false")
+
         console.log(error);        
       })
     }

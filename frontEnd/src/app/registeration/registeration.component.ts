@@ -40,7 +40,7 @@ export class RegisterationComponent implements OnInit{
   }
 
 
-  goToLoginPage(){
-      this.router.navigate(['/login'])
-  }
+  // goToLoginPage(){
+  //     this.router.navigate(['/login'])
+  // }
 }

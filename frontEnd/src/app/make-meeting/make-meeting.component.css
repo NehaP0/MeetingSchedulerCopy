@@ -1,0 +1,81 @@
+#content{
+    width: 90%;
+    height : 100vh;
+    margin: auto;
+    /* border: 1px solid red; */
+    margin-top: 80px;
+    box-shadow: rgba(56, 57, 58, 0.2) 0px 8px 24px;;
+    display: flex;
+}
+#leftDiv{
+    padding: 30px;
+    border: 1px solid rgb(231, 231, 231);
+    color: #2b2a2a9c;
+    font-weight: bold;
+    font-size: 16px;
+    width: 40%;
+    padding-right: 10%;
+}
+#backButton{
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid rgb(233, 231, 231);
+    margin-bottom: 20px;
+}
+#backButton ng-icon{
+    /* font-weight: bold; */
+    color: #1671fb;
+}
+#eventName{
+    color: #1A1A1A;
+    font-size: 25px;
+}
+ng-icon{
+    display: inline;
+    margin-right: 5px;
+    font-size: 25px;
+}
+
+
+#rightDiv{
+    padding: 30px;
+    font-size: 14px;
+
+}
+form>input{
+    display: block;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(173, 172, 172);
+    width: 100%;
+}
+form>button{
+    display: block;
+    margin-top: 10px;
+    border-radius: 50px;
+}
+#addGuests{
+    border: 1px solid #1671fb;
+    padding: 5px 10px ;
+    color: #1671fb;
+    background-color: white;
+}
+#scheduleEvent{
+    padding: 10px 15px;
+    background-color: #1671fb;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+h3{
+    font-size: 20px;
+    font-weight: bold;
+}
+form>label{
+    font-weight: bold;
+    margin: 13px 0 13px 0;
+}
+.warning{
+    margin : 5px 0px;
+    color: #cf6868;
+}

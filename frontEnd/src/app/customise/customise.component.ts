@@ -14,8 +14,9 @@ export class CustomiseComponent{
   userAvailabilityArray = []
   durationHrs = 0
   durationMins = 30
-  loggedInEmailId : string = ""
-  loggedInName : string = ""
+  loggedInName = localStorage.getItem("userLoggedInName" || "")
+  loggedInEmailId = localStorage.getItem("emailID" || "")
+  firstChar = this.loggedInName[0]
   duration : { hrs: number, minutes: number }= {
     "hrs" : 0,
     "minutes" : 30

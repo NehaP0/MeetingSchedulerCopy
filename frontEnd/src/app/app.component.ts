@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { APIService } from './api.service';
-import { Subscription} from 'rxjs';
-import { ActivatedRoute, Router} from '@angular/router';
+import { Subscription, filter} from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 
 
@@ -17,7 +17,8 @@ export class AppComponent{
   loggedInEmailId: string = localStorage.getItem("emailID" || "")
   showAvailibilityOnNav = false
   // showAvailibilityOnNav  = localStorage.getItem("showAvailibilityOnNav")
-  
+  // shouldShowNavbar: boolean = false;
+
   
   
   // constructor(private apiService: APIService){}
@@ -27,6 +28,12 @@ export class AppComponent{
     //   this.loggedInEmailId = userLoggedInEmailId;
     //   this.putAvailabilityOnNavBar()
     //   console.log("logged in user email is ",this.loggedInEmailId)
+    // });
+
+    // this.router.events.pipe(
+    //   filter(event => event instanceof NavigationEnd)
+    // ).subscribe((event: NavigationEnd) => {
+    //   this.shouldShowNavbar = event.urlAfterRedirects === '/home';
     // });
   }
 

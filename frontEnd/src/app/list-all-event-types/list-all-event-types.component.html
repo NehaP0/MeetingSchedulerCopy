@@ -1,0 +1,25 @@
+
+<!--<a href="http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}">http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}</a> 
+ -->
+
+ <div id="parentDiv">
+    <div id="childDiv">
+        <div id="aboveText">
+            <p id="userName">{{loggedInName}}</p>
+            <div  id="wlcmMsg">
+                <p>Welcome to my scheduling page. Please follow the instructions to add an event to my calendar.</p>
+            </div>
+        </div>
+        <div id="eventsDiv">
+            <ng-container *ngIf="eventsArrayOfLoggedInUser.length">
+                <div *ngFor="let event of eventsArrayOfLoggedInUser; let i = index" >
+                    <div class="card" (click)="goToCalendar(event)">                   
+                            <p class="card-title">{{event.evName}}</p>
+                            <!-- <p><ng-icon name="remixArrowRightSLine"></ng-icon></p>            -->
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+ </div>

@@ -1,6 +1,6 @@
 const express = require('express')
 // const User = require('../models/user')
-const {User, Meeting} = require('../models/userAndMeeting')
+const {User, Meeting, Event} = require('../models/userAndMeeting')
 const bcrypt= require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -19,10 +19,17 @@ userRoute.post("/postuser", async(req, res)=>{
         const hashedPassword = await bcrypt.hash(password, 5)
         console.log(hashedPassword)
 
-        const meeting =  await Meeting.create({title: "fillingSub", start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30"}) 
+        // const meeting =  await Meeting.create({title: "fillingSub", start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30", }) 
+        const meeting =  await Meeting.create({start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30", user:"abc", userEmail:"abc@gmail.com", currentDateTime:"date"}) 
 
-        const user = await User.create({name , emailID, password:hashedPassword,  meetings: [meeting], userAvailability : userAvailability })
+        console.log(meeting);
 
+        const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom", meetings: [meeting]}) 
+        // const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom"}) 
+        console.log(event);
+
+        const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: [meeting]})
+        // const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: []})
         console.log(user);
 
         return res.send({message : "User added"})
@@ -69,6 +76,7 @@ userRoute.post("/login", async(req, res)=>{
                 if(result){
                     const token = jwt.sign({emailID: user.emailID}, 'meetingScheduler')
                     loggedInUserEmail = user.emailID
+                    // console.log("user ", user);
                     return res.send({"token":{token}, "message": `Login Successful.`})
                 }
                 else{

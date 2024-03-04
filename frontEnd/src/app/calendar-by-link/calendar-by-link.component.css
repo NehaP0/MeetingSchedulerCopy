@@ -1,37 +1,218 @@
-*{
-    background-color: black;
-    color: green;
+* {
+    /* background-color: black;
+    color: green; */
 }
-#parentDiv{
-    height: 100vh;
+
+#parentDiv {
+    height: 150vh;
+
 }
-.container{
-    /* border: 1px solid red; */
-    display: flex; 
-    justify-content: space-evenly; 
-}
-full-calendar{
-    width : 60%; 
+
+/* .container{
+    border: 1px solid red; */
+/* display: flex;  */
+/* justify-content: space-evenly; 
+} */
+full-calendar {
+    /* margin: auto; */
     /* border: 1px solid blue; */
 }
-.fc-daygrid-day-top{
+
+/* .fc-daygrid-day-top{
     border: 2px solid red;
     color : red;
     background-color: green;
-}
-.timeDiv{
-    width : 40%; 
+} */
+.timeDiv {
+    width: 40%;
     /* border: 1px solid green; */
-    margin-left: 40px;
+    margin-left: 2px;
     display: flex;
     justify-content: space-between;
+    /* height: 100vh; */
 }
-.confirmEvent{
+#times{
+    margin: auto;
+    /* border: 1px solid red; */
+    width:80%;
+    /* overflow:scroll; */
+    overflow-x:hidden;
+    /* overflow-y: auto; */
+    height: calc(100% - 1px);
+    /* height: 100%; */
+    margin-top: 40px;
+}
+.oneTime{
+    width: 100%;
+    height: 50px;
+    border: 1px solid #0060E6;
+    color: #0060E6;
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+#timeLeftDIv{
+    /* border: 1px solid blue; */
+    width: 100%;
+    height: 100vh;
+}
+
+.confirmEvent {
     margin: 2px;
     width: 30%;
-    height : 30px;
+    height: 30px;
 }
-#loading{
-    text-align: center;
 
+#loading {
+    text-align: center;
+}
+
+
+
+#zoom {
+    border: 1px solid rgb(160, 158, 158);
+    width: 25%;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#zoomIcon {
+    display: block;
+    margin: auto;
+    width: 30px;
+    height: 30px;
+}
+
+/* #rightDiv{
+    width: 70%;
+    padding-top: 2%;
+    height: 150vh;
+    margin: auto;
+} */
+#eventDeets {
+    width: 60%;
+    height: 100%;
+    margin: auto;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
+    overflow: hidden;
+}
+
+#greyStrip {
+    background-color: #333333;
+    /* height: 10px; */
+    padding: 15px;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px 5px 0 0;
+}
+
+#greyStrip p {
+    display: inline;
+}
+
+#greyStrip>:nth-child(1) {
+    font-weight: bold;
+}
+
+#belowGreyStrip {
+    text-align: center;
+    padding-top: 30px;
+}
+
+#belowGreyStrip>:nth-child(1) {
+    color: grey;
+    font-weight: bold;
+}
+
+#belowGreyStrip>:nth-child(2) {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 26px;
+}
+
+#timeAndLocation {
+    display: flex;
+    justify-content: space-around;
+    color: #1A1A1A9C;
+    font-weight: bold;
+}
+
+#timeAndLocation div {
+    display: flex;
+}
+
+ng-icon {
+    display: flex;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+#locationP {
+    font-style: italic;
+}
+
+#previewDiv {
+    /* border: 1px solid black; */
+    /* margin-top: 40%; */
+    width: 50%;
+    margin-left: 25%;
+    font-size: 20px;
+    color: rgb(124, 123, 123);
+    font-weight: bold;
+}
+
+#bottomDiv {
+    margin-top: 50px;
+    /* justify-content: space-between; */
+    /* justify-content: flex-end; */
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: flex-end;
+}
+
+#bottomDiv div {
+    /* display: flex; */
+    /* border: 1px solid red; */
+    display: flex;
+    width: 50%;
+    justify-content: space-evenly;
+    font-size: 14px;
+}
+
+#bottomDiv>div>:nth-child(1) {
+    border: none;
+    background-color: white;
+}
+
+#bottomDiv>div>:nth-child(2) {
+    background-color: #0069FF;
+    padding: 10px;
+    border-radius: 50px;
+    border: none;
+    color: white;
+}
+
+#redWarning {
+    color: #C84545;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+#previewP {
+    text-align: left;
+    color: #1A1A1A;
+}
+
+#calendar {
+    /* border: 1px solid red; */
+    font-size: 15px;
+    width: 60%;
+    height: 100%;
+
+}
+#divForCalendarAndTime{
+    display: flex;
+    justify-content: center;
 }

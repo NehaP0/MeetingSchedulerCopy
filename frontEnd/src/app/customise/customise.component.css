@@ -1,10 +1,12 @@
 *{
-    background-color: black;
-    color: lightgreen;
+    /* background-color: black;
+    color: lightgreen; */
     /* border: 2px solid red; */    
 }
+
+
 #parentDiv{
-    border: 3px solid black;
+    /* border: 3px solid black; */
     display: flex;
     width: 100%;
     height: 100vh;    
@@ -13,31 +15,44 @@
     /* border: 2px solid green; */
     width: 80%;
     margin: auto;
+    padding: 0px 50px 50px 50px;
+}
+#heading h1{
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+h3{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 50px;
 }
 button {
-    background-color: lightgreen;
-    color: black;
-    padding: 5px 30px;
-    border: none;
+    background-color: #f2f8ff;
+    color: #0069FF;
+    padding: 10px;
+    border: 1px solid #0069FF;
     border-radius: 5px;
     cursor: pointer;
-    display: inline;
+    /* display: inline; */
     margin: 2px;
+    font-weight: bold;
 }
 
 #availabilityDiv p {
     display: inline;
 }
 button:focus{
-    /* background-color: green; */
+    background-color: #0c61d8;
     color: white;
 }
 #durationDiv{
     width: 80%;
     display: flex;
     justify-content: space-between;
+    /* border: 1px solid red; */
 }
-input{
+#durationDiv input{
     width: 50px;
     border: none;
     margin: 2px;
@@ -47,13 +62,22 @@ input:hover{
 }
 #weeklyHoursDiv{
     width: 100%;
-    margin: 10px;
+    /* margin: 10px; */
+    border: 1px solid rgb(184, 182, 182);
+    border-radius: 5px;
+    /* margin-top: 20px; */
+    padding: 20px;
+}
+#weeklyHoursDiv h4{
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
 }
 table{
     width: 80%;
 }
 table, tr, td, thead, th{
-    border: 1px solid green;
+    /* border: 1px solid green; */
 }
 td, th{
     padding: 10px 10px;
@@ -68,3 +92,148 @@ td, th{
 select{
     border: none;
 }
+
+/* ---------------------------------------------- */
+
+#verticalNav{
+    border-right: 1px solid lightgray;
+    width: 5%;
+    padding: 20px 5px; 
+    position: fixed;
+}
+#verticalNav:hover{
+    width: 20%;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    transition: all 0.5s;
+    padding: 10px 5px;    
+
+}
+
+.showme{ 
+    display: none;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+.showhim:hover .showme{
+    display : block;
+    
+}
+.showhim:hover .ok{
+display : none;
+}
+#lowerDiv, #lowerDivHover{
+    margin-top: 50px;
+}
+#verticalNav ng-icon{
+    margin: auto;
+    margin-bottom: 30px;
+}
+#verticalNav a{
+    text-decoration: none !important;
+    color: #1A1A1A;
+}
+#upperDivHover p, #upperDivHover ng-icon, #lowerDivHover p, #lowerDivHover ng-icon{
+    display: inline;
+}
+#upperDivHover button{
+    width: 100%;
+    padding: 10px 10px;
+}
+#upperDivHover p, #lowerDivHover p{
+    margin-left: 20px;
+}
+#upperDivHover>div, #lowerDivHover>div{
+    width:90%;
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding : 10px;
+    font-weight: bold;
+}
+#upperDivHover>div:hover{
+    background-color: #F2F8FF;
+}
+.showme{
+    height: 100vh;
+}
+#logo, #plusSign, #logoExpand{
+    font-size: 30px;
+    color: #0069FF;
+}
+#logoDivExpand{
+    color: #0069FF;
+    font-size: 20px;
+}
+#plusSign{
+    font-size: 40px;
+}
+#plusSignExpand{
+    background-color: #0069FF;
+    color: white;
+    font-size: 16px;
+}
+.commonSizeIcon{
+    /* font-size: 20px; */
+}
+#makeBold, #makeBoldExpand{
+    /* font-size: 25px; */
+}
+#verticalNav:hover + #content{
+    width: 100%;
+}
+#content{
+    width: 95%;
+    padding: 30px; 
+}
+ng-icon{
+    display: flex;
+}
+
+
+.firstChar{
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    background-color: #cccccc;
+    color: black
+}
+.firstChar>p{
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0px;
+    /* margin: auto; */
+}
+#plusSignExpand{
+    /* display: flex; */
+    border-radius: 50px;
+    border: 1px solid #0069FF;
+    /* margin: auto; */
+    padding: 0px 10px ;
+}
+#parentOfHori{
+    display: flex;
+    justify-content:flex-end;
+    font-size: 14px;
+    /* font-weight: bold; */
+}
+#horiNav{
+    font-size: 12px;
+}
+#firstCharBtn{
+    border: none;
+    background-color: white;
+    display: flex;
+}
+#firstCharBtn>ng-icon{
+    /* display: flex; */
+    margin-top: 15px;
+    color: black;
+}
+#firstCharBtn>.firstChar, #firstCharDiv>.firstChar{
+    padding-top: 10px;
+}
+#firstCharDiv>.firstChar{
+    text-align: center;
+} 

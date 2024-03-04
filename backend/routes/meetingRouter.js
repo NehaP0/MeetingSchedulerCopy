@@ -10,8 +10,6 @@ const readline = require('readline');
 const moment = require('moment-timezone');
 
 
-
-
 const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
 const TOKEN_PATH = 'token.json';
 
@@ -20,7 +18,8 @@ const meetingRoute = express.Router()
 
 const hbs = require('nodemailer-express-handlebars')
 const nodemailer = require('nodemailer')
-const path = require('path')
+const path = require('path');
+const { getLoggedInUserEmailFromQuery } = require('./calendarLinkRouter');
 
 
 
@@ -28,7 +27,9 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
 
     let meetLink;
 
-    let importedloggedInUserEmail = getLoggedInUserEmail();
+    // let importedloggedInUserEmail = getLoggedInUserEmail();
+    let importedloggedInUserEmail = getLoggedInUserEmailFromQuery();
+
     // let importedloggedInUserEmail = "nehaphadtare334@gmail.com"
     console.log("loggedInUsers imported EmailId is ",importedloggedInUserEmail);
 
@@ -115,7 +116,7 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
                     // Continue with nodemailer code
                     await sendMail(meetLink, loggedInUserName, importedloggedInUserEmail);
 
-                    return res.status(200).json({ message: "Meeting Created" });
+                    return res.status(200).json({ message: "Meeting You are scheduled. A calendar invitation has been sent to your email address." });
                 } catch (err) {
                     console.log("Error creating meeting link:", err);
                     return res.status(500).json({ message: `Meeting creation failed: ${err}` });

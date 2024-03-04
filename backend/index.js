@@ -2,11 +2,12 @@ const express = require('express')
 const {userRoute, getLoggedInUserEmail} = require('./routes/userRouter')
 const allUsersRoute = require('./routes/allusersRouter')
 const meetingRoute = require('./routes/meetingRouter')
-const calendarLinkRoute = require('./routes/calendarLinkRouter')
+const {calendarLinkRoute} = require('./routes/calendarLinkRouter')
 // const connection = require('./db')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const auth = require('./middlewares/Authenticator')
+const eventRoute = require('./routes/eventRouter')
 // const bodyParser = require("body-parser")
 const port = process.env.port
 
@@ -39,6 +40,9 @@ app.use('/user', userRoute)
 
 //get all users
 app.use('/allUsersRoute', allUsersRoute)
+
+app.use('/event', eventRoute)
+
 
 app.use('/meeting', meetingRoute)
 

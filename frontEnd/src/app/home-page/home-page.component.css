@@ -1,0 +1,409 @@
+#body{    
+    display: flex;
+    /* border: 1px solid green; */
+    font-family : "Be Vietnam Pro", sans-serif;
+    font-size: 14px;
+    height : 100vh;
+    color: #1A1A1A;
+    /* font-family: sans-serif, */
+    /* padding: 20px; */
+    /* border: 5px solid red; */
+}
+
+#logOut{
+    width: 60px;
+}
+
+#verticalNav{
+    border-right: 1px solid lightgray;
+    width: 5%;
+    padding: 20px 5px; 
+    /* position: fixed; */
+}
+#verticalNav:hover{
+    width: 20%;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    transition: all 0.5s;
+    padding: 10px 5px;    
+
+}
+
+.showme{ 
+    display: none;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+.showhim:hover .showme{
+    display : block;
+    
+}
+.showhim:hover .ok{
+display : none;
+}
+#lowerDiv, #lowerDivHover{
+    margin-top: 50px;
+}
+#verticalNav ng-icon{
+    margin: auto;
+    margin-bottom: 30px;
+}
+#verticalNav a{
+    text-decoration: none !important;
+    color: #1A1A1A;
+}
+#upperDivHover p, #upperDivHover ng-icon, #lowerDivHover p, #lowerDivHover ng-icon{
+    display: inline;
+}
+#upperDivHover button{
+    width: 100%;
+    padding: 10px 10px;
+}
+#upperDivHover p, #lowerDivHover p{
+    margin-left: 20px;
+}
+#upperDivHover>div, #lowerDivHover>div{
+    width:90%;
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding : 10px;
+    font-weight: bold;
+}
+#upperDivHover>div:hover{
+    background-color: #F2F8FF;
+}
+#upperDivHover button{
+    
+}
+.showme{
+    height: 100vh;
+}
+#logo, #plusSign, #logoExpand{
+    font-size: 30px;
+    color: #0069FF;
+}
+#logoDivExpand{
+    color: #0069FF;
+    font-size: 20px;
+}
+#plusSign{
+    font-size: 40px;
+}
+#plusSignExpand{
+    background-color: #0069FF;
+    color: white;
+    font-size: 16px;
+}
+.commonSizeIcon{
+    font-size: 20px;
+}
+#makeBold, #makeBoldExpand{
+    font-size: 25px;
+}
+#verticalNav:hover + #content{
+    width: 100%;
+}
+#content{
+    width: 95%;
+    padding: 30px; 
+}
+ng-icon{
+    display: flex;
+}
+
+#divForSearch ng-icon{
+    font-size: 18px;
+    color: rgb(138, 136, 136);
+}
+.firstChar{
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    background-color: #cccccc;
+}
+.firstChar>p{
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0px;
+    /* margin: auto; */
+}
+button{
+    /* display: flex; */
+    border-radius: 50px;
+    border: 1px solid #0069FF;
+    /* margin: auto; */
+    padding: 0px 10px ;
+}
+button p{
+    margin: 0px
+}
+#lookAround, #inviteUser{
+    display: flex;
+
+}
+#parentOfHori{
+    display: flex;
+    justify-content:flex-end;
+    font-size: 14px;
+    /* margin-bottom: 30px; */
+    /* font-weight: bold; */
+}
+#horiNav{
+    /* display:flex; */
+    /* width: 28%; */
+    /* border: 1px solid red; */
+    /* justify-content: space-between; */
+    font-size: 12px;
+}
+#firstCharBtn{
+    border: none;
+    background-color: white;
+    display: flex;
+    /* padding: 0px; */
+    /* border: 1px solid red; */
+}
+
+#logOutButton{
+    margin-top: 10px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+}
+
+#firstCharBtn>ng-icon{
+    /* display: flex; */
+    margin-top: 15px;
+}
+#firstCharBtn>.firstChar, #firstCharDiv>.firstChar{
+    padding-top: 10px;
+}
+#firstCharDiv>.firstChar{
+    text-align: center;
+}
+#horiNav > #lookAround, #horiNav > #inviteUser{
+    color: #0069FF;
+}
+#lookAround, #inviteUser{
+    font-weight: bold;
+}
+#inviteUser, #newEventType{
+    margin: auto;
+    padding: 5px;
+}
+#lookAround{
+    margin-top: 10px;
+}
+a{
+    color: #0069FF;
+    text-decoration: none;
+}
+a:hover{
+    cursor: pointer;
+}
+#eventTypeHeading{
+    /* width: 50%; */
+    font-size: 25px;
+    font-weight: bold;
+}
+#filterDiv{
+    /* border: 1px solid green; */
+    display: flex;
+    margin: 30px 0px; 
+}
+#divForuserNameLinkAndButton{
+    /* border: 2px solid brown; */
+    display: flex;
+    justify-content: space-between;
+}
+#divForSearch, #filterTag{
+    display: flex;
+    border: 1px solid grey;
+    margin-left: 20px;
+}
+#filterTag{
+    margin-left: 0px; 
+}
+#filterTag button{
+    border: none;
+    background-color: white;
+    display: flex;  
+}
+#searchIP{
+    border: none;
+}
+#filterTag, #divForSearch{
+    padding: 8px;
+    border-radius: 5px;
+}
+#filterTag ng-icon{
+    margin: auto;
+    margin-left: 10px;
+    font-size: 12px;
+}
+#leftDiv{
+    display: flex;
+    justify-content: space-evenly;
+    /* border: 2px solid red; */
+    width: 60%;
+    font-size: 14px;
+}
+#rightDiv{
+    display: flex;
+}
+#rightDiv button{
+    font-size: 14px;
+    color: #0069FF;
+}
+#rightDiv ng-icon{
+    font-size: 18px;
+    margin-top: 20px;
+    /* border: 1px solid green; */
+    margin-left: 5px;
+}
+.settingsBtnDiv{
+
+    display: flex;
+    justify-content: flex-end;
+}
+.settingsButtonOnCard{
+    border: none;
+    display: flex;
+    background-color: white;
+}
+.downArrow{
+    height: 12px;
+    width : 12px;
+    /* border: 1px solid green; */ 
+}
+.purpleLine{
+    height: 5px;
+    background-color: #8247F5;
+    border-radius: 5px 5px 0px 0px;
+    /* font-weight: ; */
+}
+#divForCards{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* padding: 10px; */
+    column-gap: 5px;
+    /* row-gap: 20px; */
+}
+.card{
+    border-radius: 5px;
+    /* width: 30% */
+}
+.card-title{
+    font-size:20px;
+}
+.firstCharCard{
+    margin-top: 15px;
+}
+.copyLinkBtn{
+    border: none;
+    display: flex;
+    width: 30%;
+    /* border: 1px solid red; */
+    justify-content: space-between;
+    color: #0069FF;
+    background-color: white;
+}
+
+#tickIcon{
+    font-size: 20px;
+}
+
+
+.settingsExpansionDiv{
+    margin-top: 10px;
+    /* padding: 0px 0px 10px 0px; */
+    border-radius: 5px;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    /* display: flex;
+    justify-content: flex-end; */
+    border: 1px solid rgb(204, 203, 203);
+    margin-left: 55%;
+    width: 40%;
+}
+
+.settingsExpansionDiv button{
+    display: block;
+    border: none;
+    /* border-bottom: 1px solid rgb(238, 234, 234); */
+    border-radius: 0px;
+    width: 100%;
+    padding-bottom: 10px 0px 10px 0px;
+    background-color: white;
+}
+
+.settingsExpansionDiv button:hover{
+    background-color: rgb(218, 215, 215);
+}
+
+#popUpForEventDeletion{
+    position: absolute;
+    z-index: 10;
+    width:35%;
+    margin-left: 25%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 10px;
+}
+
+#popupBtns{
+    display: flex;
+    justify-content: space-between;
+}
+#popUpForEventDeletion h3, #popUpForEventDeletion p{
+    margin-bottom: 20px;
+}
+#popUpForEventDeletion button{
+    /* padding: 5px 10px 5px 10px; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 45%;
+    border: 1px solid grey;
+    color: rgb(22, 21, 21)
+}
+#popUpForEventDeletion #cnfmDelBtn{
+    background-color: #c84545;
+    font-weight: bold;
+    color: white;
+    border: 1px solid  #c84545;
+}
+#popUpForEventDeletion #cnfmDelBtn:hover{
+    background-color: #9e3232;
+    border: 1px solid  #9e3232;
+}
+#popUpForEventDeletion #cancelBtn:hover{
+    background-color: rgb(233, 236, 238);
+    border: 1px solid  rgb(233, 236, 238);   
+}
+
+#popUpForEventDeletion h4{
+    margin-bottom: 20px;
+}
+#popUpForEventDeletion p{
+    margin-bottom: 30px;
+}
+
+
+/* 
+
+.custom-container {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 20px;
+  } */
+
+
+
+

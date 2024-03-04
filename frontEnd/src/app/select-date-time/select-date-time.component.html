@@ -1,0 +1,92 @@
+<body>
+    
+
+    <!-- <div id="leftDiv">
+        <a href="/createNewEventType"> < Cancel</a>
+        <h4>New Event Type</h4>
+
+        <hr>
+        <p>Event name</p>
+        <input type="text" id="eventName" placeholder="Name your event"  [(ngModel)]="inputText">
+        <label id="redWarning" *ngIf="showWarning">Please provide an event name.</label>
+
+        <p>Duration</p>
+        <div>
+            <label for="hrs">Hours</label>
+            <input type="number" name="hrs" placeholder="0" #hrs>
+
+            <label for="min">Minutes</label>
+            <input type="number" name="min" #minutes>
+        </div>
+
+        <p>Location</p>
+        <div id="zoom">
+            <ng-icon id="zoomIcon" name="heroVideoCamera"></ng-icon>
+            <p id="zoomP">Zoom</p>
+        </div>
+
+        <div id="bottomDiv">
+            <div>
+                <button>Cancel</button>
+                <button (click)="continueFunctn()">Continue</button>
+            </div>
+        </div>
+    </div> -->
+
+
+    
+    <div id="rightDiv">
+        <div id="eventDeets">
+            <div id="greyStrip">
+                <p>This is a preview. </p>
+                <p>To book an event, share a link with your invitees.</p>
+            </div>
+            <div id="belowGreyStrip">
+                <p>{{loggedInName}}</p>
+                <p>{{"" || "Event name here"}}</p>
+                <div id="timeAndLocation">
+                    <div>
+                        <ng-icon name="bootstrapClock"></ng-icon>
+                        <p>{{"" || "15 mins"}}</p>
+                    </div>
+                    <div>
+                        <ng-icon name="octLocation"></ng-icon>
+                        <p id="locationP">{{"" || "Add a location for it to show here"}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div id="previewDiv">
+                        <p id="previewP">Select a Date & Time</p>
+                        <!-- A preview of your availability will show on the next step -->
+                        <!-- <full-calendar id="calendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0" [options]="calendarOptions" plugins={[dayGridPlugin]}></full-calendar> -->
+                        <full-calendar id="calendar" defaultView="dayGridMonth" [options]="calendarOptions" plugins={[dayGridPlugin]}></full-calendar>
+
+
+                        <div *ngIf="displayTimeDiv" class="timeDiv">
+                            <div id="timeLeftDIv">
+                    
+                            <p>{{dateSelected}}</p>
+                        
+                            <button class="confirmEvent" (click)="createEvent(EventName.value)">Confirm Event</button>
+                        
+                            <label for="EventName">Event Name</label>
+                            <input type="text" id="EventName" name="EventName"  #EventName>
+                        
+                            <!-- <label for="EventDesc">Event Description</label> -->
+                            <!-- <input type="text" id="EventDesc" name="EventDesc" #EventDesc> -->
+                            
+                            <div *ngFor="let oneTime of userAvailaibleArray; let i = index">
+                                <button (click)="setEventTime(oneTime)">{{oneTime}}</button>
+                            </div>
+                            </div>
+                    
+                            <div id="timeRightDIv">
+                            <button (click)="changeDisplayTimeDiv()">X</button>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
