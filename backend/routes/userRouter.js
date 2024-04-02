@@ -1,86 +1,101 @@
 const express = require('express')
 // const User = require('../models/user')
-const {User, Meeting, Event} = require('../models/userAndMeeting')
-const bcrypt= require('bcrypt')
+const { User, Meeting, Event } = require('../models/userAndMeeting')
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const auth = require('../middlewares/Authenticator');
+
 
 const userRoute = express.Router()
 
 let loggedInUserEmail;
 
 
-userRoute.post("/postuser", async(req, res)=>{
+userRoute.post("/postuser", async (req, res) => {
     console.log("create user called");
-    const {name,emailID,password,userAvailability} = req.body
-    try{
+    const { name, emailID, password, userAvailability } = req.body
+    try {
 
-        console.log(name,emailID,password,userAvailability);
+        console.log(name, emailID, password, userAvailability);
 
         const hashedPassword = await bcrypt.hash(password, 5)
         console.log(hashedPassword)
 
         // const meeting =  await Meeting.create({title: "fillingSub", start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30", }) 
-        const meeting =  await Meeting.create({start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30", user:"abc", userEmail:"abc@gmail.com", currentDateTime:"date"}) 
+        const meeting = await Meeting.create({ start: "2019-01-18T09:00:00+05:30", end: "2019-01-18T09:30:00+05:30", user: "abc", userEmail: "abc@gmail.com", currentDateTime: "date" })
 
         console.log(meeting);
 
-        const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom", meetings: [meeting]}) 
+        const event = await Event.create({ evName: "30 Minute Meeting", evType: "One-on-One", evDuration: { hrs: 0, minutes: 30 }, evLocation: "zoom", meetings: [meeting] })
         // const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom"}) 
         console.log(event);
 
-        const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: [meeting]})
+        const user = await User.create({ name, emailID, password: hashedPassword, events: [event], userAvailability: userAvailability, meetingsWtOthers: [meeting] })
         // const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: []})
         console.log(user);
 
-        return res.send({message : "User added"})
+        return res.send({ message: "User account added" })
     }
-    catch(err){
-        return res.send({message : `User creation failed : ${err}`})
+    catch (err) {
+        return res.send({ message: `User account creation failed : ${err}` })
     }
 })
 
-userRoute.patch("/patchuser", async(req, res)=>{
+userRoute.patch("/patchuser", auth, async (req, res) => {
     console.log("patch user called");
-    const {emailID,userAvailability} = req.body
+    const { emailID, userAvailability } = req.body
     console.log("body ", req.body);
-    try{
+    try {
         await User.updateOne(
             { emailID: emailID },
-            { userAvailability: userAvailability } 
+            { userAvailability: userAvailability }
         )
 
-        return res.send({message : "Availability Updated"})
+        return res.send({ message: "Availability Updated" })
     }
-    catch(err){
-        return res.send({message : `User availability updation : ${err}`})
+    catch (err) {
+        return res.send({ message: `User availability updation : ${err}` })
     }
 })
 
 
 
-userRoute.post("/login", async(req, res)=>{
+userRoute.post("/login", async (req, res) => {
 
-    const {emailID,password} = req.body
-    console.log("loggedIn usersEmail and Password ", emailID,password)
-    try{
+    const { emailID, password } = req.body
+    console.log("loggedIn usersEmail and Password ", emailID, password)
+
+    // try{
+    //     if(emailID == "admin@gmail.com"){
+    //         console.log("admin emailID ", emailID);
+    //         if(password == "admin@123"){
+    //             console.log("admin password ", password);
+    //             // const token = jwt.sign({emailID: emailID}, 'meetingScheduler')
+    //             res.redirect(`http://localhost:4200/users`)
+    //             return res.send({"token":"token", "message": `Login Successful.`})
+
+    //         }
+    //     }
+    // }
+    try {
         //check if user's emailId matches with the one that is there in the database
-        const user = await User.findOne({emailID : emailID})
+        const user = await User.findOne({ emailID: emailID })
         // console.log(user, "line 40");
 
         //if user does not exist in database send response invalid credentials
-        if(user.length==0){
-            return res.send({"message": 'Invalid Credentials'})
+        if (user.length == 0) {
+            return res.send({ "message": 'Invalid Credentials' })
         }
-        else{
-            const matchPassword = bcrypt.compare(password, user.password, (err, result)=>{
-                if(result){
-                    const token = jwt.sign({emailID: user.emailID}, 'meetingScheduler')
+        else {
+            const matchPassword = bcrypt.compare(password, user.password, (err, result) => {
+                if (result) {
+                    const token = jwt.sign({ emailID: user.emailID }, 'meetingScheduler')
                     loggedInUserEmail = user.emailID
                     // console.log("user ", user);
-                    return res.send({"token":{token}, "message": `Login Successful.`})
+                    return res.send({ "token": { token }, "message": `Login Successful.` })
                 }
-                else{
-                    return res.send({"message": 'Invalid Credentials'})
+                else {
+                    return res.send({ "message": 'Invalid Credentials' })
                 }
             })
         }
@@ -88,9 +103,65 @@ userRoute.post("/login", async(req, res)=>{
     catch (err) {
         res.status(404).send({ msg: `User login failed ${err.message}` })
     }
+    // }
+    // catch (err) {
+    //     res.status(404).send({ msg: `User login failed ${err.message}` })
+    // }
 })
 
 
 console.log("loggedInUserEmail export", loggedInUserEmail);
 
-module.exports = {userRoute, getLoggedInUserEmail: () => loggedInUserEmail}
+
+userRoute.delete("/deleteUser", async (req, res) => {
+    const { id } = req.query
+
+    console.log("delete user called ", id);
+    try {
+        await User.deleteOne({ _id: id });
+        return res.status(200).json({ message: "User deleted." });
+    }
+    catch (err) {
+        return res.status(500).json({ message: `User deletion failed : ${err}` })
+    }
+
+})
+
+
+
+userRoute.patch("/editUserNameAndEmail/:id", async (req, res) => {
+    const { id } = req.params;
+    console.log("editUserNameAndEmail user called");
+    const { userName, email } = req.body
+    console.log("body ", req.body);
+    try {
+        await User.updateOne(
+            { _id: id },
+            { name: userName, emailID: email }
+        )
+        return res.send({ message: "User Updated" })
+    }
+    catch (err) {
+        return res.send({ message: `User updation failed: ${err}` })
+    }
+})
+
+userRoute.get("/initialUserUnavailibility", async (req, res) => {
+    console.log("/initialUserUnavailibility called");
+    const {userId} = req.query
+    try {
+        //check if user's Id matches with the one that is there in the database
+        const user = await User.findOne({ _id: userId })
+
+        let userUnavaibility = user[0]['userAvailability']['nonWorkingDays']
+        console.log('userUnavaibility ', userUnavaibility);
+        // return userUnavaibility
+        res.send({ msg: `userUnavaibilityArray `, arr :  userUnavaibility})
+
+    }
+    catch (err) {
+        res.status(404).send({ msg: `User login failed ${err.message}` })
+    }
+})
+
+module.exports = { userRoute, getLoggedInUserEmail: () => loggedInUserEmail }

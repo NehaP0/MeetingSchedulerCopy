@@ -1,6 +1,7 @@
 const express = require('express')
 // const User = require('../models/user')
 const {User, Meeting} = require('../models/userAndMeeting')
+const auth = require('../middlewares/Authenticator')
 
 
 const allUsersRoute = express.Router()

@@ -10,6 +10,7 @@ const readline = require('readline');
 const moment = require('moment-timezone');
 
 
+
 const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
 const TOKEN_PATH = 'token.json';
 
@@ -20,6 +21,7 @@ const hbs = require('nodemailer-express-handlebars')
 const nodemailer = require('nodemailer')
 const path = require('path');
 const { getLoggedInUserEmailFromQuery } = require('./calendarLinkRouter');
+const auth = require('../middlewares/Authenticator');
 
 
 
