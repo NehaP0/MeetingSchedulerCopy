@@ -1,0 +1,54 @@
+<app-admin-nav-bar></app-admin-nav-bar>
+
+<body>
+    <app-horizontal-nav-admin></app-horizontal-nav-admin>
+
+
+    <div id="mainDiv">
+        <!-- -----------meets deets--------- -->
+
+        <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
+            <h4>Meeting details: </h4>
+            <!-- <ng-container *ngIf="newObj"> -->
+            <!-- <div *ngFor="let meet of selectedDateMeets; let i = index"> -->
+            <div><span class="title">Meeting with : </span><span>{{newObj.name}}</span></div>
+            <div> <span class="title">Event name : </span> <span>{{newObj.evName}}</span> </div>
+            <div> <span class="title">Event type : </span> <span>{{newObj.evType}}</span> </div>
+            <div><span class="title">Date : </span><span>{{newObj.date}}</span></div>
+            <div><span class="title">Time : </span><span>{{newObj.startTime}} to {{newObj.endTime}}</span></div>
+            <div><span class="title">Email Id : </span><span>{{newObj.emailId}}</span></div>
+            <hr>
+            <!-- </div> -->
+            <!-- </ng-container> -->
+            <button (click)="closePopUp()" id="closeBtn">Close</button>
+        </div>
+
+        <!-- -----------meets deets ends --- -->
+        <div id="content">
+            <div id="divForCalendar">
+                <div id="parentDiv">
+                    <div id="eventDeets">
+                        <div id="divForCalendarAndTime">
+                            <full-calendar id="monthCalendar" defaultView="dayGridMonth" [options]="calendarOptions"
+                                plugins={[dayGridPlugin]}></full-calendar>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <!-- <div id="divforColors">
+                <p id="eventNameHeading">Event Names</p>
+                <div *ngFor="let obj of finalColorsArr; let i = index">
+                    <div>
+                        <p>{{obj.evName}}</p>
+                        <div class="eventColorDiv" [ngStyle]="{'background-color': obj.evColor}"></div>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+</body>

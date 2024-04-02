@@ -212,7 +212,10 @@ ngOnInit(){
 }
 
 // ----------theDayCellContent starts----------
-  theDayCellContent(info: any){    
+  theDayCellContent(info: any){  
+
+
+    // <td aria-labelledby="fc-dom-22" role="gridcell" data-date="2024-03-06" class="fc-day fc-day-wed fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="March 6, 2024" id="fc-dom-22" class="fc-daygrid-day-number"><div>6</div></a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td>
     const dayOfWeek = info.date.getDay();
     const date = info.date.getDate();
     // console.log(dayOfWeek);

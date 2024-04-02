@@ -1,0 +1,130 @@
+<!-- <app-admin-nav-bar></app-admin-nav-bar>
+
+<body>
+    <app-hori-nav-meetings-admin></app-hori-nav-meetings-admin>
+    <div id="mainDiv">
+
+        <div id="popUpForEventEdit" *ngIf="popUpForEventEdit">
+            <div class="heading">
+                <h4>Edit {{editEventName}}</h4>
+                <ng-icon (click)="editEventCacelation()" name="radixCross2"></ng-icon>
+            </div>
+            <form>
+                <input type="text" [(ngModel)]="editEventName" value={{editEventName}} name="EventName" id="EventName">
+                <label for="EventName">Event Name</label>
+
+                <select name="EventType" id="EventType" [(ngModel)]="editEventType" value="editEventType">
+                    <option value="" disabled>Event Type</option>
+                    <option value="One-on-One">One-on-One</option>
+                    <option value="Group">Group</option>
+                    <option value="Collective">Collective</option>
+                </select>
+                <label for="EventType">Event Type</label>
+
+                <input type="number" [(ngModel)]="editEventHrs" id="EventHrs" value={{editEventHrs}} name="EventHrs">
+                <label for="EventHrs">Event Hours</label>
+
+                <input type="number" [(ngModel)]="editEventMins" value={{editEventMins}} name="EventMins" id="EventMins">
+                <label for="EventMins">Event Minutes</label>
+
+            </form>
+            <div class="popupBtns">
+                <button class="cnfmBtn" (click)="editEventConfirmation()">Finish</button>
+            </div>
+        </div>
+
+
+
+
+        <div id="content">
+
+
+            <div id="popUpForEventDeletion" *ngIf="showPopup">
+                <h4>Delete {{deleteEventName}}?</h4>
+                <p>Users will be unable to schedule further meetings with deleted event types. Meetings previously
+                    scheduled will not be affected.</p>
+                <div id="popupBtns">
+                    <button id="cancelBtn" (click)="deleteEventCacelation()">Cancel</button>
+                    <button id="cnfmDelBtn" (click)="deleteEventConfirmation()">Yes</button>
+                </div>
+            </div>
+
+            <div id="PopUpForEentAssignmentConfirmation" *ngIf="showPopUpForEentAssignmentConfirmation">
+                <div id="textDiv">
+                    <p>Are you sure you want to assign {{nameOfEventToBeAssigned}} to {{assignEventToUserName}} ?</p>
+                    <ng-icon (click)="closePopUpForEventAssignmentConfirmation()" name="radixCross2"></ng-icon>
+                </div>
+
+                <div id="buttonsDiv">
+                    <button (click)="assignEvent()">Yes</button>
+                    <button (click)="closePopUpForEventAssignmentConfirmation()">Cancel</button>
+                </div>
+            </div>
+
+            <div id="popUpForEventAssignment" *ngIf="showpopUpForEventAssignment">
+                <ng-container *ngIf="usersWOloggedInUser.length">
+                    <div class="heading">
+                        <h4>Assign {{nameOfEventToBeAssigned}} To</h4>
+                        <ng-icon (click)="AssignEventCacelation()" name="radixCross2"></ng-icon>
+                    </div>
+                    <table>
+                        <tbody>
+                            <tr *ngFor="let user of usersWOloggedInUser; let i = index">
+                                <td class="name" *ngIf="user._id != selectedUserId">{{user.name}}</td>
+                                <td *ngIf="user._id != selectedUserId"><button
+                                        (click)="AssignEventToUser(user._id, user.name)">Assign</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+
+
+            </div>
+
+
+
+            <table id="table" *ngIf="tableView">
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Event Type</th>
+                        <th>Event Duration</th>
+                        <th>Event Location</th>
+                        <th>Event Meetings</th>
+                        <th>Assign Event</th>
+                        <th>Edit Event</th>
+                        <th>Delete Event</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    <ng-container *ngIf="eventsArrayOfSelectedUser.length">
+                        <tr *ngFor="let event of eventsArrayOfSelectedUser; let i = index">
+                            <td class="name">{{event.evName}}</td>
+                            <td class="type">{{event.evType}}</td>
+                            <td class="duration">
+                                <span *ngIf="event.evDuration.hrs != 0">{{event.evDuration.hrs}} hrs</span>
+                                <span *ngIf="event.evDuration.minutes != 0">{{event.evDuration.minutes}} mins</span>
+                            </td>
+                            <td class="location">{{event.evLocation}}</td>
+                            <td class="meetings"><button
+                                    (click)="showMeetings(event._id, event.evName)">Meetings</button></td>
+                            <td class="assign"><button (click)="popUpForEventAssignment(event._id, event.evName)">Assign
+                                    To</button></td>
+                            <td><button
+                                    (click)="editEvent(event._id, event.evName, event.evType, event.evDuration.hrs, event.evDuration.minutes, event.evLocation)"><ng-icon
+                                        name="tablerEdit"></ng-icon></button></td>
+                            <td><button (click)="deleteEventPopup(event._id, event.evName)"><ng-icon
+                                        name="remixDeleteBin6Line"></ng-icon></button></td>
+
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+</body> -->

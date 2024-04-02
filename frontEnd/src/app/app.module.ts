@@ -25,13 +25,15 @@ import { HomePageComponent } from './home-page/home-page.component';
 
 import { NgIconsModule } from '@ng-icons/core';
 import { heroUsers, heroVideoCamera, heroGlobeAsiaAustralia } from '@ng-icons/heroicons/outline';
-import {ionSettingsOutline, ionCopyOutline, ionSearchOutline} from '@ng-icons/ionicons'
+import {ionSettingsOutline, ionCopyOutline, ionSearchOutline, ionLogInOutline} from '@ng-icons/ionicons'
 import {bootstrapStars, bootstrapCaretDownFill, bootstrapChevronDown, bootstrapCCircleFill, bootstrapPlusCircleFill, bootstrapClock, bootstrapQuestionCircle, bootstrapArrowLeft} from '@ng-icons/bootstrap-icons'
-import {remixUserAddLine, remixCalendar2Line, remixStackshareLine, remixArrowRightSLine} from '@ng-icons/remixicon'
+import {remixUserAddLine, remixCalendar2Line, remixStackshareLine, remixArrowRightSLine, remixDeleteBin6Line} from '@ng-icons/remixicon'
 import {typAttachmentOutline, typTick} from '@ng-icons/typicons'
 import {circumRoute} from '@ng-icons/circum-icons'
 import {octApps, octLocation} from '@ng-icons/octicons'
 import {iconoirCrown} from '@ng-icons/iconoir';
+import {tablerEdit} from '@ng-icons/tabler-icons'
+import {radixCross2} from '@ng-icons/radix-icons'
 
 import { NewEventTypeComponent } from './new-event-type/new-event-type.component';
 import { CreateNewEventTypeComponent } from './create-new-event-type/create-new-event-type.component';
@@ -43,6 +45,21 @@ import { ListAllEventTypesComponent } from './list-all-event-types/list-all-even
 import { ScheduledEventsComponent } from './scheduled-events/scheduled-events.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgxSearchFilterModule } from 'ngx-search-filter';
+import { NavbarComponent } from './navbar/navbar.component';
+import { HoriNavComponent } from './hori-nav/hori-nav.component';
+import { EditEventComponent } from './edit-event/edit-event.component';
+import { AdminNavBarComponent } from './admin-nav-bar/admin-nav-bar.component';
+import { NewUserAdditionAdminComponent } from './new-user-addition-admin/new-user-addition-admin.component';
+import { EntireUserAdminComponent } from './entire-user-admin/entire-user-admin.component';
+// import { MeetingsAdminComponent } from './meetings-admin/meetings-admin.component';
+import { CalendarEventsAdminComponent } from './calendar-events-admin/calendar-events-admin.component';
+import { HorizontalNavAdminComponent } from './horizontal-nav-admin/horizontal-nav-admin.component';
+import { UserAvailabilityAdminComponent } from './user-availability-admin/user-availability-admin.component';
+import { HoriNavMeetingsAdminComponent } from './hori-nav-meetings-admin/hori-nav-meetings-admin.component';
+import { MeetingsTableAdminComponent } from './meetings-table-admin/meetings-table-admin.component';
+import { MeetingsCalendarAdminComponent } from './meetings-calendar-admin/meetings-calendar-admin.component';
+import { MakeMeetingAdminComponent } from './make-meeting-admin/make-meeting-admin.component';
+import { EditMeetComponent } from './edit-meet/edit-meet.component';
 
 // import { NavbarComponent } from './navbar/navbar.component';
 // import { ScheduleMeetComponent } from './schedule-meet/schedule-meet.component';
@@ -67,6 +84,21 @@ import { NgxSearchFilterModule } from 'ngx-search-filter';
     MakeMeetingComponent,
     ListAllEventTypesComponent,
     ScheduledEventsComponent,
+    NavbarComponent,
+    HoriNavComponent,
+    EditEventComponent,
+    AdminNavBarComponent,
+    NewUserAdditionAdminComponent,
+    EntireUserAdminComponent,
+    // MeetingsAdminComponent,
+    CalendarEventsAdminComponent,
+    HorizontalNavAdminComponent,
+    UserAvailabilityAdminComponent,
+    HoriNavMeetingsAdminComponent,
+    MeetingsTableAdminComponent,
+    MeetingsCalendarAdminComponent,
+    MakeMeetingAdminComponent,
+    EditMeetComponent,
     // NavbarComponent,
     // ScheduleMeetComponent
     // CalendarComponentComponent
@@ -87,7 +119,8 @@ import { NgxSearchFilterModule } from 'ngx-search-filter';
     AccordionModule.forRoot(),
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
        bootstrapCCircleFill, bootstrapPlusCircleFill, typAttachmentOutline, remixCalendar2Line, remixStackshareLine, circumRoute , bootstrapClock, octApps, iconoirCrown,
-       bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick}),
+       bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick, tablerEdit, remixDeleteBin6Line, radixCross2,
+       ionLogInOutline}),
   ],
   providers: [
     DayService, WeekService, MonthAgendaService, WorkWeekService, MonthService,DatePipe,

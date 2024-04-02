@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { APIService } from '../api.service';
-import { Calendar, CalendarOptions, EventContentArg } from '@fullcalendar/core';
+import { Calendar, CalendarOptions, EventContentArg, formatDate } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -9,7 +9,8 @@ import listPlugin from '@fullcalendar/list'
 import multimonthPlugin from '@fullcalendar/multimonth'
 
 
-import { DatePipe } from '@angular/common';
+
+import { DatePipe} from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // "@fullcalendar/list": "^6.1.11",
@@ -91,7 +92,11 @@ export class ScheduledEventsComponent implements OnInit {
 
 
   calendarOptionsMonth: CalendarOptions = {
+    // timeZone: 'UTC',
     initialView: 'dayGridMonth', 
+    // aspectRatio : 0.2,
+    // expandRows : true,
+    
     // initialView : 'timeline', 
     // initialView: 'timeGrid',  
     // plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, multimonthPlugin],
@@ -348,6 +353,7 @@ export class ScheduledEventsComponent implements OnInit {
       console.log('Meetings in ts :', Meetings);
       this.formattedMeetingsHide = Meetings;
       this.Events = Meetings;
+
       console.log("Events ", this.Events);
     });
 
@@ -380,21 +386,104 @@ export class ScheduledEventsComponent implements OnInit {
       this.calendarOptionsMonth = {
         initialView: 'dayGridMonth',
         events: this.Events, //commented so that events are not shown on calendar
-        // dateClick: this.onDateClick.bind(this),
+        dateClick: this.onDateClick.bind(this),
+        // events: [
+        //   {
+        //     start: '2024-03-03T11:00:00',
+        //     end: '2024-03-03T11:30:00',
+        //     // start: '2024-03-03 10:00:00',
+        //     // end: '2024-03-03 10:30:00',
+        //     evName :"Trial",
+        //     // display: 'background',
+        //     // color : 'black',
+        //     backgroundColor : 'red',
+
+        //   },
+        //   {
+        //     start: '2024-03-03T10:00:00',
+        //     end: '2024-03-03T10:30:00',
+        //     // start: '2024-03-03',
+        //     // end: '2024-03-03',
+        //     evName :"Trial2",
+        //     // display: 'background',
+        //     // color : 'black',
+        //     backgroundColor : 'green',
+
+        //   },
+        // {
+        //   groupId: 'testGroupId',
+        //   start: '2024-03-04T16:00:00',
+        //   end: '2024-03-04T16:30:00',
+        //   evName :"Trial",
+        //   // display: 'background',
+
+        //   // display: 'inverse-background',
+        //   // color : 'black'
+        //   backgroundColor : 'blue',
+
+        // }
+        // ],
+        // contentHeight : 'auto',
+        // slotDuration : '00:10:10',
+        // snapDuration : '00:10:10',
+
+
+        // eventMouseEnter: function(mouseEnterInfo){
+        //   console.log("mouseEnterInfo ", mouseEnterInfo);
+          
+        // },
+        
+        dayMaxEvents : 100,
+        eventOrder : 'start',
+        displayEventTime : false, //hides time
+        eventDisplay : 'block', // shows strip
         dayCellContent: this.theDayCellContent.bind(this),
         eventClick: this.onEventClick.bind(this)
+        // eventDisplay : 'auto', // shows dots
+
+        
+
+        
+        // dayMaxEventRows : true,
+        
+        // eventDisplay : 'list-item',
+        // eventBackgroundColor : 'red',
+
+        
+
       }
       this.calendarOptionsWeek = {
         initialView: 'timeGridWeek',
         events: this.Events, //commented so that events are not shown on calendar
+        
+        
+        // events: [
+        //   {
+        //     start: '2024-03-04T10:00:00',
+        //     end: '2024-03-04T10:30:00',
+        //     evName :"Trial",
+        //     display: 'background',
+        //     color : 'black',
+        //     backgroundColor: 'red'
+        //   },
+        // {
+        //   groupId: 'testGroupId',
+        //   start: '2024-03-04T16:00:00',
+        //   end: '2024-03-04T16:30:00',
+        //   evName :"Trial",
+        //   display: 'background',
+        //   color : 'black'
+        // }
+        // ],
         dateClick: this.onDateClick.bind(this),
+
         dayCellContent: this.theDayCellContent.bind(this),
         eventClick: this.onEventClick.bind(this),
 
       }
       this.calendarOptionsDay = {
         initialView: 'timeGrid',
-        events: this.Events, //commented so that events are not shown on calendar
+        events: this.Events, 
         // dateClick: this.onDateClick.bind(this),
         dayCellContent: this.theDayCellContent.bind(this),
         eventClick: this.onEventClick.bind(this)
@@ -417,6 +506,8 @@ export class ScheduledEventsComponent implements OnInit {
         return { html: '<div style="color: grey">' + date + '</div>' };
       }
     }
+    
+    
     return { html: '<div>' + date + '</div>' };
   }
   // ----------theDayCellContent ends------------

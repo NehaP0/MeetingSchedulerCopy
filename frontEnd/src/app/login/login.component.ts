@@ -45,18 +45,23 @@ export class LoginComponent implements OnInit{
 
         console.log("token ",token.token);
         localStorage.setItem("token", token.token)
-        localStorage.setItem("isAuth", "true")
+        // localStorage.setItem("isAuth", "true")
         
-        alert(response['message'])
+        // alert(response['message'])
         userForm.resetForm()       
 
+        if(response['message'] == "Login Successful."){
+
+          this.router.navigate(['/home'])  
+        }
         
-        this.router.navigate(['/home'])  
+        // setTimeout(()=>{
+        // }, 1000)
         console.log("After login ", this.userLoggedIn);         
       },
       (error)=>{
         alert('Invalid Credentials')
-        localStorage.setItem("isAuth", "false")
+        // localStorage.setItem("isAuth", "false")
 
         console.log(error);        
       })

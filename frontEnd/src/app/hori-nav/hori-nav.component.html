@@ -1,0 +1,8 @@
+<div id="parentOfHori">
+    <div id="horiNav">
+        <!-- <p id="lookAround"><ng-icon name="bootstrapStars"></ng-icon>Take a look around</p>
+        <button id="inviteUser"><ng-icon name="remixUserAddLine"></ng-icon><p>Invite User</p></button> -->
+        <button id="firstCharBtn" (click)="logoutCalled()"><p class="firstChar"> {{firstChar}} </p><ng-icon id="downArrow" name="bootstrapCaretDownFill"></ng-icon></button>
+        <button [hidden]="logOutValue==false" id="logOutButton" (click)="logOut()">Logout</button>
+    </div>
+</div>

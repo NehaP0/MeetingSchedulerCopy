@@ -85,11 +85,41 @@ settingsCalled(id){
 }
 
 editEvent(id: string){
-  this.showSetting = false
+  window.open('editEvent',"_self")
+  
+  for(let i=0; i<this.eventsArrayOfLoggedInUser.length; i++){
+    // event._id
+    if(this.eventsArrayOfLoggedInUser[i]._id == id){
+      console.log("event ", this.eventsArrayOfLoggedInUser[i]);
+//       evDuration
+// : 
+// {hrs: 0, minutes: 30}
+// evLocation
+// : 
+// "zoom"
+// evName
+// : 
+// "30 Minute Meeting"
+// evType
+// : 
+// "One-on-One"
+
+      localStorage.setItem("evType", this.eventsArrayOfLoggedInUser[i].evType)
+      localStorage.setItem("eventName", this.eventsArrayOfLoggedInUser[i].evName)
+      localStorage.setItem("evDurMins", this.eventsArrayOfLoggedInUser[i].evDuration.minutes)
+      localStorage.setItem("evDurHrs", this.eventsArrayOfLoggedInUser[i].evDuration.hrs)
+      localStorage.setItem("eventLocation", this.eventsArrayOfLoggedInUser[i].evLocation)
+      localStorage.setItem("evName", this.eventsArrayOfLoggedInUser[i].evName)
+      localStorage.setItem("evId", id)
+
+    }
+  }
 
 }
 
 deleteEventPopup(id, evName){
+  console.log(id, evName);
+  
   this.showSetting = false
   this.showPopup = true
   // this.deleteEventConfirmation(id)

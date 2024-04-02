@@ -3,7 +3,7 @@
     height: 100vh;
     padding: 10px;
     background-color: #dddddd;
-
+    margin-left: 60px;
 }
 /* #events{
     border: 1px solid rgb(179, 179, 179);
@@ -77,12 +77,10 @@ td{
     margin-left: 35%;
     padding: 30px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-#meetDetails{
-
     font-size: 15px;
 }
+
+
 .title{
     font-weight: 500;
 }
@@ -120,7 +118,6 @@ td{
 }
 /* -------MontCalendar starts------------- */
 #monthCalendar{
-    /* width: 22%; */
     height: 300px;
     margin-right: 10px;
 }
@@ -133,60 +130,63 @@ td{
     padding: 0px;
     border: none;
     font-size: 10px;
-    /* font-weight: 1px; */
 }
-::ng-deep #monthCalendar a.fc-daygrid-more-link{
-    /* 3788d8 */
-    color: #3788d8 ;
+::ng-deep #monthCalendar .fc-h-event .fc-event-title-container{
+    height: 3px;
+}
+/* ::ng-deep #monthCalendar a.fc-daygrid-more-link{
+    color: #88b6e4 ;
     font-weight: bold;
     font-size: 10px;
     margin-top: 0px;
     padding: 0px;
-    /* display: none; */
-}
-::ng-deep #monthCalendar a .fc-daygrid-event-dot{
-    color: green !important;
-}
+} */
 ::ng-deep #monthCalendar a.fc-daygrid-day-number{
     font-weight:300;
-    font-size: 14px;
-    /* color: green; */
-    /* border: 1px solid black; */
-    
+    font-size: 14px;  
 }
 ::ng-deep #monthCalendar .fc-scroller{
-    /* border: 1px solid red; */
 }
 ::ng-deep #monthCalendar .fc-scroller.fc-scroller-liquid-absolute{
     overflow-y: hidden !important;
-        /* border: 1px solid rgb(240, 243, 245) ; */
-        /* border: 1px solid red; */
-        /* border: none !important; */
-
 }
 
 
-
-::ng-deep #monthCalendar .fc .fc-daygrid-day-number{
-    /* border: 1px solid red !important; */
+::ng-deep #monthCalendar .fc-daygrid-day-top{
+    position: relative;
+    z-index: 10; /* initially date is infront */
 }
-/* ::ng-deep #monthCalendar .fc-scroller-harness .fc-scroller{
-    border: 1px solid white ; 
-} */
-
-/* ::ng-deep #monthCalendar .fc-daygrid-day-frame{
-    border: 1px solid red;
-} */
-
-/* ::ng-deep #monthCalendar .fc-scrollgrid-sync-inner{
-    border: 1px solid white;
-} */
-
-::ng-deep #monthCalendar .fc-day{
-    /* border: 1px solid #dddddd; */
+::ng-deep #monthCalendar .fc-daygrid-day-top:hover{
+    /* border: 1px solid red; */
+    position: relative;
+    z-index: -10; /* when user hovers on date, it goes behind */
+}
+::ng-deep #monthCalendar .fc-daygrid-day-events{
+    position: relative;
+    /* z-index: -1; */
+    width: 100%;
+    margin-top: -30px;
+    height: 100%;
+    border-radius: 0px;
+}
+::ng-deep #monthCalendar .fc-daygrid-day-events:hover{
+    /* border: 1px solid black !important; */
+    cursor: pointer;
+}  
+::ng-deep #monthCalendar .fc-daygrid-event-harness{
+        /* background-color: pink; */
+}
+::ng-deep #monthCalendar .fc-event-title-container{
+    background-color: #a7c4e0;
+    /* border: 1px solid pink; */
 }
 
-/* <td aria-labelledby="fc-dom-8" role="gridcell" data-date="2024-01-31" class="fc-day fc-day-wed fc-day-past fc-day-other fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="January 31, 2024" id="fc-dom-8" class="fc-daygrid-day-number"><div>31</div></a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td> */
+/* ::ng-deep #weekCalendar .fc-event-title-container{
+    background-color: pink;
+} */
+
+
+
 
 /* -------MontCalendar ends--------- */
 /* -------weekCalendar starts-------- */
@@ -204,6 +204,12 @@ td{
     /* margin-right: 100px; */
     
 }
+
+/* ::ng-deep #weekCalendar .fc-event-title-container{
+    background-color: pink;
+} */
+
+
 ::ng-deep #weekCalendar .fc-header-toolbar{
     padding: 5px 15px 0px 15px;
     /* border: 1px solid red; */

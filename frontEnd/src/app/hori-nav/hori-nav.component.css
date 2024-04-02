@@ -1,0 +1,88 @@
+#logOut{
+    width: 60px;
+}
+.firstChar{
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    background-color: #cccccc;
+}
+.firstChar>p{
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0px;
+    /* margin: auto; */
+}
+button{
+    /* display: flex; */
+    border-radius: 50px;
+    border: 1px solid #0069FF;
+    /* margin: auto; */
+    padding: 0px 10px ;
+}
+
+
+#parentOfHori{
+    display: flex;
+    justify-content:flex-end;
+    font-size: 14px;
+    padding-top: 20px;
+    padding-right: 20px;
+    /* margin-top: 20px; */
+    /* margin-bottom: 30px; */
+    /* font-weight: bold; */
+}
+#horiNav{
+    /* display:flex; */
+    /* width: 28%; */
+    /* border: 1px solid red; */
+    /* justify-content: space-between; */
+    font-size: 12px;
+}
+#firstCharBtn{
+    border: none;
+    background-color: white;
+    display: flex;
+    /* padding: 0px; */
+    /* border: 1px solid red; */
+}
+
+#logOutButton{
+    margin-top: 10px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+}
+
+#firstCharBtn>ng-icon{
+    /* display: flex; */
+    margin-top: 15px;
+}
+#firstCharBtn>.firstChar, #firstCharDiv>.firstChar{
+    padding-top: 10px;
+}
+#firstCharDiv>.firstChar{
+    text-align: center;
+}
+#horiNav > #lookAround, #horiNav > #inviteUser{
+    color: #0069FF;
+}
+/* #lookAround, #inviteUser{
+    font-weight: bold;
+}
+#inviteUser, #newEventType{
+    margin: auto;
+    padding: 5px;
+}
+#lookAround{
+    margin-top: 10px;
+} */
+
+
+#divForuserNameLinkAndButton{
+    /* border: 2px solid brown; */
+    display: flex;
+    justify-content: space-between;
+}

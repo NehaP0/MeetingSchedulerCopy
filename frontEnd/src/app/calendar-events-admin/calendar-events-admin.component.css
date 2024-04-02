@@ -1,0 +1,414 @@
+*{
+    /* background-color: black; */
+    padding: 0px;
+    margin: 0px;  
+  }
+  body {
+    background-color: #f2f8ff ;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* color: #1271fb; */
+    height: 100vh;
+    border: 1px solid #f2f8ff;
+  }
+  #mainDiv{
+    margin: auto;
+    width: 85%;
+    /* margin: 150px; */
+    /* margin-top: 65px; */
+    /* margin-top: 50px; */
+    /* margin: 150px; */
+    /* align-items: center; */
+    background-color: white;
+    /* border: 1px solid black; */
+    padding: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 5px;
+}
+#horiNav{
+    /* background-color: #f2f8ff ; */
+    padding: 10px 5px 10px 5px;
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+}
+#horiNav>div{
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+}
+#horiNav .viewBtn{
+    width: 130px;
+    background-color: white;
+    padding-top: 0px;
+    margin: 0px;
+    font-size: 13px;
+    /* border: 1px solid red; */
+    height: 18px;
+}
+#horiNav .viewBtn{
+    color: black;
+}
+/* hr{
+    opacity: 0.10;
+} */
+a:hover{
+    cursor: pointer;
+}
+a{
+    /* color: #0069FF; */
+    color: black;
+    text-decoration: none;
+}
+
+
+
+ng-icon{
+    display: flex;
+}
+
+#table {
+    /* border-collapse: collapse; */
+    width: 100%;   
+    font-size: 15px;
+    margin-top: 20px;
+  }
+  .buttonCol{
+  /* text-align: center; */
+
+}
+
+h4{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+  
+  
+#table th, #table td {
+    /* border: 1px solid lightgreen; */
+    padding: 10px;
+  }
+tr{
+  border: 1px solid rgb(212, 212, 212);
+}
+button{
+    /* background-color: #1271fb; */
+    /* color: white;  */
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* text-align: center; */
+ }
+ button:hover{
+    background-color: #1271fb;
+    color : white;
+}
+
+#content{
+    display: flex;
+}
+#divForCalendar{
+    width: 100%;
+    /* border: 1px solid red; */
+}
+#divforColors{
+    /* border: 1px solid green; */
+    width: 20%;
+    padding-top: 45px;
+    padding-left: 10px;
+    /* display: block; */
+}
+#divforColors #eventNameHeading{
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 15px;
+}
+#divforColors p {
+    font-size: 14px;
+}
+.eventColorDiv{
+    /* border: 1px solid black; */
+    width: 15px;
+    height: 15px
+}
+
+#popUpForEventDeletion, #popUpForEventEdit, #popUpForNewEvent, #popUpForEventAssignment, #PopUpForEentAssignmentConfirmation{
+    position: absolute;
+    z-index: 10;
+    width:35%;
+    margin-left: 25%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 10px;
+}
+
+#popupBtns{
+    display: flex;
+    justify-content: space-between;
+}
+#popUpForEventDeletion h3, #popUpForEventDeletion p{
+    margin-bottom: 20px;
+}
+#popUpForEventDeletion button, #popUpForEventEdit button, #popUpForNewEvent button{
+    /* padding: 5px 10px 5px 10px; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 45%;
+    border: 1px solid grey;
+    color: rgb(22, 21, 21)
+}
+#popUpForEventDeletion #cnfmDelBtn{
+    background-color: #c84545;
+    font-weight: bold;
+    color: white;
+    border: 1px solid  #c84545;
+}
+#popUpForEventDeletion #cnfmDelBtn:hover{
+    background-color: #9e3232;
+    border: 1px solid  #9e3232;
+}
+#popUpForEventDeletion #cancelBtn:hover{
+    background-color: rgb(233, 236, 238);
+    border: 1px solid  rgb(233, 236, 238);   
+}
+
+#popUpForEventDeletion h4{
+    margin-bottom: 20px;
+}
+#popUpForEventDeletion p{
+    margin-bottom: 30px;
+    font-size: 15px;
+}
+
+#popUpForEventEdit  .cancelBtn:hover, #popUpForEventEdit  .cnfmBtn:hover, #popUpForNewEvent  .cancelBtn:hover, #popUpForNewEvent .cnfmBtn:hover{
+    color: white;
+}
+
+#popUpForEventEdit button, #popUpForNewEvent button{
+    /* padding: 5px 10px 5px 10px; */
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 20%;
+    border: 1px solid grey;
+    color: rgb(22, 21, 21)
+}
+
+form input, form select{
+    margin-top: 10px;
+    padding: 8px;
+    display: block;
+    width: 100%;
+}
+
+form label{
+    margin-bottom: 20px;
+    display: block;
+}
+
+.heading{
+    display: flex;
+    justify-content: space-between;
+}
+
+#popUpForEventAssignment table{
+    width : 100%
+}
+#popUpForEventAssignment tr{
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 2px 0px 2px;
+}
+#PopUpForEentAssignmentConfirmation #textDiv{
+    display: flex;
+    justify-content: space-between;
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+#PopUpForEentAssignmentConfirmation button{
+    width: 100px;
+    color: white;
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(1){
+    background-color: rgb(1, 75, 1);
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(1):hover{
+    background-color: rgb(0, 51, 0);
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(2){
+    background-color: #c84545;
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(2):hover{
+    background-color: #a52e2e;
+}
+
+
+
+/* -------MontCalendar starts------------- */
+
+#monthCalendar{
+    /* height: 300px; */
+    margin-right: 10px;
+    height: 80vh;
+    width: 100%;
+
+}
+::ng-deep #monthCalendar .fc-toolbar-title{
+    font-size: 15px;
+}
+::ng-deep #monthCalendar .fc-button{
+    background-color: #dddddd;
+    color: black;
+    padding: 0px;
+    border: none;
+    font-size: 10px;
+}
+::ng-deep #monthCalendar .fc-h-event .fc-event-title-container{
+    height: 10px;
+}
+/* ::ng-deep #monthCalendar a.fc-daygrid-more-link{
+    color: #88b6e4 ;
+    font-weight: bold;
+    font-size: 10px;
+    margin-top: 0px;
+    padding: 0px;
+} */
+::ng-deep #monthCalendar a.fc-daygrid-day-number{
+    font-weight:300;
+    font-size: 14px;  
+}
+::ng-deep #monthCalendar .fc-scroller{
+}
+::ng-deep #monthCalendar .fc-scroller.fc-scroller-liquid-absolute{
+    overflow-y: hidden !important;
+}
+
+
+::ng-deep #monthCalendar .fc-daygrid-day-top{
+    position: relative;
+    z-index: 10; /* initially date is infront */
+}
+::ng-deep #monthCalendar .fc-daygrid-day-top:hover{
+    /* border: 1px solid red; */
+    position: relative;
+    z-index: -10; /* when user hovers on date, it goes behind */
+}
+::ng-deep #monthCalendar .fc-daygrid-day-events{
+    position: relative;
+    width: 100%;
+    margin-top: -10px;
+    height: 100%;
+    border-radius: 0px;
+}
+::ng-deep #monthCalendar .fc-daygrid-day-events:hover{
+    /* border: 1px solid black !important; */
+    cursor: pointer;
+}  
+::ng-deep #monthCalendar .fc-daygrid-event-harness{
+        /* background-color: pink; */
+}
+/* ::ng-deep #monthCalendar .fc-event-title-container{
+    background-color: #a7c4e0;
+    border: 1px solid pink;
+} */
+::ng-deep #monthCalendar .fc-daygrid-day-frame{
+    /* background-color: red; */
+    /* height: 50px; */
+}
+::ng-deep a{
+    color: rgb(12, 12, 12);
+    text-decoration: none;
+    /* font-weight:300;
+    font-size: 14px; */
+    font-size: 13px;
+    font-weight: 400;
+}
+/* ::ng-deep #monthCalendar .fc-event-title-container{
+    display: none;
+}
+::ng-deep #monthCalendar .fc-event-time{
+    font-size: 1px;
+    font-weight: normal;
+} */
+
+/* -------MontCalendar ends--------- */
+
+
+#eventDeets {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    border-radius: 5px;
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
+
+    overflow: hidden;
+}
+#belowGreyStrip {
+    text-align: center;
+    /* padding-top: 30px; */
+}
+
+#belowGreyStrip>:nth-child(1) {
+    color: grey;
+    font-weight: bold;
+}
+
+#belowGreyStrip>:nth-child(2) {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 26px;
+}
+#timeAndLocation {
+    display: flex;
+    justify-content: space-around;
+    color: #1A1A1A9C;
+    font-weight: bold;
+}
+#timeAndLocation div {
+    display: flex;
+}
+ng-icon {
+    display: flex;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+#locationP {
+    font-style: italic;
+}
+
+#eventDeets p{
+    font-size: 20px;
+    margin: 10px 0px 10px 0px;
+}
+#eventDeets ng-icon{
+    margin: 15px 0px 10px 0px;
+}
+
+#meetDetails{    
+    position: absolute;
+    /* position: fixed; */
+    z-index: 10;
+    background-color: white;
+    margin-top: 10%;
+    margin-left: 35%;
+    padding: 30px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    font-size: 15px;
+}
+
+
+.title{
+    font-weight: 500;
+}
+
+#closeBtn{
+    border: none;
+}

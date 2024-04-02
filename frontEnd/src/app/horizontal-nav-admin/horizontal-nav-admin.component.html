@@ -1,0 +1,52 @@
+<body>
+    <div id="mainDiv">
+
+
+        <div id="popUpForNewEvent" *ngIf="popUpForNewEvent">
+            <div class="heading">
+                <h4>Create New Event</h4>
+                <ng-icon (click)="newEventCacelation()" name="radixCross2"></ng-icon>
+            </div>
+            <form>
+                <!-- eventName:string,hrs:string,min:string, location:string, evType, userId, evDuration -->
+                <input type="text" [(ngModel)]="newEventName" value={{newEventName}} name="EventName" id="newEventName">
+                <label for="newEventName">Event Name</label>
+
+                <select name="EventType" id="newEventType" [(ngModel)]="newEventType" value="newEventType">
+                    <option value="" disabled>Event Type</option>
+                    <option value="One-on-One">One-on-One</option>
+                    <option value="Group">Group</option>
+                    <option value="Collective">Collective</option>
+                </select>
+                <label for="newEventType">Event Type</label>
+
+                <input type="number" [(ngModel)]="newEventHrs" id="newEventHrs" value={{newEventHrs}} name="EventHrs">
+                <label for="newEventHrs">Event Hours</label>
+
+                <input type="number" [(ngModel)]="newEventMins" id="newEventMins" value={{newEventMins}} name="EventMins">
+                <label for="newEventMins">Event Minutes</label>
+
+                <span>Event Location: </span> <span>Zoom</span>
+            </form>
+            <div class="popupBtns">
+                <!-- <button class="cancelBtn" (click)="editEventFull(editEventName, editEventType, editEventHrs, editEventMins)">Show User</button> -->
+                <button class="cnfmBtn" (click)="newEventConfirmation()">Finish</button>
+            </div>
+        </div>
+
+
+        <div id="horiNav">
+            <div>
+                <button id="newEvent" (click)="newEventPopup()"> + New Event</button>
+            </div>
+            <div>
+                <!-- <button class="viewBtn" *ngIf="tableView" (click)="makeCalendarView()">Calendar View</button>
+                <button class="viewBtn" *ngIf="calendarView" (click)="makeTableView()">Table View</button> -->
+                <a href="/entireUserAdmin">Events Table View</a>
+                <a href="/calendarEventsAdmin">Events Calendar View</a>
+                <!-- <a href="/entireUserAdmin">User Events</a> -->
+                <a href="/userAvailabilityAdmin">User Availibility</a>
+            </div>
+        </div>
+    </div>
+</body>

@@ -16,15 +16,25 @@ import { CreateMeetingComponent } from './create-meeting/create-meeting.componen
 import { MakeMeetingComponent } from './make-meeting/make-meeting.component';
 import { ListAllEventTypesComponent } from './list-all-event-types/list-all-event-types.component';
 import { ScheduledEventsComponent } from './scheduled-events/scheduled-events.component';
+import { EditEventComponent } from './edit-event/edit-event.component';
+import { NewUserAdditionAdminComponent } from './new-user-addition-admin/new-user-addition-admin.component';
+import { EntireUserAdminComponent } from './entire-user-admin/entire-user-admin.component';
+// import { MeetingsAdminComponent } from './meetings-admin/meetings-admin.component';
+import { CalendarEventsAdminComponent } from './calendar-events-admin/calendar-events-admin.component';
+import { UserAvailabilityAdminComponent } from './user-availability-admin/user-availability-admin.component';
+import { MeetingsTableAdminComponent } from './meetings-table-admin/meetings-table-admin.component';
+import { MeetingsCalendarAdminComponent } from './meetings-calendar-admin/meetings-calendar-admin.component';
+import { MakeMeetingAdminComponent } from './make-meeting-admin/make-meeting-admin.component';
+
 // import { ScheduleMeetComponent } from './schedule-meet/schedule-meet.component';
 // import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
 // ?name={{user.name}}&id={{user.emailID}}
+
 
 const routes: Routes = [
   { path:  '', redirectTo:  'registeration', pathMatch:  'full' },
   {path : 'registeration', component: RegisterationComponent},
   {path : 'login', component: LoginComponent},
-  {path : 'users', component: AllusersComponent},
   // {path : 'schedulemeet', component: ScheduleMeetingComponent},
   {path : 'calendarByLink', component: CalendarByLinkComponent},
   // {path : 'calendar', component: CalendarComponentComponent},
@@ -38,9 +48,19 @@ const routes: Routes = [
   // {path: 'scheduleMeet', component: ScheduleMeetComponent}
   // MakeMeetingComponent
   {path: 'listAllEventTypesComponent', component: ListAllEventTypesComponent},
-  {path: 'scheduledEvents', component: ScheduledEventsComponent}
+  {path: 'scheduledEvents', component: ScheduledEventsComponent},
+  {path: 'editEvent', component : EditEventComponent}  ,
 
-  
+  {path : 'users', component: AllusersComponent},
+  {path: 'newUserAdditionAdmin',component : NewUserAdditionAdminComponent},
+  {path: 'entireUserAdmin', component : EntireUserAdminComponent},
+  // {path: 'meetingsAdmin', component: MeetingsAdminComponent},
+  {path : 'calendarEventsAdmin',component: CalendarEventsAdminComponent},
+  {path : 'userAvailabilityAdmin', component: UserAvailabilityAdminComponent},
+  {path: 'meetingsTableAdmin', component: MeetingsTableAdminComponent},
+  {path : 'meetingsCalendarAdmin', component: MeetingsCalendarAdminComponent},
+  {path : 'makeMeetingAdminComponent', component: MakeMeetingAdminComponent}
+
 ];
 
 

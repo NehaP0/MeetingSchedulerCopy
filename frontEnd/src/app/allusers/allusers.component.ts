@@ -19,6 +19,13 @@ export class AllusersComponent implements OnInit{
   // loggedInEmailId: string = '';
   // loggedInName: string = '';
   loggedInName = localStorage.getItem("userLoggedInName" || "")
+  showPopup = false
+  deleteUserName = ""
+  deleteUserId = ""
+  popUpForUserEdit = false
+  editUserId = ""
+  editUserName = ""
+  editUserEmail = ""
 
   showLink : boolean = false;
   link : string = ''
@@ -54,17 +61,17 @@ export class AllusersComponent implements OnInit{
   private subscription: Subscription;
 
   ngOnInit(){
-    this.getMeetingsOfLoggedInUser()
+    // this.getMeetingsOfLoggedInUser()
     this.getallusersExceptLoogedIn()  
     
     
-setTimeout(() => {
-  this.calendarOptions = {
-    initialView: 'dayGridMonth',
-    events: this.Events,
-  };
-}, 2500);
-}
+    setTimeout(() => {
+      this.calendarOptions = {
+        initialView: 'dayGridMonth',
+        events: this.Events,
+      };
+    }, 2500);
+    }
 
 
 
@@ -80,30 +87,30 @@ setTimeout(() => {
 
       let usersWOloggedInUserArray = []
       for(let i=0; i<this.users.length; i++){
-        if(this.users[i].emailID !== this.loggedInEmailId){
+        // if(this.users[i].emailID !== this.loggedInEmailId){
           usersWOloggedInUserArray.push(this.users[i])
-        }
+        // }
       }
       this.usersWOloggedInUser = usersWOloggedInUserArray
     })
   }
 
-  getMeetingsOfLoggedInUser(){
-    // let getMeetings = async ()=>{
-    //   console.log("called");      
-      this.apiService.getMeetingOfLoggedInUser()
-      this.subscription = this.apiService.formattedMeetingsOfLoggedInUser$.subscribe((formattedMeetingsOfLoggedInUser) => {
-        console.log('Formatted Meetings of loggedIn:', formattedMeetingsOfLoggedInUser);
-        this.formattedMeetingsOfLoggedInUser = formattedMeetingsOfLoggedInUser;
-        this.Events = formattedMeetingsOfLoggedInUser;
-      console.log("Events ",this.Events); 
-      });
+  // getMeetingsOfLoggedInUser(){
+  //   // let getMeetings = async ()=>{
+  //   //   console.log("called");      
+  //     this.apiService.getMeetingOfLoggedInUser()
+  //     this.subscription = this.apiService.formattedMeetingsOfLoggedInUser$.subscribe((formattedMeetingsOfLoggedInUser) => {
+  //       console.log('Formatted Meetings of loggedIn:', formattedMeetingsOfLoggedInUser);
+  //       this.formattedMeetingsOfLoggedInUser = formattedMeetingsOfLoggedInUser;
+  //       this.Events = formattedMeetingsOfLoggedInUser;
+  //     console.log("Events ",this.Events); 
+  //     });
     
-    // }
-    // getMeetings()
+  //   // }
+  //   // getMeetings()
     
-    // console.log("consoling ",this.apiService.getMeetingOfLoggedInUser())
-  }
+  //   // console.log("consoling ",this.apiService.getMeetingOfLoggedInUser())
+  // }
 
   goToCalendarPage(name, emailID){
     console.log(name, emailID);  
@@ -140,4 +147,57 @@ setTimeout(() => {
   //   console.log("I am called");      
   //   this.apiService.setUserName(name);
   // }
+
+
+
+deleteUser(id, userName){
+  console.log("delete user called in ts file");
+  this.showPopup = true
+  this.deleteUserId = id
+  this.deleteUserName =  userName
+}
+
+
+deleteUserCacelation(){
+  this.showPopup = false
+}
+
+deleteUserConfirmation(){
+  this.showPopup = false
+  this.apiService.deleteUser(this.deleteUserId)
+}
+
+
+editUser(id, userName, email){
+  console.log("in edit user ", id, userName, email);
+  
+  this.popUpForUserEdit = true
+  this.editUserName = userName
+  this.editUserEmail = email
+  this.editUserId = id
+
+  // console.log(this.editUserName,this.editUserEmail,this.editUserId);
+  
+}
+editUserCacelation(){
+  this.popUpForUserEdit = false
+}
+
+editUserConfirmation(){
+  this.popUpForUserEdit = false
+  this.apiService.editUser(this.editUserId, this.editUserName, this.editUserEmail)
+}
+
+newUserBtn(){
+    this.router.navigate(['/newUserAdditionAdmin'])
+}
+
+editUserFull(editUserName, editUserEmail){
+  localStorage.setItem('selectedUserName',editUserName)
+  localStorage.setItem('selectedUserEmail',editUserEmail)
+  localStorage.setItem('selectedUserId',  this.editUserId)
+
+  this.router.navigate(['/entireUserAdmin'])
+}
+
 }

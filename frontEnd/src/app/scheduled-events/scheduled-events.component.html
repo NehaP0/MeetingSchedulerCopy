@@ -1,3 +1,6 @@
+<app-navbar></app-navbar>
+
+
 <div>
     <div id="content">
         <h1>Scheduled events</h1>
@@ -73,8 +76,11 @@
 
             <div id="calendars">
                 <div>
-                    <full-calendar id="monthCalendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
-                        [options]="calendarOptionsMonth" plugins={[dayGridPlugin]}>
+                    <!-- <full-calendar id="monthCalendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
+                        [options]="calendarOptionsMonth" plugins={[dayGridPlugin]} >
+                    </full-calendar> -->
+                    <full-calendar id="monthCalendar" defaultView="dayGridMonth" 
+                        [options]="calendarOptionsMonth" plugins={[dayGridPlugin]} >
                         <!-- <ng-template #eventContent let-arg>
                             <b>{{ arg.event.title }}</b>
                         </ng-template> -->

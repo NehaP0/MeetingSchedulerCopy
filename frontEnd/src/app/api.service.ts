@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, take, Observable } from 'rxjs';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Injectable({
@@ -21,14 +21,17 @@ export class APIService {
   private userLoggedInEmailIdSubject = new BehaviorSubject<string>('');
   private userLoggedInNameSubject = new BehaviorSubject<string>('');
   // private userAvailableOnWeekendsSubject = new BehaviorSubject<boolean>(true);
-  private userUnavailabelOnArraySubject = new BehaviorSubject<number[]>([0,6]);
-  private userAvailabelOnArraySubject = new BehaviorSubject<number[]>([1,2,3,4,5]);
-  private durationSubject = new BehaviorSubject<object>({"hrs":0, "minutes":30});
-  private workingHrsSubject = new BehaviorSubject<object>({1:{start: '09:00:00', end: '17:00:00'}, 2:{start: '09:00:00', end: '17:00:00'}, 3:{start: '09:00:00', end: '17:00:00'}, 4:{start: '09:00:00', end: '17:00:00'}, 5:{start: '09:00:00', end: '17:00:00'}});
+  private initiallyUserUnavailabelOnArraySubject = new BehaviorSubject<number[]>([]);
+  private userUnavailabelOnArraySubject = new BehaviorSubject<number[]>([0, 6]);
+  private userAvailabelOnArraySubject = new BehaviorSubject<number[]>([1, 2, 3, 4, 5]);
+  private durationSubject = new BehaviorSubject<object>({ "hrs": 0, "minutes": 30 });
+  private workingHrsSubject = new BehaviorSubject<object>({ 1: { start: '09:00:00', end: '17:00:00' }, 2: { start: '09:00:00', end: '17:00:00' }, 3: { start: '09:00:00', end: '17:00:00' }, 4: { start: '09:00:00', end: '17:00:00' }, 5: { start: '09:00:00', end: '17:00:00' } });
   private selectedUserAvailabilityObjSubject = new BehaviorSubject<object>({});
   private eventsArraySubject = new BehaviorSubject<object[]>([]);
-  private eventTypeSubject = new BehaviorSubject<string>(''); 
+  private eventTypeSubject = new BehaviorSubject<string>('');
   private getMeetingsforUserToSeeSubject = new BehaviorSubject<any[]>([]);
+  private getEventsforUserToSeeSubject = new BehaviorSubject<any[]>([]);
+  private getMeetingsOfParticularEventAdminSubject = new BehaviorSubject<any[]>([]);
 
   public userName$ = this.userNameSubject.asObservable();
   public emailId$ = this.emailIdSubject.asObservable();
@@ -44,6 +47,7 @@ export class APIService {
   public userLoggedInName$ = this.userLoggedInNameSubject.asObservable();
   // public userAvailableOnWeekends$ = this.userAvailableOnWeekendsSubject.asObservable();
   public userUnavailabelOnArray$ = this.userUnavailabelOnArraySubject.asObservable()
+  public initiallyUserUnavailabelOnArray$ = this.initiallyUserUnavailabelOnArraySubject.asObservable()
   public userAvailabelOnArray$ = this.userAvailabelOnArraySubject.asObservable()
   public duration$ = this.durationSubject.asObservable()
   public workingHrs$ = this.workingHrsSubject.asObservable()
@@ -51,28 +55,34 @@ export class APIService {
   public eventsArray$ = this.eventsArraySubject.asObservable()
   public eventType$ = this.eventTypeSubject.asObservable()
   public getMeetingsforUserToSee$ = this.getMeetingsforUserToSeeSubject.asObservable()
-  
+  public getEventsforUserToSee$ = this.getEventsforUserToSeeSubject.asObservable()
+  public getMeetingsOfParticularEventAdmin$ = this.getMeetingsOfParticularEventAdminSubject.asObservable()
 
   API_URL = 'http://localhost:3000'
-  
-  private headers : HttpHeaders = new HttpHeaders()
-  
-  constructor(private httpClient: HttpClient, private router:Router) { }
 
- 
+  private headers: HttpHeaders = new HttpHeaders()
 
-  getallusers(){
-    return this.httpClient.get(`${this.API_URL}/allUsersRoute/`)
+  constructor(private httpClient: HttpClient, private router: Router) { }
+
+
+
+  getallusers() {
+    return this.httpClient.get(`${this.API_URL}/allUsersRoute/`, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
   }
 
-  registerUser(user){
+  registerUser(user) {
     // console.log(user);  
-    user["userAvailability"] = {"duration" :"", "workingHrs":"", "workingDays": "", "nonWorkingDays": ""}  
-    
+    user["userAvailability"] = { "duration": "", "workingHrs": "", "workingDays": "", "nonWorkingDays": "" }
+
     this.duration$.subscribe((durationValue) => {
       user.userAvailability.duration = durationValue;
     });
-  
+
     this.workingHrs$.subscribe((workingHrsValue) => {
       user.userAvailability.workingHrs = workingHrsValue;
     });
@@ -83,51 +93,51 @@ export class APIService {
 
     this.userUnavailabelOnArray$.subscribe((userUnavailabelOnArrayValue) => {
       user.userAvailability.nonWorkingDays = userUnavailabelOnArrayValue;
-    });  
-    
-    console.log("user ",user);   
-    
+    });
+
+    console.log("user ", user);
+
     return this.httpClient.post(`${this.API_URL}/user/postuser`, user)
   }
 
-  async findLoggedInName(email){
+  async findLoggedInName(email) {
     const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
-  
-    const users =  usersObj["users"]
-    console.log("users", users); 
-    
-    
+
+    const users = usersObj["users"]
+    console.log("users", users);
+
+
     const user = (users as any[]).find((u) => u.emailID === email);
     const name = user.name
     localStorage.setItem("userLoggedInName", name)
     this.userLoggedInNameSubject.next(name)
-    
+
   }
 
-  loginUser(user){
-    console.log("user ",user);
+  loginUser(user) {
+    console.log("user ", user);
     this.userLoggedInSubject.next(true);
     this.userLoggedInEmailIdSubject.next(user.emailID);
     // this.userLoggedInNameSubject.next(user.name); 
-    console.log("id value after login ",this.userLoggedInEmailIdSubject);
-      
+    console.log("id value after login ", this.userLoggedInEmailIdSubject);
+
 
     this.findLoggedInName(user.emailID)
 
-    console.log("userLoggedIn api service ts", this.userLoggedIn$);    
-    return this.httpClient.post(`${this.API_URL}/user/login`, user)    
+    console.log("userLoggedIn api service ts", this.userLoggedIn$);
+    return this.httpClient.post(`${this.API_URL}/user/login`, user)
   }
 
 
   // loginUser(user) : Observable<{token: string}>{
   //   console.log("user ",user);
   //   // console.log("token ", token);
-    
+
   //   this.userLoggedInSubject.next(true);
   //   this.userLoggedInEmailIdSubject.next(user.emailID);
   //   // this.userLoggedInNameSubject.next(user.name); 
   //   console.log("id value after login ",this.userLoggedInEmailIdSubject);
-      
+
 
   //   this.findLoggedInName(user.emailID)
 
@@ -136,8 +146,8 @@ export class APIService {
   // }
 
 
-  logoutUser(){ 
-    this.userLoggedInSubject.next(false);  
+  logoutUser() {
+    this.userLoggedInSubject.next(false);
   }
 
   // isAuth(){ 
@@ -146,39 +156,44 @@ export class APIService {
 
 
   //to set Authorization header
-  setAuthorizationHeader(token : string){
+  setAuthorizationHeader(token: string) {
     this.headers = new HttpHeaders().set('Authorization', token)
   }
 
-  scheduleMeet(meet){
-    console.log("scheduleMeet functn called and meet details", meet);    
+  scheduleMeet(meet) {
+    console.log("scheduleMeet functn called and meet details", meet);
     // console.log(meet);    
-    return this.httpClient.post(`${this.API_URL}/meeting/createMeeting`, meet)     
+    return this.httpClient.post(`${this.API_URL}/meeting/createMeeting`, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }, meet)
   }
 
-  scheduleMeetByCalendarLink(meet){
-    console.log("scheduleMeetByCalendarLink functn called and meet details", meet);    
+  scheduleMeetByCalendarLink(meet) {
+    console.log("scheduleMeetByCalendarLink functn called and meet details", meet);
     // console.log(meet);    
-    return this.httpClient.post(`${this.API_URL}/calendarLink/`, meet)     
+    return this.httpClient.post(`${this.API_URL}/calendarLink/`, meet)
   }
 
-  scheduleMeetBymakeMeetingPage(meet){
-    console.log("scheduleMeetByCalendarLink functn called and meet details", meet);    
-    console.log("meet from apiservice ",meet); 
+  scheduleMeetBymakeMeetingPage(meet) {
+    console.log("scheduleMeetByCalendarLink functn called and meet details", meet);
+    console.log("meet from apiservice ", meet);
     // return meet   
-    return this.httpClient.post(`${this.API_URL}/calendarLink/postMeetFromMeetPage`, meet)     
+    return this.httpClient.post(`${this.API_URL}/calendarLink/postMeetFromMeetPage`, meet)
   }
 
   setUserName(userName: string) {
-    console.log("username set by link ",userName);
-    this.userNameSubject.next(userName);    
+    console.log("username set by link ", userName);
+    this.userNameSubject.next(userName);
   }
 
   setUserEmailId(emailId: string) {
-    console.log("id set by link ",emailId);
+    console.log("id set by link ", emailId);
     this.emailIdSubject.next(emailId);
   }
-  
+
 
 
 
@@ -188,13 +203,13 @@ export class APIService {
   async getMeetings() {
     const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
 
-    const users =  usersObj["users"]
-    console.log("users", users);       
-    
+    const users = usersObj["users"]
+    console.log("users", users);
+
     const userName = this.userNameSubject.getValue();
     console.log("userName", userName);
-    
-    
+
+
     const user = (users as any[]).find((u) => u.name === userName);
 
     if (user && user.meetings) {
@@ -206,243 +221,260 @@ export class APIService {
       }));
 
       this.formattedMeetingsSubject.next(formattedMeetings);
-    }    
+    }
   }
 
 
   // --------------------------------------------------------
   async getMeetingsHide(id) {
-              
-      // const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
-  
-      // const users =  usersObj["users"]
-      // console.log("users", users);      
-      
-      // const userName = name
-      
-      
-      // const user = (users as any[]).find((u) => u.name === userName);
-  
-      // if (user && user.meetings) {
-      //   const formattedMeetingsHide = user.meetings.map(meeting => ({
-      //     Id: meeting._id,
-      //     title: "Unavailable",
-      //     // title: meeting.title,
-      //     start: meeting.start,
-      //     end: meeting.end,
-      //   }));
-  
-      //   this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
-      // } 
+
+    // const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+
+    // const users =  usersObj["users"]
+    // console.log("users", users);      
+
+    // const userName = name
+
+
+    // const user = (users as any[]).find((u) => u.name === userName);
+
+    // if (user && user.meetings) {
+    //   const formattedMeetingsHide = user.meetings.map(meeting => ({
+    //     Id: meeting._id,
+    //     title: "Unavailable",
+    //     // title: meeting.title,
+    //     start: meeting.start,
+    //     end: meeting.end,
+    //   }));
+
+    //   this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
+    // } 
 
 
 
-      const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
-  
-      const users =  usersObj["users"]
-      console.log("users", users);      
-      
-      const userId = id
+    const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
 
-      console.log("userId ", userId);
-      
-      
-      
-      const user = (users as any[]).find((u) => u.emailID === userId);
-      console.log("found user", user);
-      
-      const userEventsArray = user.events
+    const users = usersObj["users"]
+    console.log("users", users);
 
-      console.log("userEventsArray ", userEventsArray);
-      
-      // let formattedMeetingsHide = []
-      // for(let i=0; i<userEventsArray.length; i++){
-      //   let userMeetings = userEventsArray[i]
-      //   for(let j=0; j<userMeetings.length; j++){
-      //     formattedMeetingsHide.push(userMeetings[j])
-      //   }
-      // }
+    const userId = id
 
-      // console.log(formattedMeetingsHide);
-      
-      
-      // if (user && user.meetings) {
-        // } 
-
-        //----------- commented now-----
-        // const formattedMeetingsHide = user.events[0].meetings.map(meeting => ({
-        //   Id: meeting._id,
-        //   // title: "Unavailable",
-        //   title: meeting.title,
-        //   start: meeting.start,
-        //   end: meeting.end,
-        // }));
-  
-        // this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
-        //----------  commented now
-
-        console.log("user events ", user.events);
-        
-        let meetings = []
-        for(let i=0; i<user.events.length; i++){
-          console.log("event ",user.events[i],"particular event meetings ", user.events[i].meetings);
-          let meetingsArr = user.events[i].meetings
-          // const formattedMeetingsHide = user.events[i].meetings.map(meeting => ({
-          //   Id: meeting._id,
-          //   // title: "Unavailable",
-          //   // title: "",
-          //   start: meeting.start,
-          //   end: meeting.end,
-          // }));
-
-          for(let j=0; j<meetingsArr.length; j++){
-            let oneMeetObj = {
-              Id: meetingsArr[j]._id,
-              // title: "Unavailable",
-              // title: "",
-              start: meetingsArr[j].start,
-              end: meetingsArr[j].end,
-            }
-            meetings.push(oneMeetObj)
-          }
-
-          
-          // meetings = [...meetings, formattedMeetingsHide]
-          
-        }
-        for(let i=0; i<user.meetingsWtOthers.length; i++){
-          let oneMeetObj = {
-            Id: user.meetingsWtOthers[i]._id,
-            // title: "Unavailable",
-            // title: "",
-            start: user.meetingsWtOthers[i].start,
-            end: user.meetingsWtOthers[i].end,
-          }
-          meetings.push(oneMeetObj)
-        }
-        
-        console.log("meetings ", meetings)
-
-        this.formattedMeetingsHideSubject.next(meetings);
-      
-
-}
+    console.log("userId ", userId);
 
 
 
-async getMeetingsforUserToSee(id) {
+    const user = (users as any[]).find((u) => u.emailID === userId);
+    console.log("found user", user);
 
-  const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+    const userEventsArray = user.events
 
-  const users =  usersObj["users"]
-  console.log("users", users);      
-  
-  const userId = id
+    console.log("userEventsArray ", userEventsArray);
 
-  console.log("userId ", userId);
-  
-  
-  
-  const user = (users as any[]).find((u) => u.emailID === userId);
-  console.log("found user", user);
-  
-  const userEventsArray = user.events
+    // let formattedMeetingsHide = []
+    // for(let i=0; i<userEventsArray.length; i++){
+    //   let userMeetings = userEventsArray[i]
+    //   for(let j=0; j<userMeetings.length; j++){
+    //     formattedMeetingsHide.push(userMeetings[j])
+    //   }
+    // }
 
-  console.log("userEventsArray ", userEventsArray);
+    // console.log(formattedMeetingsHide);
 
+
+    // if (user && user.meetings) {
+    // } 
+
+    //----------- commented now-----
+    // const formattedMeetingsHide = user.events[0].meetings.map(meeting => ({
+    //   Id: meeting._id,
+    //   // title: "Unavailable",
+    //   title: meeting.title,
+    //   start: meeting.start,
+    //   end: meeting.end,
+    // }));
+
+    // this.formattedMeetingsHideSubject.next(formattedMeetingsHide);
+    //----------  commented now
 
     console.log("user events ", user.events);
-    
-    let allMeetings = []
-    for(let i=0; i<user.events.length; i++){
-      console.log("event ",user.events[i],"particular event meetings ", user.events[i].meetings);
-      let meetingsArr = user.events[i].meetings
 
-      // let meetInOneEvent = []
-      for(let j=0; j<meetingsArr.length; j++){
+    let meetings = []
+    for (let i = 0; i < user.events.length; i++) {
+      console.log("event ", user.events[i], "particular event meetings ", user.events[i].meetings);
+      let meetingsArr = user.events[i].meetings
+      // const formattedMeetingsHide = user.events[i].meetings.map(meeting => ({
+      //   Id: meeting._id,
+      //   // title: "Unavailable",
+      //   // title: "",
+      //   start: meeting.start,
+      //   end: meeting.end,
+      // }));
+
+      for (let j = 0; j < meetingsArr.length; j++) {
         let oneMeetObj = {
           Id: meetingsArr[j]._id,
-          name: meetingsArr[j].user, 
-          emailId: meetingsArr[j].userEmail,
-          evName: meetingsArr[j].evName,
-          evType : user.events[i].evType,
-          currentDate: meetingsArr[j].currentDate,
+          // title: "Unavailable",
+          // title: "",
           start: meetingsArr[j].start,
           end: meetingsArr[j].end,
         }
-        // meetInOneEvent.push(oneMeetObj)
-        // allMeetings.push(user.events[i])
-        allMeetings.push(oneMeetObj)
-      }      
-      // meetings = [...meetings, formattedMeetingsHide]      
+        meetings.push(oneMeetObj)
+      }
+
+
+      // meetings = [...meetings, formattedMeetingsHide]
+
     }
-    for(let i=0; i<user.meetingsWtOthers.length; i++){
+    for (let i = 0; i < user.meetingsWtOthers.length; i++) {
       let oneMeetObj = {
         Id: user.meetingsWtOthers[i]._id,
-        name:  user.meetingsWtOthers[i].user,
-        emailId: user.meetingsWtOthers[i].userEmail,
-        evName : user.meetingsWtOthers[i].evName,
-        evType: user.meetingsWtOthers[i].evType,
-        currentDate : user.meetingsWtOthers[i].currentDate,
         // title: "Unavailable",
         // title: "",
         start: user.meetingsWtOthers[i].start,
         end: user.meetingsWtOthers[i].end,
       }
+      meetings.push(oneMeetObj)
+    }
+
+    console.log("meetings ", meetings)
+
+    this.formattedMeetingsHideSubject.next(meetings);
+  }
+
+
+
+  async getMeetingsforUserToSee(id) {
+
+    const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+
+    const users = usersObj["users"]
+    console.log("users", users);
+
+    const userId = id
+
+    console.log("userId ", userId);
+
+
+
+    const user = (users as any[]).find((u) => u.emailID === userId);
+    console.log("found user", user);
+
+    const userEventsArray = user.events
+
+    console.log("userEventsArray ", userEventsArray);
+
+
+    this.getEventsforUserToSeeSubject.next(userEventsArray);
+
+
+    console.log("userEventsArray ", userEventsArray);
+
+
+    console.log("user events ", user.events);
+
+    let allMeetings = []
+    for (let i = 0; i < user.events.length; i++) {
+      console.log("event ", user.events[i], "particular event meetings ", user.events[i].meetings);
+      let event = user.events[i]
+      let meetingsArr = user.events[i].meetings
+
+      // let meetInOneEvent = []
+      for (let j = 0; j < meetingsArr.length; j++) {
+        let oneMeetObj = {
+          Id: meetingsArr[j]._id,
+          name: meetingsArr[j].user,
+          emailId: meetingsArr[j].userEmail,
+          evName: event.evName,
+          evType: event.evType,
+          // currentDate: meetingsArr[j].currentDate,
+          start: meetingsArr[j].start,
+          end: meetingsArr[j].end,
+        }
+        // meetInOneEvent.push(oneMeetObj)
+        // allMeetings.push(user.events[i])
+        console.log("his own meet oneMeetObj ", oneMeetObj);
+
+        allMeetings.push(oneMeetObj)
+      }
+      // meetings = [...meetings, formattedMeetingsHide]      
+    }
+    for (let i = 0; i < user.meetingsWtOthers.length; i++) {
+      let oneMeetObj = {
+        Id: user.meetingsWtOthers[i]._id,
+        name: user.meetingsWtOthers[i].user,
+        emailId: user.meetingsWtOthers[i].userEmail,
+        evName: user.meetingsWtOthers[i].evName,
+        evType: user.meetingsWtOthers[i].evType,
+        // currentDate: user.meetingsWtOthers[i].currentDate,
+        // title: "Unavailable",
+        // title: "",
+        start: user.meetingsWtOthers[i].start,
+        end: user.meetingsWtOthers[i].end,
+      }
+
+      console.log("his meet with others oneMeetObj ", oneMeetObj);
+
       allMeetings.push(oneMeetObj)
     }
-    
+
     console.log("allMeetings ", allMeetings)
 
     this.getMeetingsforUserToSeeSubject.next(allMeetings);
-  
-  
-}
 
 
-    
-
-async getMeetingOfLoggedInUser() {
-      const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
-  
-      const users =  usersObj["users"]
-      console.log("users", users);       
-      
-      // const userEmail = this.userLoggedInEmailIdSubject.getValue();
-      const userEmail = localStorage.getItem("emailID" || "")
-      console.log("Email of loggedIn user", userEmail);
-      
-      
-      const user = (users as any[]).find((u) => u.emailID === userEmail);
-
-      this.userLoggedInNameSubject.next(user.name);
-      localStorage.setItem("userLoggedInName", this.userLoggedInNameSubject.getValue())
-  
-      if (user && user.meetings) {
-        const formattedMeetings = user.meetings.map(meeting => ({
-          Id: meeting._id,
-          title: meeting.title,
-          start: meeting.start,
-          end: meeting.end,
-        }));
-        
-  
-        this.formattedMeetingsOfLoggedInUserSubject.next(formattedMeetings);
-        console.log("this.formattedMeetingsOfLoggedInUser$ ", this.formattedMeetingsOfLoggedInUser$);        
-        // console.log( this.formattedMeetingsSubject);        
-      }    
-}
+  }
 
 
-// ----------------------------------------------------------------------------------
 
-userUnavOn(dayNumberArray){
-      // this.userUnavailabelOnArraySubject = dayNumberArray
-      this.userUnavailabelOnArraySubject.next(dayNumberArray);
-      console.log("unavailable ", this.userUnavailabelOnArraySubject);             
-}
 
-userAvOnDay(dayNumberArray){
+  async getMeetingOfLoggedInUser() {
+    const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+
+    const users = usersObj["users"]
+    console.log("users", users);
+
+    // const userEmail = this.userLoggedInEmailIdSubject.getValue();
+    const userEmail = localStorage.getItem("emailID" || "")
+    console.log("Email of loggedIn user", userEmail);
+
+
+    const user = (users as any[]).find((u) => u.emailID === userEmail);
+
+    this.userLoggedInNameSubject.next(user.name);
+    localStorage.setItem("userLoggedInName", this.userLoggedInNameSubject.getValue())
+
+    if (user && user.meetings) {
+      const formattedMeetings = user.meetings.map(meeting => ({
+        Id: meeting._id,
+        title: meeting.title,
+        start: meeting.start,
+        end: meeting.end,
+      }));
+
+
+      this.formattedMeetingsOfLoggedInUserSubject.next(formattedMeetings);
+      console.log("this.formattedMeetingsOfLoggedInUser$ ", this.formattedMeetingsOfLoggedInUser$);
+      // console.log( this.formattedMeetingsSubject);        
+    }
+  }
+
+
+  //-----------------------------------------------------------------------------------
+
+  async initiallyUserUnavailbeOn(userId) {
+    console.log("initiallyUserUnavailbeOn called ");
+    const response = await this.httpClient.get(`${this.API_URL}/user/initialUserUnavailibility?userId=${userId}`).toPromise();
+    console.log("response ", response);
+  }
+
+
+  userUnavOn(dayNumberArray) {
+    // this.userUnavailabelOnArraySubject = dayNumberArray
+    this.userUnavailabelOnArraySubject.next(dayNumberArray);
+    console.log("unavailable ", this.userUnavailabelOnArraySubject);
+  }
+
+  userAvOnDay(dayNumberArray) {
     // this.userAvailabelOnArraySubject = dayNumberArray
     // console.log("Available ", this.userAvailabelOnArraySubject);
 
@@ -452,40 +484,40 @@ userAvOnDay(dayNumberArray){
     // this.userAvailabelOnArray$.subscribe((userAvailabelOnArrayValue) => {
     //     console.log("available value ", userAvailabelOnArrayValue);
     // });
-}
+  }
 
 
 
-userAvOnTime(durationObj){
+  userAvOnTime(durationObj) {
     // if(durationObj.hrs==""){
     //   durationObj.hrs = 0
     // }
     this.duration$ = durationObj
-    console.log("duration ", this.duration$); 
-}
+    console.log("duration ", this.duration$);
+  }
 
-userWorkingHrs(wrkngHrsObj){
+  userWorkingHrs(wrkngHrsObj) {
     this.workingHrs$ = wrkngHrsObj
     console.log("workingHrs ", this.workingHrs$);
     this.patchUserAvailability()
-}
+  }
 
-patchUserAvailability(){
+  patchUserAvailability() {
     console.log("pathUserAvailability called");
-    
+
     //     this.userLoggedInEmailIdSubject.next(user.emailID);
     let emailID = localStorage.getItem('emailID')
     // let userAvailability = {};
-    let userAvailability = {duration :{}, workingHrs:{}, workingDays: [], nonWorkingDays: []}  
+    let userAvailability = { duration: {}, workingHrs: {}, workingDays: [], nonWorkingDays: [] }
 
-    
+
     // this.userLoggedInEmailId$.subscribe((userLoggedInEmailIdValue) => {
     //   emailID = userLoggedInEmailIdValue;
     // });
     // console.log("log in id ",this.userLoggedInEmailId$);
 
     console.log(this.duration$, this.workingHrs$);
-    
+
     userAvailability.duration = this.duration$;
     userAvailability.workingHrs = this.workingHrs$
 
@@ -494,138 +526,179 @@ patchUserAvailability(){
 
     this.userAvailabelOnArray$.subscribe((userAvailabelOnArrayValue) => {
       console.log("available value ", userAvailabelOnArrayValue);
-      
+
       userAvailability.workingDays = userAvailabelOnArrayValue;
-      console.log("available on ",userAvailabelOnArrayValue);
+      console.log("available on ", userAvailabelOnArrayValue);
     });
 
     this.userUnavailabelOnArray$.subscribe((userUnavailabelOnArrayValue) => {
       userAvailability.nonWorkingDays = userUnavailabelOnArrayValue;
-      console.log("unavailable on ",userUnavailabelOnArrayValue);
+      console.log("unavailable on ", userUnavailabelOnArrayValue);
 
-    }); 
+    });
 
-    console.log(userAvailability);    
+    console.log(userAvailability);
 
-    return this.httpClient.patch(`${this.API_URL}/user/patchuser`, {emailID,userAvailability})
-      .subscribe(
-      (response) => {
-        console.log(response);
-        alert(response["message"])
-      },
-      (error) => {
-        console.error(error);
+    return this.httpClient.patch(`${this.API_URL}/user/patchuser`, { emailID, userAvailability }, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-    );
+    })
+      .subscribe(
+        (response) => {
+          console.log(response);
+          alert(response["message"])
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
 
-}
+  }
 
-async getSelectedUsersAvailaibilityObj(){
+  async getSelectedUsersAvailaibilityObj() {
     console.log("called for Av Obj");
-    
+
     const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
-  
-    const users =  usersObj["users"]
-    console.log("users", users);  
-    
+
+    const users = usersObj["users"]
+    console.log("users", users);
+
     let emailIDofSelectedUser = ""
-    
+
     this.emailId$.subscribe((emailIdValue) => {
       emailIDofSelectedUser = emailIdValue;
     });
-    
-    console.log("email ",emailIDofSelectedUser); 
 
-    for(let i=0; i<users.length; i++){
-      if(users[i]["emailID"] == emailIDofSelectedUser){
+    console.log("email ", emailIDofSelectedUser);
+
+    for (let i = 0; i < users.length; i++) {
+      if (users[i]["emailID"] == emailIDofSelectedUser) {
         // this.selectedUserAvailabilityObj$ = users[i]["userAvailability"]
         this.selectedUserAvailabilityObjSubject.next(users[i]["userAvailability"]);
         // console.log(this.selectedUserAvailabilityObj$);        
         break;
       }
     }
-  
-}
-
-
-
-async getEvents(){
-  console.log("get events called");
-  
-  const response = await this.httpClient.get(`${this.API_URL}/event/getEvents`).toPromise();
-  console.log("events ",response["message"]);
-  const events = response["message"]
-  this.eventsArraySubject.next(events)
-}
-
-updateEventType(evType){//tells the type of event, like one-on-one
-  console.log("called updateEventType");
-  console.log("evType ",evType);  
-  this.eventTypeSubject.next(evType)
-  this.eventType$.subscribe((eventTypeValue)=>{
-    console.log( "eventTypeValue in updateEventType is ",  eventTypeValue);    
-  })
-}
-
-async createNewEvent(eventName:string,hrs:string,min:string, location:string){
-  // let {evName, evType, evDuration, evLocation} = req.body
-  
-  let loggedInName = localStorage.getItem("userLoggedInName" || "")
-  let loggedInEmailId = localStorage.getItem("emailID" || "")
-
-  let evType = localStorage.getItem("evType")
-  // this.eventType$.subscribe((eventTypeValue)=>{
-  //   evType = eventTypeValue
-  // })
-  // evType = this.eventType$
-  
-  
-  console.log("createNewEvtn called", eventName,hrs,min, location, evType);
-  
-  let event = {evName:eventName, evType:evType, evDuration:{"hrs": hrs,"minutes":min}, evLocation: location }
-  // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
-
-  console.log(event);
-
-
-  const response = await this.httpClient.post(`${this.API_URL}/event/createEvent`, event).toPromise();      
-  console.log("gotten response ",response["message"]);
-  if(response["message"]=="Event created"){
-    localStorage.setItem("eventName", eventName)
-    localStorage.setItem("evDurHrs", hrs)
-    localStorage.setItem("evDurMins", min)
-    localStorage.setItem("eventLocation", location)
-    // console.log(loggedInName, loggedInEmailId);
-    
-    // console.log(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`);
-    
-    window.open(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`)
 
   }
-  else{
+
+
+
+  async getEvents() {
+    console.log("get events called");
+
+    const response = await this.httpClient.get(`${this.API_URL}/event/getEvents`).toPromise();
+    console.log("events ", response["message"]);
+    const events = response["message"]
+    this.eventsArraySubject.next(events)
+  }
+
+  updateEventType(evType) {//tells the type of event, like one-on-one
+    console.log("called updateEventType");
+    console.log("evType ", evType);
+    this.eventTypeSubject.next(evType)
+    this.eventType$.subscribe((eventTypeValue) => {
+      console.log("eventTypeValue in updateEventType is ", eventTypeValue);
+    })
+  }
+
+  async createNewEvent(eventName: string, hrs: string, min: string, location: string) {
+    // let {evName, evType, evDuration, evLocation} = req.body
+
+    let loggedInName = localStorage.getItem("userLoggedInName" || "")
+    let loggedInEmailId = localStorage.getItem("emailID" || "")
+
+    let evType = localStorage.getItem("evType")
+    // this.eventType$.subscribe((eventTypeValue)=>{
+    //   evType = eventTypeValue
+    // })
+    // evType = this.eventType$
+
+
+    console.log("createNewEvtn called", eventName, hrs, min, location, evType);
+
+    let event = { evName: eventName, evType: evType, evDuration: { "hrs": hrs, "minutes": min }, evLocation: location }
+    // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
+
+    console.log(event);
+
+
+    const response = await this.httpClient.post(`${this.API_URL}/event/createEvent`, event, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).toPromise();
+    console.log("gotten response ", response["message"]);
+    if (response["message"] == "Event created") {
+      localStorage.setItem("eventName", eventName)
+      localStorage.setItem("evDurHrs", hrs)
+      localStorage.setItem("evDurMins", min)
+      localStorage.setItem("eventLocation", location)
+      // console.log(loggedInName, loggedInEmailId);
+
+      // console.log(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`);
+
+      window.open(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`)
+
+    }
+    else {
+      alert(response["message"])
+    }
+
+  }
+
+
+  deleteEvent(id: string) {
+    console.log("delete called in api");
+
+    return this.httpClient.delete(`${this.API_URL}/event/deleteEvent?id=${id}`, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .subscribe(
+        (response) => {
+          console.log(response);
+          alert(response["message"])
+          window.location.reload()
+
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  }
+
+
+  async editEvent(id: string, eventName: string, hrs: number, min: number, location: string, evType: string) {
+    // let {evName, evType, evDuration, evLocation} = req.body
+
+    let loggedInName = localStorage.getItem("userLoggedInName" || "")
+    let loggedInEmailId = localStorage.getItem("emailID" || "")
+
+    console.log("editEvtn called in apiService", eventName, hrs, min, location, evType);
+
+    let event = { evId: id, evName: eventName, evType: evType, evDuration: { "hrs": hrs, "minutes": min }, evLocation: location }
+    // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
+
+    console.log(event);
+
+    const response = await this.httpClient.patch(`${this.API_URL}/event/editEvent`, event, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).toPromise();
+    console.log("gotten response ", response["message"]);
     alert(response["message"])
+    if (response["message"] == "Event edited") {
+      window.open('/home', "_self")
+    }
   }
-
-}
-
-
-deleteEvent(id : string){
-  console.log("delete called in api");
-  
-  return this.httpClient.delete(`${this.API_URL}/event/deleteEvent?id=${id}`)
-  .subscribe(
-  (response) => {
-    console.log(response);
-    alert(response["message"])
-    window.location.reload()
-
-  },
-  (error) => {
-    console.error(error);
-  }
-);
-
-}
 
 
   // setDateAndTime(eventDate: string, eventTime: string) {
@@ -638,14 +711,14 @@ deleteEvent(id : string){
   //   this.apiService.getallusers().subscribe((data: Array<any>) =>{
   //     this.users = data['users']
   //     console.log(this.users)
-      
+
   //     for(let i=0; i<this.users.length; i++){
   //       if(this.users[i].name==this.userName){          
   //         this.meetingArray = this.users[i].meetings
   //       }
   //     }
   //     console.log("selected username",this.userName)    
-       
+
   //     console.log(this.meetingArray);
 
   //     this.formattedMeetings = this.meetingArray.map(meeting => ({
@@ -659,9 +732,269 @@ deleteEvent(id : string){
 
   //     console.log("formattedMeetings", this.formattedMeetings);
   //     // this.eventObject.dataSource = this.formattedMeetings;
-     
-      
+
+
   //   })
   // }
+
+
+
+  //Admin part:- 
+
+  deleteUser(id: string) {
+    console.log("delete user called in api");
+
+    return this.httpClient.delete(`${this.API_URL}/user/deleteUser?id=${id}`)
+      .subscribe(
+        (response) => {
+          console.log(response);
+          alert(response["message"])
+          window.location.reload()
+
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  }
+
+
+
+  async editUser(id: string, userName: string, email: string) {
+    console.log(id, userName, email);
+
+    let user = { userName, email }
+
+
+    const response = await this.httpClient.patch(`${this.API_URL}/user/editUserNameAndEmail/${id}`, user).toPromise();
+    console.log("gotten response ", response["message"]);
+    alert(response["message"])
+    if (response["message"] == "User Updated") {
+      window.location.reload()
+    }
+
+  }
+
+  async getEventsOfSelectedUserAdmin(selectedUserId) {
+    console.log("get events called");
+
+    const response = await this.httpClient.get(`${this.API_URL}/event/getEventsOfSelectedUserAdmin/${selectedUserId}`).toPromise();
+    console.log("events ", response["message"]);
+    const events = response["message"]
+    this.eventsArraySubject.next(events)
+  }
+
+
+  async editEventAdmin(selectedUsersId: string, id: string, eventName: string, hrs: number, min: number, location: string, evType: string) {
+    // let {evName, evType, evDuration, evLocation} = req.body
+
+
+    console.log("editEvtn called in apiService", eventName, hrs, min, location, evType);
+
+
+    let event = { evId: id, evName: eventName, evType: evType, evDuration: { "hrs": Number(hrs), "minutes": Number(min) }, evLocation: location }
+    // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
+
+    console.log(event);
+
+    const response = await this.httpClient.patch(`${this.API_URL}/event/editEventAdmin/${selectedUsersId}`, event).toPromise();
+    console.log("gotten response ", response["message"]);
+    alert(response["message"])
+    if (response["message"] == "Event edited") {
+      window.location.reload()
+    }
+
+  }
+
+
+  async createNewEventAdmin(selectedUserId, eventName, eventHrs, eventMins, eventLocation, eventType) {
+
+
+    console.log("createNewEvtnAdmin called", selectedUserId, eventName, eventHrs, eventMins, eventLocation, eventType);
+
+    let event = { selectedUserId, evName: eventName, evType: eventType, evDuration: { "hrs": eventHrs, "minutes": eventMins }, evLocation: eventLocation }
+    console.log(event);
+
+    const response = await this.httpClient.post(`${this.API_URL}/event/createEventAdmin`, event).toPromise();
+    console.log("gotten response ", response["message"]);
+    if (response["message"] == "Event created") {
+      alert(response["message"])
+      window.location.reload()
+    }
+    else {
+      alert(response["message"])
+    }
+
+  }
+
+  async assignEventAdmin(assignEventToThisUserId, idOfEventToBAssigned, userIdToWhomEventBelongs) {
+    let details = { assignEventToThisUserId, idOfEventToBAssigned, userIdToWhomEventBelongs }
+    const response = await this.httpClient.post(`${this.API_URL}/event/assignEventAdmin`, details).toPromise();
+    console.log("gotten response ", response["message"]);
+    if (response["message"] == "Event assignment succesfull.") {
+      alert(response["message"])
+      window.location.reload()
+    }
+    else {
+      alert(response["message"])
+    }
+  }
+
+
+  async deleteEventAdmin(eventId: string, userId: string) {
+    console.log("delete called in api");
+
+    let details = { eventId, userId };
+    const options = {
+      body: details,
+    };
+    const response = await this.httpClient.delete(`${this.API_URL}/event/deleteEventAdmin?eventId=${eventId}&userId=${userId}`).toPromise()
+    // const response = await this.httpClient.delete(`${this.API_URL}/event/deleteEventAdmin`, options).toPromise()
+
+    if (response["message"] == "Event deleted.") {
+      console.log(response);
+      alert(response["message"])
+      window.location.reload()
+    }
+    else {
+      alert(response["message"])
+    }
+  }
+
+
+
+  async getMeetingsOfParticularEventAdmin(userId, eventId) {
+
+    const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+
+    const users = usersObj["users"]
+    console.log("users", users);
+
+
+    const user = (users as any[]).find((u) => u._id === userId);
+    console.log("found user", user);
+
+    const userEventsArray = user.events
+    console.log("userEventsArray ", userEventsArray);
+
+
+    let thatEvent = (userEventsArray as any[]).find((oneEvent) => oneEvent._id === eventId);
+
+    console.log("thatEvent ", thatEvent);
+
+    let meetingsOfThatEvent = thatEvent.meetings
+
+    console.log("meetingsOfThatEvent ", meetingsOfThatEvent);
+
+
+
+    let finalMeetingsArray = []
+    for (let j = 0; j < meetingsOfThatEvent.length; j++) {
+      let oneMeetObj = {
+        Id: meetingsOfThatEvent[j]._id,
+        name: meetingsOfThatEvent[j].user,
+        emailId: meetingsOfThatEvent[j].userEmail,
+        // evName: meetingsOfThatEvent[j].evName,
+        // currentDate: meetingsOfThatEvent[j].currentDate,
+        start: meetingsOfThatEvent[j].start,
+        end: meetingsOfThatEvent[j].end,
+      }
+      // meetInOneEvent.push(oneMeetObj)
+      // allMeetings.push(user.events[i])
+      finalMeetingsArray.push(oneMeetObj)
+    }
+
+
+    console.log("finalMeetingsArray ", finalMeetingsArray)
+
+    this.getMeetingsOfParticularEventAdminSubject.next(finalMeetingsArray);
+
+
+  }
+
+
+
+  async getSelectedUsersAvailaibilityObjAdmin(userId: string) {
+    console.log("called for Av Obj");
+
+    const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
+
+    const users = usersObj["users"]
+    console.log("users", users);
+
+    const user = (users as any[]).find((u) => u._id === userId);
+    this.selectedUserAvailabilityObjSubject.next(user["userAvailability"]);
+
+  }
+
+
+
+  scheduleMeetByAdminPage(body) {
+    console.log("scheduleMeetFromAdmin functn called and meet details", body);
+    console.log("meet from apiservice ", body);
+
+    return this.httpClient.post(`${this.API_URL}/calendarLink/postMeetFromAdminSide`, body)
+  }
+
+
+  async deleteMeetByAdmin(selectedMeetId, selectedEventId, selectedUserId) {
+
+
+    console.log("delete Meet called in api");
+
+    // let details = { selectedMeetId, selectedEventId, selectedUserId };
+    // const options = {
+    //   body: details,
+    // };
+    const response = await this.httpClient.delete(`${this.API_URL}/calendarLink/deleteMeetFromAdminSide?selectedEventId=${selectedEventId}&selectedUserId=${selectedUserId}&selectedMeetId=${selectedMeetId}`).toPromise()
+    // const response = await this.httpClient.delete(`${this.API_URL}/event/deleteEventAdmin`, options).toPromise()
+
+    if (response["message"] == "Meeting deleted.") {
+      console.log(response);
+      alert(response["message"])
+      window.location.reload()
+    }
+    else {
+      alert(response["message"])
+    }
+  }
+
+
+  async editMeeting(selectedUserId, selectedEventId, selectedMeetingId) {
+    //const usersObj = await this.httpClient.get(`${this.API_URL}/event/`).toPromise();
+
+
+    const response = await this.httpClient.get(`${this.API_URL}/event/getEventsOfSelectedUserAdmin/${selectedUserId}`).toPromise();
+
+    const events = response["message"]
+    console.log("events ", events);
+
+    let reqEvent = events.find((ev)=> ev._id == selectedEventId)
+    console.log("reqEvent ", reqEvent);
+
+    let eventMeetings = reqEvent.meetings
+    console.log("eventMeetings ", eventMeetings);    
+
+    let reqMeet = eventMeetings.find((meet)=> meet._id == selectedMeetingId)
+    console.log("reqMeet ", reqMeet);
+
+    // reqMeet = {
+    //   currentDateTime: "2024-04-01T17:44:42"
+    //   end:"2024-04-03T09:30:00"
+    //   start: "2024-04-03T09:00:00"
+    //   user:"Neha"
+    //   userEmail:"nehaphadtare334@gmail.com"
+    //   __v:0
+    //   _id:"660aa53411b301afa51993ef"
+    // }
+    
+
+    
+    
+  }
 }
+
+
+
+
 

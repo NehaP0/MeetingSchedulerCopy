@@ -5,7 +5,6 @@
 
 #parentDiv {
     height: 150vh;
-
 }
 
 /* .container{
@@ -16,6 +15,14 @@
 full-calendar {
     /* margin: auto; */
     /* border: 1px solid blue; */
+}
+::ng-deep #calendar .fc-day-past a.fc-daygrid-day-number{
+    /* background-color: red; */
+    color: grey !important;
+    /* border: 1px solid red; */
+}
+::ng-deep #calendar a.fc-daygrid-day-number:hover{
+    cursor: pointer;
 }
 
 /* .fc-daygrid-day-top{
@@ -229,9 +236,50 @@ ng-icon {
     font-size: 15px;
     width: 60%;
     height: 100%;
+    /* width: 1000%; */
 
 }
 #divForCalendarAndTime{
     display: flex;
     justify-content: center;
 }
+
+
+
+/* -------MontCalendar starts------------- */
+
+
+::ng-deep #calendar .fc-toolbar-title{
+    font-size: 15px;
+}
+::ng-deep #calendar .fc-button{
+    background-color: #dddddd;
+    color: black;
+    padding: 0px;
+    border: none;
+    font-size: 10px;
+}
+::ng-deep #calendar a.fc-daygrid-day-number{
+    font-weight:500;
+    font-size: 14px;  
+    color: #0060E6;
+}
+
+
+::ng-deep a{
+    color: rgb(12, 12, 12);
+    text-decoration: none;
+    /* font-weight:300;
+    font-size: 14px; */
+    font-size: 13px;
+    font-weight: 400;
+}
+/* ::ng-deep #monthCalendar .fc-event-title-container{
+    display: none;
+}
+::ng-deep #monthCalendar .fc-event-time{
+    font-size: 1px;
+    font-weight: normal;
+} */
+
+/* -------MontCalendar ends--------- */

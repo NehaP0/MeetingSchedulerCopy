@@ -5,6 +5,8 @@
     font-size: 14px;
     height : 100vh;
     color: #1A1A1A;
+    /* margin-left: 35px; */
+    margin-left: 50px;
     /* font-family: sans-serif, */
     /* padding: 20px; */
     /* border: 5px solid red; */
@@ -107,7 +109,7 @@ display : none;
 }
 #content{
     width: 95%;
-    padding: 30px; 
+    padding-left: 25px; 
 }
 ng-icon{
     display: flex;
@@ -264,6 +266,15 @@ a:hover{
     /* border: 1px solid green; */
     margin-left: 5px;
 }
+
+#divForCards{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* padding: 10px; */
+    column-gap: 5px;
+    /* row-gap: 20px; */
+}
 .settingsBtnDiv{
 
     display: flex;
@@ -284,14 +295,6 @@ a:hover{
     background-color: #8247F5;
     border-radius: 5px 5px 0px 0px;
     /* font-weight: ; */
-}
-#divForCards{
-    margin-top: 30px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* padding: 10px; */
-    column-gap: 5px;
-    /* row-gap: 20px; */
 }
 .card{
     border-radius: 5px;

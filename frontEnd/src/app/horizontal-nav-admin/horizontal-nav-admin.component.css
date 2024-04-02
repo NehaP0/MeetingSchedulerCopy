@@ -1,0 +1,209 @@
+*{
+    /* background-color: black; */
+    padding: 0px;
+    margin: 0px;  
+  }
+  body {
+    background-color: #f2f8ff ;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* color: #1271fb; */
+    /* height: 100vh; */
+    border: 1px solid #f2f8ff;
+  }
+  #mainDiv{
+    margin: auto;
+    width: 85%;
+    /* margin: 150px; */
+    /* margin-top: 65px; */
+    margin-top: 50px;
+    /* margin: 150px; */
+    /* align-items: center; */
+    background-color: white;
+    /* border: 1px solid black; */
+    padding: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 5px;
+}
+#horiNav{
+    /* background-color: #f2f8ff ; */
+    padding: 10px 5px 5px 5px;
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; */
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+}
+#horiNav>div{
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+}
+a{
+    width: 130px;
+    background-color: white;
+    padding-top: 0px;
+    margin: 0px;
+    font-size: 13px;
+    /* border: 1px solid red; */
+    height: 18px;
+    color: black;
+}
+/* hr{
+    opacity: 0.10;
+} */
+a:hover{
+    cursor: pointer;
+}
+a{
+    /* color: #0069FF; */
+    color: black;
+    text-decoration: none;
+}
+
+
+
+
+button{
+    /* background-color: #1271fb; */
+    /* color: white;  */
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* text-align: center; */
+ }
+ button:hover{
+    background-color: #1271fb;
+    color : white;
+}
+
+
+#popUpForEventDeletion, #popUpForEventEdit, #popUpForNewEvent, #popUpForEventAssignment, #PopUpForEentAssignmentConfirmation{
+    position: absolute;
+    z-index: 10;
+    width:35%;
+    margin-left: 25%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 10px;
+}
+
+#popupBtns{
+    display: flex;
+    justify-content: space-between;
+}
+#popUpForEventDeletion h3, #popUpForEventDeletion p{
+    margin-bottom: 20px;
+}
+#popUpForEventDeletion button, #popUpForEventEdit button, #popUpForNewEvent button{
+    /* padding: 5px 10px 5px 10px; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 45%;
+    border: 1px solid grey;
+    color: rgb(22, 21, 21)
+}
+#popUpForEventDeletion #cnfmDelBtn{
+    background-color: #c84545;
+    font-weight: bold;
+    color: white;
+    border: 1px solid  #c84545;
+}
+#popUpForEventDeletion #cnfmDelBtn:hover{
+    background-color: #9e3232;
+    border: 1px solid  #9e3232;
+}
+#popUpForEventDeletion #cancelBtn:hover{
+    background-color: rgb(233, 236, 238);
+    border: 1px solid  rgb(233, 236, 238);   
+}
+
+#popUpForEventDeletion h4{
+    margin-bottom: 20px;
+}
+#popUpForEventDeletion p{
+    margin-bottom: 30px;
+    font-size: 15px;
+}
+
+#popUpForEventEdit  .cancelBtn:hover, #popUpForEventEdit  .cnfmBtn:hover, #popUpForNewEvent  .cancelBtn:hover, #popUpForNewEvent .cnfmBtn:hover{
+    color: white;
+}
+
+#popUpForEventEdit button, #popUpForNewEvent button{
+    /* padding: 5px 10px 5px 10px; */
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 20%;
+    border: 1px solid grey;
+    color: rgb(22, 21, 21)
+}
+
+form input, form select{
+    margin-top: 10px;
+    padding: 8px;
+    display: block;
+    width: 100%;
+}
+
+form label{
+    margin-bottom: 20px;
+    display: block;
+}
+
+.heading{
+    display: flex;
+    justify-content: space-between;
+}
+
+#popUpForEventAssignment table{
+    width : 100%
+}
+#popUpForEventAssignment tr{
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 2px 0px 2px;
+}
+#PopUpForEentAssignmentConfirmation #textDiv{
+    display: flex;
+    justify-content: space-between;
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+#PopUpForEentAssignmentConfirmation button{
+    width: 100px;
+    color: white;
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(1){
+    background-color: rgb(1, 75, 1);
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(1):hover{
+    background-color: rgb(0, 51, 0);
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(2){
+    background-color: #c84545;
+}
+#PopUpForEentAssignmentConfirmation #buttonsDiv>:nth-child(2):hover{
+    background-color: #a52e2e;
+}
+
+
+
+
+
+
+
+ng-icon {
+    display: flex;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+
+

@@ -1,52 +1,99 @@
 *{
-  background-color: black;
-  /* padding: 0px; */
-  /* margin: 0px; */
-  
+  /* background-color: black; */
+  padding: 0px;
+  margin: 0px;  
 }
 body {
-  display: flex;
-  justify-content: center;
-  color: lightgreen;
+  background-color: #f2f8ff ;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* color: #1271fb; */
   height: 100vh;
-  }
+  border: 1px solid #f2f8ff;
+}
 #usersDiv{
-      width: 40%;
-  }
+      margin: auto;
+      width: 80%;
+      /* margin: 150px; */
+      /* margin-top: 65px; */
+      margin-top: 50px;
+      /* margin: 150px; */
+      /* align-items: center; */
+      background-color: white;
+      /* border: 1px solid black; */
+      padding: 20px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      border-radius: 5px;
+}
+.heading{
+  display: flex;
+  justify-content: space-between;
+}
 h2{
-    text-align: center;
-  }
+    /* text-align: center; */
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+thead{
+  background-color: #f2f8ff ;
+    /* text-align: center; */
+
+}
 #table {
-    background-color: black;
     /* border-collapse: collapse; */
-    /* width: 100%; */
-    margin-top: 65px;
+    width: 100%;   
+    font-size: 15px;
   }
+  .buttonCol{
+  /* text-align: center; */
+
+}
+  
   
 #table th, #table td {
-    border: 1px solid lightgreen;
+    /* border: 1px solid lightgreen; */
     padding: 10px;
   }
+tr{
+  border: 1px solid rgb(212, 212, 212);
+}
   
-button {
-    background-color: lightgreen;
-    color: black;
-    /* padding: 5px 10px; */
+.name{
+  font-weight: bold;
+}
+button, #newUser{
+    /* background-color: #1271fb; */
+    /* color: white;  */
+    padding: 5px 10px;
     padding: 0px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
+    /* text-align: center; */
+ }
+ng-icon{
+  /* border: none; */
+  /* border: 1px solid red; */
+  width: 30px;
+  height: 20px;
+}
   
-button:hover {
-    background-color: darkgreen;
+button:hover{
+    background-color: #1271fb;
     color : white;
-  }
+}
+#newUser{
+  padding: 5px 10px;
+}
+#newUser:hover {
+  background-color: #1271fb;
+  color : white;
+}
 
 a:hover{
     cursor: pointer;
-    background-color: darkgreen;
-    color: whitej;
+    background-color: #1271fb;
+    color: white;
   }
 
 #myCalendarDiv{
@@ -60,8 +107,8 @@ full-calendar{
   /* width: 80%; */
 }
 a{
-  background-color: lightgreen;
-  color: black;
+  background-color: #1271fb;
+  color: white;
   text-decoration: none !important;
   margin: 0px !important;
   padding: 10px !important;
@@ -71,5 +118,75 @@ a{
 .linkButton{
   padding: 10px;
 }
+
+
+#popUpForUserDeletion, #popUpForUserEdit{
+  position: absolute;
+  z-index: 10;
+  width:35%;
+  margin-left: 20%;
+  background-color: white;
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-radius: 10px;
+}
+.popupBtns{
+  display: flex;
+  justify-content: space-between;
+}
+#popUpForUserDeletion h3, #popUpForUserDeletion p{
+  margin-bottom: 20px;
+}
+#popUpForUserDeletion button, #popUpForUserEdit button{
+  /* padding: 5px 10px 5px 10px; */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 45%;
+  border: 1px solid grey;
+  color: rgb(22, 21, 21)
+}
+#popUpForUserDeletion .cnfmBtn{
+  background-color: #c84545;
+  font-weight: bold;
+  color: white;
+  border: 1px solid  #c84545;
+}
+#popUpForUserDeletion .cnfmBtn:hover{
+  background-color: #9e3232;
+  border: 1px solid  #9e3232;
+}
+#popUpForUserDeletion .cancelBtn:hover{
+  background-color: rgb(233, 236, 238);
+  border: 1px solid  rgb(233, 236, 238);   
+}
+
+#popUpForUserEdit  .cancelBtn:hover, #popUpForUserEdit  .cnfmBtn:hover{
+  color: white;
+}
+
+#popUpForUserDeletion h4{
+  margin-bottom: 20px;
+}
+#popUpForUserDeletion p{
+  margin-bottom: 30px;
+}
+
+form input{
+  margin-top: 10px;
+  padding: 8px;
+  display: block;
+  width: 100%;
+}
+
+form label{
+  margin-bottom: 20px;
+  display: block;
+
+}
+
+ng-icon:hover{
+  cursor: pointer;
+}
+
 
   

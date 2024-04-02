@@ -1,26 +1,63 @@
+<app-admin-nav-bar></app-admin-nav-bar>
 <body>    
     <div id="usersDiv">
-        <h2>All Users</h2>
+        <div class="heading">
+            <h2>All Users</h2>
+            <h2 id="newUser" (click)="newUserBtn()"> + New user</h2>
+        </div>
 
         <table id="table">
             <thead>
                 <tr>
-                <th>User Name</th>
-                <th>Email ID</th>
-                <th>Action</th>
+                <th>FULL NAME</th>
+                <th>EMAIL ID</th>
+                <th>EDIT</th>
+                <th>DELETE</th>
                 <!-- <th>Calendar shareable link</th> -->
                 </tr>
             </thead>
+
+            <div id="popUpForUserDeletion" *ngIf="showPopup">
+                <h4>Delete {{deleteUserName}}?</h4>
+                <div class="popupBtns">
+                    <button class="cancelBtn" (click)="deleteUserCacelation()">Cancel</button>
+                    <button class="cnfmBtn" (click)="deleteUserConfirmation()">Yes</button>
+                </div>
+            </div>
+
+
+            <div id="popUpForUserEdit" *ngIf="popUpForUserEdit">
+                <div class="heading">
+                    <h4>Edit {{editUserName}}</h4>
+                    <ng-icon (click)="editUserCacelation()" name="radixCross2"></ng-icon>
+                </div>
+                <form>
+                    <input type="text" [(ngModel)]="editUserName" type="text" value={{editUserName}} name="UserName">
+                    <label for="">Username</label>
+                    <!-- <input type="text" [(ngModel)]="editUserEmail" type="text" value={{editUserEmail}} name="UserEmail">
+                    <label for="">Email Id</label> -->
+                </form>
+                <div class="popupBtns">
+                    <button class="cancelBtn" (click)="editUserFull(editUserName, editUserEmail)">Show User Events</button>
+                    <button class="cnfmBtn" (click)="editUserConfirmation()">Finish</button>
+                </div>
+            </div>
+
+            
+
             <tbody>
                 <ng-container *ngIf="usersWOloggedInUser.length">
                 <tr *ngFor="let user of usersWOloggedInUser; let i = index">
-                    <td>{{user.name}}</td>
+                    <td class="name">{{user.name}}</td>
                     <td>{{user.emailID}}</td>
-                    <td>
+                    <!-- <td> -->
                     <!-- <button (clnameick)="goToCalendarPage(user., user.emailID)">Schedule Meet</button> -->
-                    <button><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">Schedule Meet</a> </button>
+                    <!-- <button><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">Schedule Meet</a> </button> -->
 
                     <!-- <td><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td> -->
+                    <td class="buttonCol"><button (click)="editUser(user._id, user.name, user.emailID)"><ng-icon name="tablerEdit"></ng-icon></button></td>
+                    <td class="buttonCol"><button (click)="deleteUser(user._id, user.name)"><ng-icon name="remixDeleteBin6Line"></ng-icon></button></td>
+
                 </tr>
                 </ng-container>
             </tbody>
@@ -28,7 +65,7 @@
 
     </div>
 
-    <div id="myCalendarDiv">
+    <!-- <div id="myCalendarDiv">
         <h2>My Calendar</h2>
         <full-calendar defaultView="dayGridMonth" *ngIf="formattedMeetingsOfLoggedInUser.length > 0" [options]="calendarOptions" plugins={[dayGridPlugin]}></full-calendar>
         <div id="calendarSharableLink">
@@ -36,7 +73,7 @@
             <button class="linkButton" (click)="changeShowLink()" *ngIf="showLink">Hide calendar sharable link</button>
             <ng-container *ngIf="showLink"><p>http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}</p></ng-container>
         </div>
-    </div>
+    </div> -->
 
 </body>
 

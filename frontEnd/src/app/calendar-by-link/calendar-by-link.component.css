@@ -210,9 +210,10 @@ ng-icon {
     font-size: 15px;
     width: 60%;
     height: 100%;
-
 }
+
+
 #divForCalendarAndTime{
     display: flex;
-    justify-content: center;
+    justify-content: center;    
 }

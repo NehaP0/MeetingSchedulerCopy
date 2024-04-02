@@ -1,6 +1,7 @@
 body{
     display: flex;
     height: 110vh;
+    margin-left: 60px;
 }
 #leftDiv{
     /* border-right: 1px solid rgb(165, 164, 164); */
@@ -9,7 +10,6 @@ body{
     padding: 30px;
     /* overflow-y:hidden; */
     height: 120vh;
-
 }
 #leftDiv a{
     line-height: 80px;
