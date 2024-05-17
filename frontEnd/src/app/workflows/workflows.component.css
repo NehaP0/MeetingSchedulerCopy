@@ -1,0 +1,48 @@
+#saveTime{
+    width: 50%;
+    margin: auto;
+    margin-bottom: 100px;
+}
+.parentOfCards{
+    display: flex;
+    width : 90%;
+    margin: auto;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+}
+.card{
+    /* border: 1px solid grey; */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 30%;
+    padding: 35px;
+}
+.textDiv{
+    height: 80%;
+    /* border: 1px solid red; */
+}
+h3{
+    font-size: 18px;
+    font-weight: bold;
+}
+p{
+    font-size: 16px;
+}
+.btnDiv{
+    display: flex;
+    justify-content: flex-end;
+    /* border: 1px solid green; */
+
+}
+button{
+    border: none;
+    border-radius: 50px;
+    padding: 10px 15px;
+    background-color: #0069ff;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+}
+ng-icon{
+    display: flex;
+    font-size: 30px;
+}

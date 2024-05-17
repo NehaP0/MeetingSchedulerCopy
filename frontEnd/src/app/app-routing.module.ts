@@ -30,6 +30,13 @@ import { MakeMeetingAdminComponent } from './make-meeting-admin/make-meeting-adm
 // import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
 // ?name={{user.name}}&id={{user.emailID}}
 
+import {OAuthLoginComponent} from './o-auth-login/o-auth-login.component'
+// import {MicrosoftOutlookComponent} from './microsoft-outlook/microsoft-outlook.component'
+
+// import { CallbackComponent } from './callback.component';
+import {CallbackComponentComponent} from './callback-component/callback-component.component'
+import {BrandingComponent} from './branding/branding.component'
+import {WorkflowsComponent} from './workflows/workflows.component'
 
 const routes: Routes = [
   { path:  '', redirectTo:  'registeration', pathMatch:  'full' },
@@ -59,7 +66,14 @@ const routes: Routes = [
   {path : 'userAvailabilityAdmin', component: UserAvailabilityAdminComponent},
   {path: 'meetingsTableAdmin', component: MeetingsTableAdminComponent},
   {path : 'meetingsCalendarAdmin', component: MeetingsCalendarAdminComponent},
-  {path : 'makeMeetingAdminComponent', component: MakeMeetingAdminComponent}
+  {path : 'makeMeetingAdminComponent', component: MakeMeetingAdminComponent},
+
+  // {path: '', component : OAuthLoginComponent},
+  // {path: 'microsoftCalendar', component : MicrosoftOutlookComponent},
+  // {path: 'callback', component: CallbackComponent}
+  {path: 'auth/callback', component: CallbackComponentComponent},
+  {path: 'branding', component: BrandingComponent},
+  {path: 'workflows', component: WorkflowsComponent}
 
 ];
 

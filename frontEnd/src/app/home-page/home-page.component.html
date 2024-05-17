@@ -2,7 +2,7 @@
 <app-hori-nav></app-hori-nav>
 
 <div id="body">
-    <!-- <button class="btn btn-primary" (click)="openModal()">Open Bootstrap Modal</button>
+  <!-- <button class="btn btn-primary" (click)="openModal()">Open Bootstrap Modal</button>
 
       
         <div class="modal" tabindex="-1" role="dialog">
@@ -24,10 +24,9 @@
             </div>
         </div> -->
 
+  <!-- -------------------------------------------- -->
 
-<!-- -------------------------------------------- -->
-
-    <!-- <div class="showhim" id="verticalNav" >
+  <!-- <div class="showhim" id="verticalNav" >
         <div  class="ok">
             <div id="upperDiv">
                 <ng-icon id="logo" name="bootstrapCCircleFill"></ng-icon>
@@ -64,89 +63,154 @@
         </div>
     </div> -->
 
+  <!-- ------------------------------------------------------------------------------------------- -->
 
-    <!-- ------------------------------------------------------------------------------------------- -->
-
-    <!-- <p id="lookAround"><ng-icon name="bootstrapStars"></ng-icon>Take a look around</p>
+  <!-- <p id="lookAround"><ng-icon name="bootstrapStars"></ng-icon>Take a look around</p>
     <button id="inviteUser"><ng-icon name="remixUserAddLine"></ng-icon><p>Invite User</p></button> -->
-    <div id="content">
-        <!-- <div id="parentOfHori">
+  <div id="content">
+    <!-- <div id="parentOfHori">
             <div id="horiNav">
                 <button id="firstCharBtn" (click)="logoutCalled()"><p class="firstChar"> {{firstChar}} </p><ng-icon id="downArrow" name="bootstrapCaretDownFill"></ng-icon></button>
                 <button [hidden]="logOutValue==false" id="logOutButton" (click)="logOut()">Logout</button>
             </div>
         </div> -->
-        <div id="eventsDiv">
-            <p id="eventTypeHeading">Event types</p>
-            <div id="filterDiv">
-                <!-- <div id="filterTag"><button><p>My Calendly</p><ng-icon name="bootstrapChevronDown"></ng-icon></button></div>
+    <div id="eventsDiv">
+      <p id="eventTypeHeading">Event types</p>
+      <div id="filterDiv">
+        <!-- <div id="filterTag"><button><p>My Calendly</p><ng-icon name="bootstrapChevronDown"></ng-icon></button></div>
                 <div id="divForSearch">
                     <ng-icon name="ionSearchOutline"></ng-icon>
                     <input type="text" id="searchIP" placeholder="Filter">
                 </div> -->
-            </div>
-            <div id="divForuserNameLinkAndButton">
-                <div id="leftDiv">
-                    <div id="firstCharDiv"><p class="firstChar"> {{firstChar}} </p></div>
-                    <div>
-                        <p>{{loggedInName}}</p>
-                        <a href="/listAllEventTypesComponent" >http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}</a> 
-                    </div>
-                </div>
-                <div id="rightDiv">
-                    <button id="newEventType" (click)="goToCreateNewEventPage()">New Event Type</button>
-                    <ng-icon name="ionSettingsOutline"></ng-icon>
-                </div>
-            </div>
-            <hr>
+      </div>
+      <div id="divForuserNameLinkAndButton">
+        <div id="leftDiv">
+          <div id="firstCharDiv">
+            <p class="firstChar">{{ firstChar }}</p>
+          </div>
+          <div>
+            <p>{{ loggedInName }}</p>
+            <a href="/listAllEventTypesComponent"
+              >http://localhost:3000/calendarLink?name={{ loggedInName }}&id={{
+                loggedInEmailId
+              }}&image={{ imageAfterGetting }}</a
+            >
+          </div>
         </div>
-
-
-
-        <div id="popUpForEventDeletion" *ngIf="showPopup">
-            <h4>Delete {{deleteEventName}}?</h4>
-            <p>Users will be unable to schedule further meetings with deleted event types. Meetings previously scheduled will not be affected.</p>
-            <div id="popupBtns">
-                <button id="cancelBtn" (click)="deleteEventCacelation()">Cancel</button>
-                <button id="cnfmDelBtn" (click)="deleteEventConfirmation()">Yes</button>
-            </div>
+        <div id="rightDiv">
+          <button id="newEventType" (click)="goToCreateNewEventPage()">
+            New Event Type
+          </button>
+          <ng-icon name="ionSettingsOutline"></ng-icon>
         </div>
+      </div>
+      <hr />
+    </div>
 
-
-
-
-        <div id="divForCards">
-
-            <ng-container *ngIf="eventsArrayOfLoggedInUser.length">
-                <div class="card" style="width: 23rem;" *ngFor="let event of eventsArrayOfLoggedInUser; let i = index">
-                <!-- <div class="card" style="width: 23rem;" *ngFor="let event of eventsArrayOfLoggedInUser; let i = index | filter:filterTerm"> -->
-
-                    <div class="purpleLine"></div>
-                    <div class="card-body">
-                        <div class="settingsBtnDiv"><button class="settingsButtonOnCard" (click)="settingsCalled(event._id)"><ng-icon name="ionSettingsOutline"></ng-icon><ng-icon class="downArrow" name="bootstrapCaretDownFill"></ng-icon></button></div>
-                            <div *ngIf="showSetting" [hidden]="showSettingFor!=event._id" class="settingsExpansionDiv">
-                                <button (click)="editEvent(event._id)">Edit</button>
-                                <button (click)="deleteEventPopup(event._id, event.evName)">Delete</button>
-                            </div>
-                            <p class="card-title">{{event.evName}}</p>
-                            <p class="card-subtitle mb-2 text-mute d">
-                              <span *ngIf="event.evDuration.hrs != 0">{{event.evDuration.hrs}} hrs</span>
-                              <span *ngIf="event.evDuration.minutes != 0">{{event.evDuration.minutes}} mins</span> , {{event.evType}}
-                            </p>
-                            <a href="http://localhost:3000/calendarLink/sharable?name={{loggedInName}}&id={{loggedInEmailId}}&evType={{event.evType}}&evName={{event.evName}}&evDurHrs={{event.evDuration.hrs}}&evDurMins={{event.evDuration.minutes}}">View booking page</a>
+    <div id="popUpForEventDeletion" *ngIf="showPopup">
+      <h4>Delete {{ deleteEventName }}?</h4>
+      <p>
+        Users will be unable to schedule further meetings with deleted event
+        types. Meetings previously scheduled will not be affected.
+      </p>
+      <div id="popupBtns">
+        <button id="cancelBtn" (click)="deleteEventCacelation()">Cancel</button>
+        <button id="cnfmDelBtn " (click)="deleteEventConfirmation()">Yes</button>
+      </div>
+    </div>
  
-                        <div class="firstChar firstCharCard"><p> {{firstChar}} </p></div>
-                        <hr>
-                        <div class="cardFooter">
-                            <button ngxClipboard [cbContent]="'http://localhost:3000/calendarLink/sharable?name=' + loggedInName + '&id=' + loggedInEmailId + '&evType=' + event.evType + '&evName=' + event.evName + '&evDurHrs=' + event.evDuration.hrs + '&evDurMins=' + event.evDuration.minutes" class="copyLinkBtn" (click)="copied(event.evName)" [hidden]="setCopied==event.evName"><ng-icon name="ionCopyOutline"></ng-icon><p>Copy link</p></button> 
-                            <button class="copyLinkBtn" [hidden]="setCopied!=event.evName"><ng-icon id="tickIcon" name="typTick" ></ng-icon><p>Copied</p></button> 
+    <div id="divForCards">
+      <ng-container *ngIf="eventsArrayOfLoggedInUser.length">
+        <div
+          class="card"
+          style="width: 23re m"
+          *ngFor="let event of eventsArrayOfLoggedInUser; let i = index"
+        >
+          <!-- <div class="card" style="width: 23rem;" *ngFor="let event of eventsArrayOfLoggedInUser; let i = index | filter:filterTerm"> -->
 
-                        </div>             
-                    </div>
-                </div>
-            </ng-container>
+          <div class="purpleLine"></div>
+          <div class="card-body">
+            <div class="settingsBtnDiv">
+              <button
+                class="settingsButtonOnCard"
+                (click)="settingsCalled(event._id)"
+              >
+                <ng-icon name="ionSettingsOutline"></ng-icon
+                ><ng-icon
+                  class="downArrow"
+                  name="bootstrapCaretDownFill"
+                ></ng-icon>
+              </button>
+            </div>
+            <div
+              *ngIf="showSetting"
+              [hidden]="showSettingFor != event._id"
+              class="settingsExpansionDiv"
+            >
+              <button (click)="editEvent(event._id)">Edit</button>
+              <button (click)="deleteEventPopup(event._id, event.evName)">
+                Delete
+              </button>
+            </div>
+            <p class="card-title">{{ event.evName }}</p>
+            <p class="card-subtitle mb-2 text-mute d">
+              <span *ngIf="event.evDuration.hrs != 0"
+                >{{ event.evDuration.hrs }} hrs</span
+              >
+              <span *ngIf="event.evDuration.minutes != 0"
+                >{{ event.evDuration.minutes }} mins</span
+              >
+              , {{ event.evType }}
+            </p>
+            <a
+              href="http://localhost:3000/calendarLink/sharable?name={{
+                loggedInName
+              }}&id={{ loggedInEmailId }}&evType={{ event.evType }}&evName={{
+                event.evName
+              }}&evDurHrs={{ event.evDuration.hrs }}&evDurMins={{
+                event.evDuration.minutes
+              }}&image={{ imageAfterGetting }}"
+              >View booking page</a
+            >
 
-            <!-- <div class="card" style="width: 23rem;">
+            <div class="firstChar firstCharCard">
+              <p>{{ firstChar }}</p>
+            </div>
+            <hr />
+            <div class="cardFooter">
+              <button
+                ngxClipboard
+                [cbContent]="
+                  'http://localhost:3000/calendarLink/sharable?name=' +
+                  loggedInName +
+                  '&id=' +
+                  loggedInEmailId +
+                  '&evType=' +
+                  event.evType +
+                  '&evName=' +
+                  event.evName +
+                  '&evDurHrs=' +
+                  event.evDuration.hrs +
+                  '&evDurMins=' +
+                  event.evDuration.minutes
+                "
+                class="copyLinkBtn"
+                (click)="copied(event.evName)"
+                [hidden]="setCopied == event.evName"
+              >
+                <ng-icon name="ionCopyOutline"></ng-icon>
+                <p>Copy link</p>
+              </button>
+              <button class="copyLinkBtn" [hidden]="setCopied != event.evName">
+                <ng-icon id="tickIcon" name="typTick"></ng-icon>
+                <p>Copied</p>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- <div class="card" style="width: 23rem;">
                 <div class="purpleLine"></div>
                 <div class="card-body">
                   <div class="settingsBtnDiv"><button class="settingsButtonOnCard"><ng-icon name="ionSettingsOutline"></ng-icon><ng-icon class="downArrow" name="bootstrapCaretDownFill"></ng-icon></button></div>
@@ -161,7 +225,9 @@
 
                 </div>
               </div> -->
-        </div>
-    </div>
 
+            </div>
+            <!-- <button (click)="integratePayPal()">Integrate PayPal</button>
+            <button *ngIf="paypalIntegrated" (click)="makePayment()">Pay Now</button> -->
+  </div>
 </div>

@@ -1,0 +1,51 @@
+<app-navbar></app-navbar>
+<app-hori-nav></app-hori-nav>
+
+<div id="content">
+  <div>
+    <p>Account details</p>
+    <h2>Branding</h2>
+  </div>
+
+  <div id="logoDiv">
+    <p id="logoP">Logo</p>
+    <p>
+      Your company branding will appear at the top-left corner of the scheduling
+      page.
+    </p>
+
+    <div id="imageDiv">
+      <!-- <p *ngIf="!selectedImage">No Logo</p> -->
+      <p *ngIf="!selectedImage">No Logo</p>
+
+      <img
+        *ngIf="selectedImage"
+        id="uploadedImg"
+        [src]="toShowImg"
+        alt="Selected Image"
+        style="max-width: 100%; max-height: 300px"
+      />
+      <!-- <img *ngIf="selectedImage" id="uploadedImg" [src]="selectedImage" alt="Selected Image" > -->
+      <!-- <img *ngIf="selectedImage" id="uploadedImg" [src]="selectedImage" alt="Selected Image" > -->
+    </div>
+
+    <div id="belowDiv">
+      <div *ngIf="!selectedImage">
+        <!-- <div *ngIf="!selectedImage"> -->
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          id="selectFile"
+        />
+        <!-- </div> -->
+        <!-- <input type="file" *ngIf="selectedImage"  (change)="onFileSelected($event)"> -->
+      </div>
+
+      <div *ngIf="selectedImage">
+        <button (click)="removeImg()">Remove</button>
+        <button (click)="applyImg()">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>

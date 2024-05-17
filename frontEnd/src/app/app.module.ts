@@ -6,6 +6,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import {RecurrenceEditorModule, ScheduleModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule'
 
+import { OAuthModule } from 'angular-oauth2-oidc';
+// import { AuthService } from './auth.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +27,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 
 import { NgIconsModule } from '@ng-icons/core';
 import { heroUsers, heroVideoCamera, heroGlobeAsiaAustralia } from '@ng-icons/heroicons/outline';
-import {ionSettingsOutline, ionCopyOutline, ionSearchOutline, ionLogInOutline} from '@ng-icons/ionicons'
+import {ionSettingsOutline, ionCopyOutline, ionSearchOutline, ionLogInOutline, ionMailOpenOutline} from '@ng-icons/ionicons'
 import {bootstrapStars, bootstrapCaretDownFill, bootstrapChevronDown, bootstrapCCircleFill, bootstrapPlusCircleFill, bootstrapClock, bootstrapQuestionCircle, bootstrapArrowLeft} from '@ng-icons/bootstrap-icons'
 import {remixUserAddLine, remixCalendar2Line, remixStackshareLine, remixArrowRightSLine, remixDeleteBin6Line} from '@ng-icons/remixicon'
 import {typAttachmentOutline, typTick} from '@ng-icons/typicons'
@@ -60,10 +62,16 @@ import { MeetingsTableAdminComponent } from './meetings-table-admin/meetings-tab
 import { MeetingsCalendarAdminComponent } from './meetings-calendar-admin/meetings-calendar-admin.component';
 import { MakeMeetingAdminComponent } from './make-meeting-admin/make-meeting-admin.component';
 import { EditMeetComponent } from './edit-meet/edit-meet.component';
+// import { MicrosoftOutlookComponent } from './microsoft-outlook/microsoft-outlook.component';
+import { OAuthLoginComponent } from './o-auth-login/o-auth-login.component';
+import { CallbackComponentComponent } from './callback-component/callback-component.component';
+import { BrandingComponent } from './branding/branding.component';
+import { WorkflowsComponent } from './workflows/workflows.component';
+import { PollCalendarComponent } from './poll-calendar/poll-calendar.component';
+// import { CallbackComponentComponent } from './callback-component/callback-component.component';
 
 // import { NavbarComponent } from './navbar/navbar.component';
 // import { ScheduleMeetComponent } from './schedule-meet/schedule-meet.component';
-
 
 @NgModule({
   declarations: [
@@ -99,6 +107,13 @@ import { EditMeetComponent } from './edit-meet/edit-meet.component';
     MeetingsCalendarAdminComponent,
     MakeMeetingAdminComponent,
     EditMeetComponent,
+    // MicrosoftOutlookComponent,
+    OAuthLoginComponent,
+    CallbackComponentComponent,
+    BrandingComponent,
+    WorkflowsComponent,
+    PollCalendarComponent,
+    // CallbackComponentComponent,
     // NavbarComponent,
     // ScheduleMeetComponent
     // CalendarComponentComponent
@@ -120,11 +135,18 @@ import { EditMeetComponent } from './edit-meet/edit-meet.component';
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
        bootstrapCCircleFill, bootstrapPlusCircleFill, typAttachmentOutline, remixCalendar2Line, remixStackshareLine, circumRoute , bootstrapClock, octApps, iconoirCrown,
        bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick, tablerEdit, remixDeleteBin6Line, radixCross2,
-       ionLogInOutline}),
+       ionLogInOutline, ionMailOpenOutline}),
+
+      OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['https://api.example.com'],
+        sendAccessToken: true
+      }
+    })
+    
   ],
   providers: [
-    DayService, WeekService, MonthAgendaService, WorkWeekService, MonthService,DatePipe,
-    provideClientHydration()
+    DayService, WeekService, MonthAgendaService, WorkWeekService, MonthService,DatePipe
   ],
   bootstrap: [AppComponent]
 })

@@ -4,5 +4,6 @@
         <button id="inviteUser"><ng-icon name="remixUserAddLine"></ng-icon><p>Invite User</p></button> -->
         <button id="firstCharBtn" (click)="logoutCalled()"><p class="firstChar"> {{firstChar}} </p><ng-icon id="downArrow" name="bootstrapCaretDownFill"></ng-icon></button>
         <button [hidden]="logOutValue==false" id="logOutButton" (click)="logOut()">Logout</button>
+        <button [hidden]="logOutValue==false" id="brandingButton" (click)="branding()">Branding</button>
     </div>
 </div>

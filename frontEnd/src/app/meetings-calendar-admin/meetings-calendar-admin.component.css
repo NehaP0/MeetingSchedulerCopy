@@ -25,12 +25,14 @@ full-calendar {
     /* background-color: white; */
 
 }
-::ng-deep #calendar .fc-day-past a.fc-daygrid-day-number{
+
+::ng-deep #calendar .fc-day-past a.fc-daygrid-day-number {
     /* background-color: red; */
     color: grey !important;
     /* border: 1px solid red; */
 }
-::ng-deep #calendar a.fc-daygrid-day-number:hover{
+
+::ng-deep #calendar a.fc-daygrid-day-number:hover {
     cursor: pointer;
 }
 
@@ -46,18 +48,20 @@ full-calendar {
     /* background-color: white; */
 
 }
-#times{
+
+#times {
     margin: auto;
     /* border: 1px solid red; */
-    width:80%;
+    width: 80%;
     /* overflow:scroll; */
-    overflow-x:hidden;
+    overflow-x: hidden;
     /* overflow-y: auto; */
     height: calc(100% - 1px);
     /* height: 100%; */
     margin-top: 40px;
 }
-.oneTime{
+
+.oneTime {
     width: 100%;
     height: 50px;
     border: 1px solid #0060E6;
@@ -66,7 +70,9 @@ full-calendar {
     border-radius: 5px;
     margin-bottom: 20px;
 }
-.oneTimeHidden, .nextBtn{
+
+.oneTimeHidden,
+.nextBtn {
     width: 48%;
     height: 50px;
     border: 1px solid #0060E6;
@@ -75,18 +81,21 @@ full-calendar {
     border-radius: 5px;
     margin-bottom: 20px;
 }
-.oneTimeHidden{
+
+.oneTimeHidden {
     margin-right: 4%;
     background-color: grey;
     border: none;
     color: white;
 }
-#timeLeftDIv{
+
+#timeLeftDIv {
     /* border: 1px solid blue; */
     width: 100%;
     height: 100vh;
 }
-.nextBtn{
+
+.nextBtn {
     background-color: #0060E6;
     color: white;
 }
@@ -247,7 +256,8 @@ ng-icon {
     /* width: 1000%; */
 
 }
-#divForCalendarAndTime{
+
+#divForCalendarAndTime {
     display: flex;
     justify-content: center;
 }
@@ -257,27 +267,30 @@ ng-icon {
 /* -------MontCalendar starts------------- */
 
 
-::ng-deep #calendar .fc-toolbar-title{
+::ng-deep #calendar .fc-toolbar-title {
     font-size: 15px;
 }
-::ng-deep #calendar .fc-button{
+
+::ng-deep #calendar .fc-button {
     background-color: #dddddd;
     color: black;
     padding: 0px;
     border: none;
     font-size: 10px;
 }
-::ng-deep #calendar a.fc-daygrid-day-number{
-    font-weight:500;
-    font-size: 14px;  
+
+::ng-deep #calendar a.fc-daygrid-day-number {
+    font-weight: 500;
+    font-size: 14px;
     color: #0060E6;
 }
-::ng-deep #calendar .fc-event-title-container{
+
+::ng-deep #calendar .fc-event-title-container {
     height: 10px;
 }
 
 
-::ng-deep a{
+::ng-deep a {
     color: rgb(12, 12, 12);
     text-decoration: none;
     /* font-weight:300;
@@ -285,6 +298,7 @@ ng-icon {
     font-size: 13px;
     font-weight: 400;
 }
+
 /* ::ng-deep #monthCalendar .fc-event-title-container{
     display: none;
 }
@@ -296,7 +310,8 @@ ng-icon {
 /* -------MontCalendar ends--------- */
 
 
-#meetDetails, #meetEditDetails{    
+#meetDetails,
+#meetEditDetails {
     position: absolute;
     /* position: fixed; */
     z-index: 10;
@@ -308,24 +323,28 @@ ng-icon {
     font-size: 15px;
 }
 
-#meetEditDetails{
-    width: 300px;
+#meetEditDetails {
+    width: 400px;
     margin-top: 0%;
 }
-#meetEditDetails input{
-    display : block;
+
+#meetEditDetails input {
+    display: block;
     margin-bottom: 10px;
     /* padding: 15px; */
-    padding: 5px 5px 5px 5px;
+    padding: 10px 5px 10px 5px;
+    border: 1px solid rgb(201, 198, 198);
 }
-#meetEditDetails label{
+
+#meetEditDetails label {
     font-weight: bold;
 }
 
-#btnDiv{
+#btnDiv {
     display: flex;
     justify-content: space-between;
 }
-#btnDiv button{
+
+#btnDiv button {
     border: none;
 }

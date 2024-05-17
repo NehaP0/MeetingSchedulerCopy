@@ -15,6 +15,10 @@
         <div id="belowGreyStrip">
           <p>{{loggedInName}}</p>
           <p>{{evName || "Event name here"}}</p>
+          <div id="avatarDiv" *ngIf="avatar">            
+            <img [src]="avatar" alt="img">
+          </div>
+
           <div id="timeAndLocation">
             <div>
               <ng-icon name="bootstrapClock"></ng-icon>

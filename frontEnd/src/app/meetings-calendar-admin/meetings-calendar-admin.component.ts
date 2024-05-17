@@ -869,17 +869,29 @@ export class MeetingsCalendarAdminComponent {
 
   editMeeting(){
     console.log(this.selectedUserId, this.selectedEventId, this.selectedMeetingId);
-    
     console.log("newEditObj ",this.newEditObj);
+    console.log(this.newObj.date, this.newEditObj.date, this.newObj.startTime, `${this.newEditObj.startTime}:00`, this.newObj.endTime, `${this.newEditObj.endTime}:00`, this.newObj.date==this.newEditObj.date , this.newObj.startTime==`${this.newEditObj.startTime}:00` , this.newObj.endTime==`${this.newEditObj.endTime}:00`);
     
-    // if(){
+    if(this.newObj.date==this.newEditObj.date && this.newObj.startTime==`${this.newEditObj.startTime}:00` && this.newObj.endTime==`${this.newEditObj.endTime}:00` || this.newObj.date==this.newEditObj.date && this.newObj.startTime==this.newEditObj.startTime && this.newObj.endTime==this.newEditObj.endTime){
+      alert('Date and time are same as previous.')
+    }
+    else{
 
-    // }
+      // newEditObj ={
+      //   // 'evType':"",
+      //   'date': "",
+      //   'startTime': "",
+      //   'endTime': "",
+      //   'name' : "",
+      //   'emailId' : "",
+      //   // 'meetId' : ""
+      // }
 
-    this.apiService.editMeeting(this.selectedUserId, this.selectedEventId, this.selectedMeetingId)  
+      this.apiService.editMeeting(this.selectedUserId, this.selectedEventId, this.selectedMeetingId, this.newEditObj.date, this.newEditObj.startTime, this.newEditObj.endTime, this.newEditObj.name, this.newEditObj.emailId)  
+      // this.router.navigate([''])
+    }
     
         
-    // this.router.navigate([''])
   }
 
 

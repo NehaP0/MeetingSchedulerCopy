@@ -16,6 +16,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 // "@fullcalendar/list": "^6.1.11",
 // "@fullcalendar/multimonth": "^6.1.11",
 
+interface EditObj {
+  evType : string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  name: string;
+  emailId: string[];
+}
+
+interface NewEditObj {
+  date: string;
+  startTime: string;
+  endTime: string;
+  name: string;
+  emailId: string[];
+}
 
 
 
@@ -46,14 +62,28 @@ export class ScheduledEventsComponent implements OnInit {
   showNext = false
   selectedDateMeets = []
   showMeets = false
+  meetId = ""
+  selectedUserEmailId = ""
   eventObj = {}
-  newObj ={
+  newObj : EditObj ={
     'evType':"",
     'date':"",
     'startTime':"",
     'endTime':"",
     'name' : "",
-    'emailId' : ""
+    'emailId' : []
+  }
+
+
+
+  newEditObj: NewEditObj ={
+    // 'evType':"",
+    'date': "",
+    'startTime': "",
+    'endTime': "",
+    'name' : "",
+    'emailId' : [],
+    // 'meetId' : ""
   }
 
 
@@ -90,127 +120,69 @@ export class ScheduledEventsComponent implements OnInit {
   workingDays = [1, 2, 3, 4, 5]
   nonWorkingDays = [0, 6]
 
+  editMeet = false
+  attendees:  string[] = [""];
+
+  removedAttendee: string[] = [];
+  removedAttendeeUndo: boolean = false;
+  removedAttendeeEmail = ""
 
   calendarOptionsMonth: CalendarOptions = {
-    // timeZone: 'UTC',
     initialView: 'dayGridMonth', 
-    // aspectRatio : 0.2,
-    // expandRows : true,
     
-    // initialView : 'timeline', 
-    // initialView: 'timeGrid',  
-    // plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, multimonthPlugin],
     plugins: [dayGridPlugin],
 
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      // right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek, multiMonth',
       right: '',
 
     },
-    // eventDisplay : 'this',
-    // eventDisplay: 'auto', // Set to 'auto' or 'block' for dots
+  
     
 
     views: {
       dayGridMonth: {
-        // options apply to dayGridMonth, dayGridWeek, and dayGridDay views
-        // buttonText: 'Month'       
+        
       },
-      // timeGridFourDay: {
-      //   // type: 'timeGrid',
-      //   // duration: { days: 4 },
-      //   buttonText: 'timeGrid'
-      // },
-      // timeGridWeek: {
-      //   // options apply to dayGridWeek and timeGridWeek views
-      //   buttonText: 'Week'
-      // },
-      // timeGridDay: {
-      //   // options apply to dayGridDay and timeGridDay views
-      //   buttonText: 'Day'
-      // },
-      // listWeek : {
-      //   buttonText: 'List'
-      // },
-      // multiMonth:{
-      //   buttonText: 'Multi month'
-      // }
+     
     },
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    // selectAllow: function (info){
-
-    //   console.log("info", info);     
-
-    //   const selectedDay = info.start.getDay()
-    //   const selectedDate = info.start.getDate()
-
-    //   return selectedDay !==0 && selectedDay!==6
-    // }    
+   
   };
 
 
 
   calendarOptionsWeek: CalendarOptions = {
-    // initialView: 'dayGridMonth', 
-    // initialView : 'timeline', 
+
     initialView: 'timeGridWeek',  
-    // plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, multimonthPlugin],
     plugins: [timeGridPlugin],
     dayHeaderFormat:{ weekday: 'short',  day: 'numeric' },
 
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      // right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek, multiMonth',
       right: '',
 
     },
     views: {
-      // dayGrid: {
-      //   // options apply to dayGridMonth, dayGridWeek, and dayGridDay views
-      //   buttonText: 'Month'       
-      // },
-      // timeGridFourDay: {
-      //   // type: 'timeGrid',
-      //   // duration: { days: 4 },
-      //   buttonText: 'timeGrid'
-      // },
+
 
       timeGridWeek: {
-        // options apply to dayGridWeek and timeGridWeek views
         buttonText: 'Week'
       },
-      // timeGridDay: {
-      //   // options apply to dayGridDay and timeGridDay views
-      //   buttonText: 'Day'
-      // },
-      // listWeek : {
-      //   buttonText: 'List'
-      // },
-      // multiMonth:{
-      //   buttonText: 'Multi month'
-      // }
+
     },
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    // selectAllow: function (info){
-
-    //   console.log("info", info);     
-
-    //   const selectedDay = info.start.getDay()
-    //   const selectedDate = info.start.getDate()
-
-    //   return selectedDay !==0 && selectedDay!==6
-    // }
+   
   };
 
 
@@ -577,28 +549,33 @@ export class ScheduledEventsComponent implements OnInit {
     console.log("response ", response);
     console.log("event ", response['event']);
 
-
-    
+    this.meetId = event.extendedProps.Id
 
 
     this.newObj['evType'] = event.extendedProps.evType
+    this.newEditObj['evType'] = event.extendedProps.evType
     console.log("this.newObj['evType'] ", this.newObj['evType']);
      
     this.newObj['date'] = event.start.split('T')[0]
+    this.newEditObj['date'] = event.start.split('T')[0]
     console.log("this.newObj['date'] ", this.newObj['date']);
     
     this.newObj['startTime'] = event.start.split('T')[1].split('+')[0]
+    this.newEditObj['startTime'] = event.start.split('T')[1].split('+')[0]
     console.log("this.newObj['startTime'] ", this.newObj['startTime']);
     
     console.log("end ", event.end);
     
     this.newObj['endTime'] = event.end.split('T')[1].split('+')[0]
+    this.newEditObj['endTime'] = event.end.split('T')[1].split('+')[0]
     console.log("this.newObj['endTime'] ", this.newObj['endTime']);
     
     this.newObj['name'] = event.extendedProps.name
+    this.newEditObj['name'] = event.extendedProps.name
     console.log("this.newObj['name'] ", this.newObj['name']);
     
     this.newObj['emailId'] = event.extendedProps.emailId
+    this.newEditObj['emailId'] = event.extendedProps.emailId
     console.log("this.newObj['emailId'] ", this.newObj['emailId']);
     
 
@@ -624,13 +601,72 @@ export class ScheduledEventsComponent implements OnInit {
 
   closePopUp(){
     this.showMeets = false
-    console.log(this.showMeets);
+    this.editMeet = false
+    console.log(this.showMeets);    
+  }
+ 
+  editMeetingPopUp(){
+    this.showMeets = false
+    this.editMeet = true
+  }
+
+  addAttendee() {
+    this.attendees.push('');
+    console.log(this.attendees);
     
   }
 
+  removeAttendee(index: number) {
+    this.attendees.splice(index, 1);
+    console.log(this.attendees);
+  }
+
+  removeExistingAttendee(index, email) {
+    // this.removedAttendee = { emailId: this.newObj.emailId, name: this.newObj.name };
+    // this.newEditObj.emailId = [];
+    this.newEditObj.name = '';
+    this.newEditObj['emailId'].splice(index, 1)
+    this.removedAttendeeUndo = true;
+    this.removedAttendeeEmail = email
+    console.log(this.newEditObj);
+    
+}
+
+// undoRemoveExistingAttendee() {
+//     if (this.removedAttendee) {
+//         this.newEditObj.emailId.push(this.removedAttendeeEmail)
+//         this.newEditObj.name = this.removedAttendee.name;
+//         this.removedAttendee = null;
+//         this.removedAttendeeUndo = false;
+//     }
+//     console.log(this.newEditObj);
+
+// }
 
 
+  editMeetingfromUserSide(){      
+    this.selectedUserEmailId = localStorage.getItem("emailID")
+    console.log(this.selectedUserEmailId, this.meetId);
+    console.log("meetId ", this.meetId);      
+    console.log("newEditObj ",this.newEditObj);
+    console.log(this.newObj.date, this.newEditObj.date, this.newObj.startTime, `${this.newEditObj.startTime}:00`, this.newObj.endTime, `${this.newEditObj.endTime}:00`, this.newObj.date==this.newEditObj.date , this.newObj.startTime==`${this.newEditObj.startTime}:00` , this.newObj.endTime==`${this.newEditObj.endTime}:00`);
+    
+    this.newEditObj.emailId = [...this.newEditObj.emailId, ...this.attendees]
+ 
 
+    console.log("attendees ", this.attendees);
+    console.log("newEditObj ", this.newEditObj);
+
+    
+    
+    this.editMeet = false
+    if(this.newObj.date==this.newEditObj.date && this.newObj.startTime==`${this.newEditObj.startTime}:00` && this.newObj.endTime==`${this.newEditObj.endTime}:00` || this.newObj.date==this.newEditObj.date && this.newObj.startTime==this.newEditObj.startTime && this.newObj.endTime==this.newEditObj.endTime){
+      alert('Date and time are same as previous.')
+    }
+    else{
+      this.apiService.editMeetingfromUserSide(this.selectedUserEmailId, this.meetId, this.newEditObj.date, this.newEditObj.startTime, this.newEditObj.endTime, this.newEditObj.name, this.newEditObj.emailId)  
+    }    
+  }
 
 
 }

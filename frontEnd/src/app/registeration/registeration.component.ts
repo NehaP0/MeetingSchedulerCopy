@@ -20,7 +20,8 @@ export class RegisterationComponent implements OnInit{
       const user = {
         name : userForm.value.Name,
         emailID : userForm.value.EmailID,
-        password : userForm.value.Password
+        password : userForm.value.Password,
+        phoneNumber : userForm.value.PhoneNumber
       }      
 
       this.apiService.registerUser(user).subscribe((response)=>{

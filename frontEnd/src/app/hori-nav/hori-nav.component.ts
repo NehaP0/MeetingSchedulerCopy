@@ -68,6 +68,10 @@ logOut(){
     this.router.navigate(['/login'])
 }
 
+branding(){
+  this.router.navigate(['/branding'])
+}
+
 copied(evName){
   console.log("clicked");
   

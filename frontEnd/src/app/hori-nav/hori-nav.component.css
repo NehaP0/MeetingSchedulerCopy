@@ -47,13 +47,18 @@ button{
     /* border: 1px solid red; */
 }
 
-#logOutButton{
+#logOutButton, #brandingButton{
     margin-top: 10px;
     padding: 10px 20px 10px 20px;
     border-radius: 2px;
     position: absolute;
     z-index: 10;
     background-color: white;
+    width: 80px;
+    border: 1px solid rgb(218, 214, 214)
+}
+#brandingButton{
+    margin-top: 50px;
 }
 
 #firstCharBtn>ng-icon{

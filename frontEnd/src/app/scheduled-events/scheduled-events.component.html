@@ -5,87 +5,126 @@
     <div id="content">
         <h1>Scheduled events</h1>
         <div id="events">
-            <!-- <div id="schedNav">
-                <p>Upcoming</p>
-                <p>Past</p>
-            </div> -->
-            <!-- <table>
-                <tbody *ngFor="let meeting of formattedMeetingsHide; let i = index">
-                    <div id="oneMeet">
-                        <tr id="date">{{meeting.start[8]}}{{meeting.start[9]}}/{{meeting.start[5]}}{{meeting.start[6]}}/{{meeting.start[0]}}{{meeting.start[1]}}{{meeting.start[2]}}{{meeting.start[3]}}</tr>
-                        <tr>{{formattedMeetingsHide}}</tr> 
-                         <tr>{{meeting.Id}}</tr> 
-                        <tr>
-                            <td>{{meeting.start[11]}}{{meeting.start[12]}}:{{meeting.start[14]}}{{meeting.start[15]}} - {{meeting.end[11]}}{{meeting.end[12]}}:{{meeting.end[14]}}{{meeting.end[15]}}</td>
-                            <td>
-                                <p>{{meeting.name}} with you.</p> 
-                                <p>Event type {{meeting.evType}}.</p>
-                            </td>
-                            <td>
-                                <button (click)="setEventId(meeting.Id)" [hidden]="showDeetsFor==meeting.Id" class="deetCloseBtn">Details</button>
-                                <button [hidden]="showDeetsFor!=meeting.Id" (click)="closeDeets()" class="deetCloseBtn">Close</button>
-                            </td>
-                        </tr>
-                        <tr id="extraDetails" [hidden]="showDeetsFor!=meeting.Id" >
-                            <td></td>
-                            <td>
-                                <h4>Email</h4>
-                                <p>{{meeting.emailId}}</p>
-                                <h4>Location</h4>
-                                <p>Zoom</p>
-                            </td>
-                            <td></td>
-                        </tr>
-                    </div>
-                </tbody>
-            </table> -->
-
-            <!-- <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
-                <h4>Meeting details</h4>
-                <ng-container *ngIf="selectedDateMeets.length">
-                    <div *ngFor="let meet of selectedDateMeets; let i = index">
-                        <div><span>Meeting with: </span><span>{{meet.name}}</span></div>
-                        <div> <span>Event type: </span> <span>{{meet.evType}}</span> </div>
-                        <div><span>Date: </span><span>{{meet.date}}</span></div>
-                        <div><span>Time: </span><span>{{meet.startTime}} to {{meet.endTime}}</span></div>
-                        <div><span>Email Id: </span><span>{{meet.emailId}}</span></div>
-                        <hr>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="!selectedDateMeets.length">
-                    <p>No meetings.</p>
-                </ng-container>
-                <button (click)="closePopUp()" id="closeBtn">Close</button>
-            </div> -->
-
-
             <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
                 <h4>Meeting details: </h4>
-                <!-- <ng-container *ngIf="newObj"> -->
-                    <!-- <div *ngFor="let meet of selectedDateMeets; let i = index"> -->
                         <div><span class="title">Meeting with : </span><span>{{newObj.name}}</span></div>
                         <div> <span class="title">Event type : </span> <span>{{newObj.evType}}</span> </div>
                         <div><span class="title">Date : </span><span>{{newObj.date}}</span></div>
                         <div><span class="title">Time : </span><span>{{newObj.startTime}} to {{newObj.endTime}}</span></div>
-                        <div><span class="title">Email Id : </span><span>{{newObj.emailId}}</span></div>
+                        <div><span class="title">Email Ids of participants : </span>
+                            <!-- <span>{{newObj.emailId}}</span> -->
+                            <span *ngFor="let email of newObj.emailId; let i = index">
+                                <p>{{email}}</p>
+                            </span>
+                        </div>
                         <hr>
-                    <!-- </div> -->
-                <!-- </ng-container> -->
-                <button (click)="closePopUp()" id="closeBtn">Close</button>
+
+                <button (click)="closePopUp()" class="closeBtn">Close</button>
+                <button (click)="editMeetingPopUp()">Edit</button>
             </div>
+
+
+            <!-- <div *ngIf="editMeet" [hidden]="!editMeet" id="meetEditDetails">
+                <h4>Edit Meet: </h4>          
+                
+                <p>Add atendees</p>
+                <label for="meetWith">Email Id : </label>
+                <input type="email" [(ngModel)]="newEditObj.emailId" value={{newObj.emailId}} name="meetWith" class="editMeet"/>
+    
+                <label for="meetWithName">Name : </label>
+                <input type="name" [(ngModel)]="newEditObj.name" value={{newObj.name}} name="meetWithName" class="editMeet"/>
+
+                <p>Remove atendees</p>
+
+
+                <label for="meetDate">Meeting date : </label>
+                <input type="date" [(ngModel)]="newEditObj.date" value={{newObj.date}} name="meetDate" class="editDate"/>
+                
+                <label for="meetStartTime">Meeting start time : </label>
+                <input type="time" [(ngModel)]="newEditObj.startTime" value={{newObj.startTime}} name="meetStartTime" class="editStartTime"/>
+    
+                <label for="meetEndTime">Meeting end time : </label>
+                <input type="time" [(ngModel)]="newEditObj.endTime" value={{newObj.endTime}} name="meetEndTime" class="editEndTime"/>
+                    <hr>
+    
+                <div id="btnDiv">
+                    <button (click)="closePopUp()" class="closeBtn">Cancel</button>
+                    <button (click)="editMeetingfromUserSide()">Finish</button>
+                </div>
+    
+            </div> -->
+
+
+            <div *ngIf="editMeet" [hidden]="!editMeet" id="meetEditDetails">
+                <h4>Edit Meet: </h4>          
+                
+                <p>Add attendees:</p>
+                <div *ngFor="let attendee of attendees; let i = index">
+                    <div>
+                        <div class="makeFlex">
+                            <label for="meetWith">Email Id : </label>
+                            <input type="email" [(ngModel)]="attendees[i]" name="meetWith{{i}}" class="editMeet"/>
+                        </div>
+
+                        <div class="BtnDiv"> 
+                            <button (click)="removeAttendee(i)"  class="removeBtn">-</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="BtnDiv">
+                    <button (click)="addAttendee()"  class="addBtn">+</button>
+                </div>
+                <hr>
+
+                <div>
+                    <p>Remove existing attendees:</p>
+
+                    <div class="removeExtUser" *ngFor="let email of newEditObj['emailId']; let i = index">
+                        <!-- <p>{{newEditObj['emailId']}}</p>
+                        <button *ngIf="newEditObj['emailId']" (click)="removeExistingAttendee()" class="removeBtn">-</button> -->
+                            <p>{{email}}</p>
+                            <button (click)="removeExistingAttendee(i, email)" class="removeBtn">-</button>
+                    </div>
+
+                     <!-- <div *ngIf="removedAttendeeUndo">
+                        <button (click)="undoRemoveExistingAttendee()" class="undoBtn">Undo</button>
+                    </div> -->
+                </div>
+                <hr>
+                
+
+            
+                <div class="makeFlex">
+                    <label for="meetDate">Meeting date : </label>
+                    <input type="date" [(ngModel)]="newEditObj.date" name="meetDate" class="editDate"/>
+                </div>
+                
+                <div class="makeFlex">
+                    <label for="meetStartTime">Meeting start time : </label>
+                    <input type="time" [(ngModel)]="newEditObj.startTime" name="meetStartTime" class="editStartTime"/>
+                </div>
+            
+                <div class="makeFlex">
+                    <label for="meetEndTime">Meeting end time : </label>
+                    <input type="time" [(ngModel)]="newEditObj.endTime" name="meetEndTime" class="editEndTime"/>
+                </div>
+                <hr>
+            
+                <div id="btnDiv">
+                    <button (click)="closePopUp()" class="closeBtn">Cancel</button>
+                    <button (click)="editMeetingfromUserSide()">Finish</button>
+                </div>
+            </div>
+
+
+
+
 
             <div id="calendars">
                 <div>
-                    <!-- <full-calendar id="monthCalendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
-                        [options]="calendarOptionsMonth" plugins={[dayGridPlugin]} >
-                    </full-calendar> -->
                     <full-calendar id="monthCalendar" defaultView="dayGridMonth" 
                         [options]="calendarOptionsMonth" plugins={[dayGridPlugin]} >
-                        <!-- <ng-template #eventContent let-arg>
-                            <b>{{ arg.event.title }}</b>
-                        </ng-template> -->
-                        <!-- <a #eventTitle> this </a> -->
-                        <!-- <a #eventTitle>{{ arg.event.title }}</a> -->
                     </full-calendar>
                 </div>
     

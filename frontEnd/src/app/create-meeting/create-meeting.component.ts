@@ -62,6 +62,11 @@ export class CreateMeetingComponent implements OnInit {
   workingHrStart = ""
   workingHrEnd = ""
 
+  avatar = ""
+  API_URL = 'http://localhost:3000';
+
+
+
   // hardcoding--------
   duration = {
     "hrs": 0,
@@ -162,6 +167,7 @@ export class CreateMeetingComponent implements OnInit {
       this.evDurHrs = Number(params['evDurHrs'])
       this.evDurMins = Number(params['evDurMins'])
       this.evType = params['evType']
+      this.avatar = `${this.API_URL}/${params['image']}`
 
       // Fetch meetings when component initializes
       this.apiService.getMeetingsHide(id);
@@ -873,9 +879,5 @@ export class CreateMeetingComponent implements OnInit {
     this.router.navigate(['/makeMeeting'])
 
   }
-
-
-
-
 }
 

@@ -68,7 +68,7 @@ td{
     /* justify-content: space-between; */
 }
 
-#meetDetails{    
+#meetDetails, #meetEditDetails{    
     position: absolute;
     /* position: fixed; */
     z-index: 10;
@@ -79,7 +79,62 @@ td{
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     font-size: 15px;
 }
+#meetEditDetails{
+    /* margin-left: 25%; */
+    margin-top: 1%;
+    width : 400px;
+}
+.makeFlex{
+    display: flex;
+    justify-content: space-between;
+}
+button{
+    width:100px;
+    height:30px;
+    border-radius: 5px;
+    margin-right: 5px;
+    border: none;
+    background-color: rgb(40, 107, 40);
+}
+.closeBtn{
+    background-color: rgb(211, 36, 36)
+}
+button:hover{
+    cursor: pointer;
+    color: white;
+}
+.removeBtn, .addBtn{
+    width:30px;
+    border-radius: 50px;
+    /* background-color: white; */
+}
+.removeBtn{
+    margin-left: 2px;
+}
+.BtnDiv{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 5px;
+}
+.addBtn{
+    display: block;
+}
 
+#meetEditDetails input{
+    margin-bottom: 10px;
+} 
+input{
+    padding: 7px;
+    border: 1px solid rgb(216, 213, 213);
+    border-radius: 5px;
+}
+.removeExtUser{
+    display: flex;
+    justify-content: space-between;
+}
+.removeExtUser>p{
+    display: inline;
+}
 
 .title{
     font-weight: 500;

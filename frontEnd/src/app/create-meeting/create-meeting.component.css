@@ -6,6 +6,16 @@
 #parentDiv {
     height: 150vh;
 }
+#avatarDiv{
+    margin-bottom: 10px;
+    width:100px;
+    height:100px;
+    margin: auto;
+}
+#avatarDiv>img{
+    width:100%;
+    height:100%
+}
 
 /* .container{
     border: 1px solid red; */
