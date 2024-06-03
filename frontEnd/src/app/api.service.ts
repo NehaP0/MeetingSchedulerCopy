@@ -30,7 +30,6 @@ export class APIService {
     1, 2, 3, 4, 5,
   ]);
   private durationSubject = new BehaviorSubject<object>({
-    
     hrs: 0,
     minutes: 30,
   });
@@ -49,6 +48,10 @@ export class APIService {
   private getMeetingsOfParticularEventAdminSubject = new BehaviorSubject<any[]>(
     []
   );
+  private timesForVotingSubject = new BehaviorSubject<any[]>([]);
+  private meetingPollDetailsSubject = new BehaviorSubject<object>({});
+  private votingLinkSubject = new BehaviorSubject<string>('');
+  private votingArrSubject = new BehaviorSubject<any[]>([]);
 
   public userName$ = this.userNameSubject.asObservable();
   public emailId$ = this.emailIdSubject.asObservable();
@@ -83,6 +86,10 @@ export class APIService {
     this.getEventsforUserToSeeSubject.asObservable();
   public getMeetingsOfParticularEventAdmin$ =
     this.getMeetingsOfParticularEventAdminSubject.asObservable();
+  public timesForVoting$ = this.timesForVotingSubject.asObservable();
+  public meetingPollDetails$ = this.meetingPollDetailsSubject.asObservable();
+  public votingLink$ = this.votingLinkSubject.asObservable();
+  public votingArr$ = this.votingArrSubject.asObservable();
 
   API_URL = 'http://localhost:3000';
 
@@ -614,7 +621,7 @@ export class APIService {
         this.selectedUserAvailabilityObjSubject.next(
           users[i]['userAvailability']
         );
-        // console.log(this.selectedUserAvailabilityObj$);
+        // console.log("selectedUserAvailabilityObj ",this.selectedUserAvailabilityObj$);
         break;
       }
     }
@@ -1211,5 +1218,79 @@ export class APIService {
     // let url = `${this.API_URL}/user/getImage/${localStorage.getItem('emailID')}`
     // const response = await this.httpClient.get(url)
     // console.log("response message ", response['message']);
+  }
+
+  updateTimesForVoting(events: any[]) {
+    this.timesForVotingSubject.next(events);
+    console.log('times ', this.timesForVotingSubject.value);
+    //[
+    // { Id: 8711775288493731
+    // end: "2024-05-25T06:30:00.000Z"
+    // start: "2024-05-25T11:30:00+05:30"
+    //},
+
+    //{ Id: 8711775288493731
+    // end: "2024-05-25T06:30:00.000Z"
+    // start: "2024-05-25T11:30:00+05:30"}
+    //]
+    if (this.timesForVotingSubject.value.length == 0) {
+      alert('Please pick 1 or more times to continue.');
+    } else {
+      this.router.navigate(['votingEventDetails']);
+    }
+  }
+
+  async updatePollDetails(meetingName, reserveTimes, votesCheckBox) {
+    console.log('updatePollDetails called ');
+
+    let deets = {
+      evName: meetingName,
+      reserveTimes: reserveTimes,
+      showVotes: votesCheckBox,
+      link: '',
+      location: 'Google Meet',
+      details: this.timesForVotingSubject.value,
+    };
+    console.log('deets ', deets);
+
+    const response = await this.httpClient
+      .patch<any>(
+        `${this.API_URL}/user/updatePoll/${localStorage.getItem('emailID')}`,
+        deets
+      )
+      .toPromise();
+    console.log('response ', response);
+    if (response['message'] == 'User data updated successfully') {
+      this.votingLinkSubject.next(response['link']);
+      console.log('link in apiservice ', this.votingLinkSubject.value);
+
+      this.router.navigate(['/pollLinkPopUp']);
+    } else {
+      alert(response['message']);
+    }
+    // if (response['message'] == 'Meeting edited.') {
+    //   window.location.reload();
+    // }
+  }
+
+  async getVotingArrOfloggedInUser() {
+    const response = await this.httpClient
+      .get(`${this.API_URL}/user/getVotingEvents`)
+      .toPromise();
+
+    const responseMsg = response['msg'];
+
+    if (responseMsg == 'voting arr not found') {
+      this.votingArrSubject.next([]);
+    } else {
+      this.votingArrSubject.next(responseMsg);
+    }
+  }
+
+  meetingByPollConfirmed(meetingId: string, detailObjId: string) {
+    console.log('meetingByPollConfirmed functn called and meet details ids',meetingId,detailObjId);
+    let body = { meetingId, detailObjId };
+
+    return this.httpClient.post(`${this.API_URL}/user/votingMeetConfirmed`, body).toPromise();
   }
 }

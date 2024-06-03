@@ -136,12 +136,15 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
       console.log("findLoggedInUser ", findLoggedInUser);
 
       let loggedInUserName = findLoggedInUser[0].name;
-      let loggedInUserPhoneNumber = findLoggedInUser[0].phoneNumber;
-
-      let phoneNumbersOfUsersFoundInDb = [findUser[0].phoneNumber]
-
-
       console.log("loggedInUserName ", loggedInUserName);
+      let loggedInUserPhoneNumber = findLoggedInUser[0].phoneNumber;
+      console.log("loggedInUserPhoneNumber ", loggedInUserPhoneNumber);
+
+      // if(findUser.length != 0){
+      //   let phoneNumbersOfUsersFoundInDb = [findUser[0].phoneNumber]
+      // }
+
+
       console.log("findUser ", findUser[0]);
 
       // whosoevers calendar it is find that event for him and put meeting in that event and send him mail.
@@ -194,14 +197,14 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         let findHimInDb = await User.find({ emailID: otherEmails[i] });
         if (findHimInDb) {
           emailsOfUsersFoundInDb.push(otherEmails[i]);
-          console.log("phoneNumber ", findHimInDb[0].phoneNumber);
-          phoneNumbersOfUsersFoundInDb.push(findHimInDb[0].phoneNumber)
+          // console.log("phoneNumber ", findHimInDb[0].phoneNumber);
+          // phoneNumbersOfUsersFoundInDb.push(findHimInDb[0].phoneNumber)
         } else {
           emailsOfUsersNotFoundInDb.push(otherEmails[i]);
         }
       }
 
-      console.log("phoneNumbersOfUsersFoundInDb ", phoneNumbersOfUsersFoundInDb);
+      // console.log("phoneNumbersOfUsersFoundInDb ", phoneNumbersOfUsersFoundInDb);
       console.log("emailsOfUsersFoundInDb ", emailsOfUsersFoundInDb);
 
 
@@ -282,7 +285,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
           additionalInfo
         );
         // await sendMsg([loggedInUserPhoneNumber, ...phoneNumbersOfUsersFoundInDb]);
-        await sendMsg([...phoneNumbersOfUsersFoundInDb]);
+        // await sendMsg([...phoneNumbersOfUsersFoundInDb]);
 
         return res
           .status(200)
@@ -524,24 +527,24 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
   // -----------------mailsending ends-------------
 
   // -----------------msgSending starts------------
-  async function sendMsg(phoneNumbersArr) {
-    console.log("sendMsg called ", phoneNumbersArr);
-    const client = require("twilio")(accountSid, authToken);
+  // async function sendMsg(phoneNumbersArr) {
+  //   console.log("sendMsg called ", phoneNumbersArr);
+  //   const client = require("twilio")(accountSid, authToken);
 
-    for(let i=0; i<phoneNumbersArr.length; i++){
-        console.log(phoneNumbersArr[i]);
-        client.messages
-          .create({
-            from: process.env.TWILIO_PHONE_NUMBER,
-            // to: "+919359412215",
-            to: `+91${phoneNumbersArr[i]}`,
-            body: "Hi, your meeting is scheduled. For more details, check your mail.",
-            //   }).then((message) => console.log(message.sid));
-          })
-          .then((message) => console.log(message.sid))
-          .catch((err) => console.log(err));
-    }
-  }
+  //   for(let i=0; i<phoneNumbersArr.length; i++){
+  //       console.log(phoneNumbersArr[i]);
+  //       client.messages
+  //         .create({
+  //           from: process.env.TWILIO_PHONE_NUMBER,
+  //           // to: "+919359412215",
+  //           to: `+91${phoneNumbersArr[i]}`,
+  //           body: "Hi, your meeting is scheduled. For more details, check your mail.",
+  //           //   }).then((message) => console.log(message.sid));
+  //         })
+  //         .then((message) => console.log(message.sid))
+  //         .catch((err) => console.log(err));
+  //   }
+  // }
   //----------------msgSending Ends-------------------
 });
 

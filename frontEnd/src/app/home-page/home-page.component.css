@@ -250,7 +250,7 @@ a:hover{
     display: flex;
     justify-content: space-evenly;
     /* border: 2px solid red; */
-    width: 60%;
+    /* width: 60%; */
     font-size: 14px;
 }
 #rightDiv{

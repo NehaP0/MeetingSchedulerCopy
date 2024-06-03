@@ -1,0 +1,52 @@
+<app-navbar></app-navbar>
+
+<div>
+  <div id="content">
+    <h1>Polling events</h1>
+    <app-nav-for-scheduled-events></app-nav-for-scheduled-events>
+    <div id="events">
+      <table>
+        <thead>
+          <tr>
+            <th>Event Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let meeting of meetings; let i = index">
+            <tr>
+              <td>{{ meeting.evName }}</td>
+              <td class="detailsBtnClass">
+                <button (click)="toggleDetails(i)">Details</button>
+              </td>
+            </tr>
+            <tr *ngIf="selectedMeetingIndex === i" class="meetingDetails">
+              <td colspan="2">
+                <ng-container *ngFor="let detailObj of meeting.details; let j = index">
+                  <div>
+                    <p>TIME: {{ detailObj.start | date: 'short' }} - {{ detailObj.end | date: 'short' }}</p>
+                    <p>NUMBER OF INVITEES WHO VOTED: {{ detailObj.whoVoted.length }}</p>
+                    <table *ngIf="detailObj.whoVoted.length">
+                      <ng-container *ngFor="let whoVotedObj of detailObj.whoVoted">
+                        <tr>{{ whoVotedObj.whoVotedName }}</tr>
+                      </ng-container>
+                    </table>
+                    <p *ngIf="!isLater(detailObj.start)" class="red">Oops! This slot is in the past and you cannot book it now.</p>
+                    <p *ngIf="isLater(detailObj.start)">LINK: {{ meeting.link }}</p>
+                    <p *ngIf="!isLater(detailObj.start)" class="grey">Link expired</p>
+                    <button *ngIf="isLater(detailObj.start)" (click)="bookSlot(i, j)">Book Slot</button>
+                    <div *ngIf="selectedMeetingIndex === i && selectedDetailIndex === j">
+                      <button (click)="confirmBookSlot(meeting._id, detailObj._id)" class="confmCnclBtn">Confirm booking</button>
+                      <button (click)="bookSlot(i, j)" class="confmCnclBtn" id="cancelBtn">Cancel</button>
+                    </div>
+                  </div>
+                  <hr />
+                </ng-container>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

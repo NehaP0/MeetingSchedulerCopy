@@ -49,11 +49,8 @@ meetingRoute.post("/createMeeting", async(req, res)=>{
     }
 
     else{
-
         console.log("gotten body data", req.body);
         console.log("meeting will be scheduled with ", userEmail);
-
-
     try{
         let findUser = await User.find({name:user})
         let findLoggedInUser = await User.find({emailID : importedloggedInUserEmail})

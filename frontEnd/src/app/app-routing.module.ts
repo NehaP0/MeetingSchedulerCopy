@@ -19,69 +19,57 @@ import { ScheduledEventsComponent } from './scheduled-events/scheduled-events.co
 import { EditEventComponent } from './edit-event/edit-event.component';
 import { NewUserAdditionAdminComponent } from './new-user-addition-admin/new-user-addition-admin.component';
 import { EntireUserAdminComponent } from './entire-user-admin/entire-user-admin.component';
-// import { MeetingsAdminComponent } from './meetings-admin/meetings-admin.component';
 import { CalendarEventsAdminComponent } from './calendar-events-admin/calendar-events-admin.component';
 import { UserAvailabilityAdminComponent } from './user-availability-admin/user-availability-admin.component';
 import { MeetingsTableAdminComponent } from './meetings-table-admin/meetings-table-admin.component';
 import { MeetingsCalendarAdminComponent } from './meetings-calendar-admin/meetings-calendar-admin.component';
 import { MakeMeetingAdminComponent } from './make-meeting-admin/make-meeting-admin.component';
+import { OAuthLoginComponent } from './o-auth-login/o-auth-login.component';
+import { CallbackComponentComponent } from './callback-component/callback-component.component';
+import { BrandingComponent } from './branding/branding.component';
+import { WorkflowsComponent } from './workflows/workflows.component';
+import { PollCalendarComponent } from './poll-calendar/poll-calendar.component';
+import {VotingEventDetailsComponent} from './voting-event-details/voting-event-details.component'
+import {PollLinkPopUpComponent} from './poll-link-pop-up/poll-link-pop-up.component'
+import { PollingPageComponent } from './polling-page/polling-page.component';
 
-// import { ScheduleMeetComponent } from './schedule-meet/schedule-meet.component';
-// import { CalendarComponentComponent } from './calendar-component/calendar-component.component';
-// ?name={{user.name}}&id={{user.emailID}}
-
-import {OAuthLoginComponent} from './o-auth-login/o-auth-login.component'
-// import {MicrosoftOutlookComponent} from './microsoft-outlook/microsoft-outlook.component'
-
-// import { CallbackComponent } from './callback.component';
-import {CallbackComponentComponent} from './callback-component/callback-component.component'
-import {BrandingComponent} from './branding/branding.component'
-import {WorkflowsComponent} from './workflows/workflows.component'
 
 const routes: Routes = [
-  { path:  '', redirectTo:  'registeration', pathMatch:  'full' },
-  {path : 'registeration', component: RegisterationComponent},
-  {path : 'login', component: LoginComponent},
+  { path: '', redirectTo: 'registeration', pathMatch: 'full' },
+  { path: 'registeration', component: RegisterationComponent },
+  { path: 'login', component: LoginComponent },
   // {path : 'schedulemeet', component: ScheduleMeetingComponent},
-  {path : 'calendarByLink', component: CalendarByLinkComponent},
+  { path: 'calendarByLink', component: CalendarByLinkComponent },
   // {path : 'calendar', component: CalendarComponentComponent},
-  {path : 'customise', component: CustomiseComponent},
-  {path : 'home', component: HomePageComponent},
-  {path: 'createNewEventType', component: NewEventTypeComponent},
-  {path : 'newEventType', component : CreateNewEventTypeComponent},
-  {path : 'selectDateTime', component: SelectDateTimeComponent},
-  {path: 'createMeeting', component: CreateMeetingComponent},
-  {path: 'makeMeeting', component : MakeMeetingComponent},
-  // {path: 'scheduleMeet', component: ScheduleMeetComponent}
-  // MakeMeetingComponent
-  {path: 'listAllEventTypesComponent', component: ListAllEventTypesComponent},
-  {path: 'scheduledEvents', component: ScheduledEventsComponent},
-  {path: 'editEvent', component : EditEventComponent}  ,
-
-  {path : 'users', component: AllusersComponent},
-  {path: 'newUserAdditionAdmin',component : NewUserAdditionAdminComponent},
-  {path: 'entireUserAdmin', component : EntireUserAdminComponent},
-  // {path: 'meetingsAdmin', component: MeetingsAdminComponent},
-  {path : 'calendarEventsAdmin',component: CalendarEventsAdminComponent},
-  {path : 'userAvailabilityAdmin', component: UserAvailabilityAdminComponent},
-  {path: 'meetingsTableAdmin', component: MeetingsTableAdminComponent},
-  {path : 'meetingsCalendarAdmin', component: MeetingsCalendarAdminComponent},
-  {path : 'makeMeetingAdminComponent', component: MakeMeetingAdminComponent},
-
-  // {path: '', component : OAuthLoginComponent},
-  // {path: 'microsoftCalendar', component : MicrosoftOutlookComponent},
-  // {path: 'callback', component: CallbackComponent}
-  {path: 'auth/callback', component: CallbackComponentComponent},
-  {path: 'branding', component: BrandingComponent},
-  {path: 'workflows', component: WorkflowsComponent}
-
+  { path: 'customise', component: CustomiseComponent },
+  { path: 'home', component: HomePageComponent },
+  { path: 'createNewEventType', component: NewEventTypeComponent },
+  { path: 'newEventType', component: CreateNewEventTypeComponent },
+  { path: 'selectDateTime', component: SelectDateTimeComponent },
+  { path: 'createMeeting', component: CreateMeetingComponent },
+  { path: 'makeMeeting', component: MakeMeetingComponent },
+  { path: 'listAllEventTypesComponent', component: ListAllEventTypesComponent },
+  { path: 'scheduledEvents', component: ScheduledEventsComponent },
+  { path: 'editEvent', component: EditEventComponent },
+  { path: 'users', component: AllusersComponent },
+  { path: 'newUserAdditionAdmin', component: NewUserAdditionAdminComponent },
+  { path: 'entireUserAdmin', component: EntireUserAdminComponent },
+  { path: 'calendarEventsAdmin', component: CalendarEventsAdminComponent },
+  { path: 'userAvailabilityAdmin', component: UserAvailabilityAdminComponent },
+  { path: 'meetingsTableAdmin', component: MeetingsTableAdminComponent },
+  { path: 'meetingsCalendarAdmin', component: MeetingsCalendarAdminComponent },
+  { path: 'makeMeetingAdminComponent', component: MakeMeetingAdminComponent },
+  { path: 'auth/callback', component: CallbackComponentComponent },
+  { path: 'branding', component: BrandingComponent },
+  { path: 'workflows', component: WorkflowsComponent },
+  { path: 'pollCalendar', component: PollCalendarComponent },
+  { path : 'votingEventDetails', component : VotingEventDetailsComponent},
+  {path : 'pollLinkPopUp', component : PollLinkPopUpComponent},
+  {path: 'pollingPage', component : PollingPageComponent}
 ];
-
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule{}
-
+export class AppRoutingModule {}

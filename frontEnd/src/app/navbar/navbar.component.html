@@ -18,7 +18,25 @@
     <div class="showme" >
         <div id="upperDivHover">
             <div id="logoDivExpand"><a href="/home"><ng-icon id="logoExpand" name="bootstrapCCircleFill"></ng-icon><p>Calendly</p></a></div>
-            <div><a href="/createNewEventType"><button id="plusSignExpand" name="bootstrapPlusCircleFill">+ Create</button></a></div>
+            <div><button id="plusSignExpand" name="bootstrapPlusCircleFill" (click)="createClicked()">+ Create</button></div>
+            <div id="popUp" *ngIf="showPopUp">
+                <button class="popUpBtns">
+                    <!-- <div>icon</div> -->
+                    <div>
+                        <div class="heading"><p>Event Type</p></div>
+                        <div  class="text"><p>Create a new template for your regularly scheduled events.</p></div>
+                    </div>
+                </button>
+                <button class="popUpBtns" (click)="meetingPoll()">
+                    <!-- <div>icon</div> -->
+                    <div>
+                        <div class="heading"><p>Meeting poll</p></div>
+                        <div class="text"><p>SChedule a group meeting after offering times for a vote.</p></div>
+                    </div>
+                </button>
+            </div>
+
+
             <div><a href="/home"><ng-icon class="commonSizeIcon" id="attachIconExpand" name="typAttachmentOutline"></ng-icon><p>Event Types</p></a></div>
             <div><a href="/scheduledEvents"><ng-icon class="commonSizeIcon" name="remixCalendar2Line"></ng-icon><p>Scheduled events</p></a></div>
             <div><a href="/workflows"><ng-icon class="commonSizeIcon" name="remixStackshareLine"></ng-icon><p>Workflows</p></a></div>
@@ -34,7 +52,3 @@
 
     </div>
 </div>
-
-
-
-

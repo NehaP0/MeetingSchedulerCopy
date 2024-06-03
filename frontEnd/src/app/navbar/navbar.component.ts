@@ -9,8 +9,6 @@ import { APIService } from '../api.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-
-
   loggedInName = localStorage.getItem("userLoggedInName" || "")
   loggedInEmailId = localStorage.getItem("emailID" || "")
   firstChar = this.loggedInName[0]
@@ -23,6 +21,7 @@ export class NavbarComponent {
   deleteEventId : string = ""
   deleteEventName : string = ""
   setCopied : string = ""
+  showPopUp: boolean = false
 
 
   constructor(private route:ActivatedRoute,private router:Router,private apiService: APIService){}
@@ -117,9 +116,18 @@ deleteEvent(id : string){
   //   this.apiService.eventsArray$.subscribe((eventsArray) => {
   //    console.log("events in ts ",eventsArray)
   //    this.eventsArrayOfLoggedInUser = eventsArray
-  //   })
-
+  //   })'
   //  }, 1000);
+}
+
+
+createClicked(){
+  // <a href="/createNewEventType">
+  this.showPopUp = !this.showPopUp
+}
+
+meetingPoll(){
+  this.router.navigate(['/pollCalendar'])
 }
 
 }

@@ -1,0 +1,112 @@
+#topDiv {
+  padding: 40px 10px;
+  border-bottom: 1px solid rgb(230, 227, 227);
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#mainDiv {
+  display: flex;
+  width: 100%;
+}
+#mainDiv > :nth-child(1) {
+  width: 25%;
+}
+#mainDiv > :nth-child(2) {
+  width: 75%;
+}
+#leftDiv {
+  padding: 30px;
+}
+#durationHeading {
+  font-weight: bold;
+}
+select {
+  padding: 10px;
+  border-radius: 5px;
+  width: 150px;
+}
+/* -------weekCalendar starts-------- */
+
+#weekCalendar {
+  height: 100vh;
+  border: 0.2px solid rgb(230, 230, 230);
+  background-color: white;
+  border-radius: 5px;
+}
+::ng-deep #weekCalendar .fc-header-toolbar {
+  padding: 5px 15px 0px 15px;
+}
+::ng-deep #weekCalendar .fc-toolbar-title {
+  /* color: white; */
+  font-size: 15px;
+}
+::ng-deep #weekCalendar .fc-button {
+  background-color: #ecebeb;
+  color: black;
+  padding: 0px;
+  border: none;
+  font-size: 10px;
+  /* font-weight: 1px; */
+}
+::ng-deep #weekCalendar .fc-scrollgrid-shrink-cushion {
+  font-size: 13px;
+  /* color: green; */
+}
+::ng-deep #weekCalendar a {
+  font-size: 12px;
+  font-weight: 400;
+}
+::ng-deep #weekCalendar .fc-timegrid-slot.fc-timegrid-slot-lane {
+  /* overflow-y: hidden !important; */
+  /* border: 1px solid red; */
+}
+::ng-deep
+  #weekCalendar
+  .fc-timegrid-slot
+  .fc-timegrid-slot-lane
+  .fc-timegrid-slot-minor
+  > :nth-child(1) {
+  /* overflow-y: hidden !important; */
+  border: 1px solid green;
+}
+/* ::ng-deep #weekCalendar .fc-scroller>:nth-child(1){
+    border: 1px solid red;
+} */
+::ng-deep
+  #weekCalendar
+  .fc-daygrid-body.fc-daygrid-body-unbalanced.fc-daygrid-body-natural {
+  display: none;
+}
+
+::ng-deep #weekCalendar .unavailable {
+  background-color: #f2f2f2; /* Example background color for unavailable dates */
+  color: #999; /* Example text color for unavailable dates */
+  cursor: not-allowed; /* Example cursor style for unavailable dates */
+}
+
+/* -------weekCalendar ends--------- */
+
+#footer{
+  margin-top: -200px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 10px;
+}
+#footerChildDiv{
+  background-color: white;  
+  position: fixed;
+  width:30%;
+  display: flex;
+  margin-right: 10px;
+  justify-content: space-between;
+  z-index: 1;
+}
+button{
+  padding: 5px 30px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #1271fb;
+  color : white;
+}

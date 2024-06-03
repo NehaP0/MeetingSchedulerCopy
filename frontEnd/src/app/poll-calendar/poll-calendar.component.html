@@ -1,1 +1,35 @@
-<p>poll-calendar works!</p>
+<div>
+  <div id="topDiv">New meeting poll</div>
+
+  <div id="mainDiv">
+    <div id="leftDiv">
+      <p id="durationHeading">Duration</p>
+      <select (change)="onDurationChange($event)">
+        <option value="30">30 minutes</option>
+        <option value="15">15 minutes</option>
+        <option value="45">45 minutes</option>
+        <option value="1">1 hour</option>
+        <!-- <option value="custom">Custom</option> -->
+      </select>
+    </div>
+    <div>
+      <full-calendar
+        id="weekCalendar"
+        defaultView="dayGridWeek"
+        *ngIf="formattedMeetingsHide.length > 0"
+        [options]="calendarOptionsWeek"
+        plugins="{[dayGridPlugin]}"
+      >
+      </full-calendar>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div id="footerChildDiv">
+      <p>{{ numberOfEventsSelected }}/20 times selected</p>
+      <button (click)="nextBtn()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- defaultView="dayGridWeek" -->

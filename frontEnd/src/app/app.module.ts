@@ -28,7 +28,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { NgIconsModule } from '@ng-icons/core';
 import { heroUsers, heroVideoCamera, heroGlobeAsiaAustralia } from '@ng-icons/heroicons/outline';
 import {ionSettingsOutline, ionCopyOutline, ionSearchOutline, ionLogInOutline, ionMailOpenOutline} from '@ng-icons/ionicons'
-import {bootstrapStars, bootstrapCaretDownFill, bootstrapChevronDown, bootstrapCCircleFill, bootstrapPlusCircleFill, bootstrapClock, bootstrapQuestionCircle, bootstrapArrowLeft} from '@ng-icons/bootstrap-icons'
+import {bootstrapStars, bootstrapCaretDownFill, bootstrapChevronDown, bootstrapCCircleFill, bootstrapPlusCircleFill, bootstrapClock, bootstrapQuestionCircle, bootstrapArrowLeft, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo} from '@ng-icons/bootstrap-icons'
 import {remixUserAddLine, remixCalendar2Line, remixStackshareLine, remixArrowRightSLine, remixDeleteBin6Line} from '@ng-icons/remixicon'
 import {typAttachmentOutline, typTick} from '@ng-icons/typicons'
 import {circumRoute} from '@ng-icons/circum-icons'
@@ -68,6 +68,10 @@ import { CallbackComponentComponent } from './callback-component/callback-compon
 import { BrandingComponent } from './branding/branding.component';
 import { WorkflowsComponent } from './workflows/workflows.component';
 import { PollCalendarComponent } from './poll-calendar/poll-calendar.component';
+import { VotingEventDetailsComponent } from './voting-event-details/voting-event-details.component';
+import { PollLinkPopUpComponent } from './poll-link-pop-up/poll-link-pop-up.component';
+import { NavForScheduledEventsComponent } from './nav-for-scheduled-events/nav-for-scheduled-events.component';
+import { PollingPageComponent } from './polling-page/polling-page.component';
 // import { CallbackComponentComponent } from './callback-component/callback-component.component';
 
 // import { NavbarComponent } from './navbar/navbar.component';
@@ -113,6 +117,10 @@ import { PollCalendarComponent } from './poll-calendar/poll-calendar.component';
     BrandingComponent,
     WorkflowsComponent,
     PollCalendarComponent,
+    VotingEventDetailsComponent,
+    PollLinkPopUpComponent,
+    NavForScheduledEventsComponent,
+    PollingPageComponent,
     // CallbackComponentComponent,
     // NavbarComponent,
     // ScheduleMeetComponent
@@ -135,7 +143,7 @@ import { PollCalendarComponent } from './poll-calendar/poll-calendar.component';
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
        bootstrapCCircleFill, bootstrapPlusCircleFill, typAttachmentOutline, remixCalendar2Line, remixStackshareLine, circumRoute , bootstrapClock, octApps, iconoirCrown,
        bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick, tablerEdit, remixDeleteBin6Line, radixCross2,
-       ionLogInOutline, ionMailOpenOutline}),
+       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo}),
 
       OAuthModule.forRoot({
       resourceServer: {

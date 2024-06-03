@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// start, end, user, userEmail, currentDateTime, evType, evName
 const meetingSchema = mongoose.Schema({
   start: {
     type: String,
@@ -18,7 +17,7 @@ const meetingSchema = mongoose.Schema({
   },
   currentDateTime: {
     type: String,
-    required: true,
+    // required: true,
   },
   evName: {
     type: String,
@@ -55,6 +54,30 @@ const availabilitySchema = mongoose.Schema({
   nonWorkingDays: { type: Array, required: true },
 });
 
+const whoVoted = mongoose.Schema({
+  whoVotedName : {type: String},
+  whoVotedEmail : {type: String}
+})
+
+const votingSchema = mongoose.Schema(
+  {
+    evName: { type: String },
+    reserveTimes : {type : Boolean},
+    showVotes : {type : Boolean},
+    link: { type: String },
+    location : {type: String},
+    uniqueId : { type: String },
+    details: [
+      {
+        start: { type: String },
+        end: { type: String },
+        whoVoted: [whoVoted],
+        noOfVotes: { type: Number },
+      },
+    ],
+  },
+);
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -72,21 +95,18 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  // meetings: [meetingSchema],
   events: [eventSchema],
   userAvailability: {
     type: availabilitySchema,
     required: true,
   },
   meetingsWtOthers: [meetingSchema],
-//   profileImage: {
-//     data: Buffer,
-//     contentType: String
-// },
-profileImage: {
-  type: String,
-  required: true,
-}
+  profileImage: {
+    type: String,
+  },
+  voting: {
+    type: [votingSchema]
+  },
 });
 
 const User = mongoose.model("User", userSchema);

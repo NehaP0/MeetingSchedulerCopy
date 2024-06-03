@@ -22,21 +22,21 @@ export class HomePageComponent {
   deleteEventId: string = '';
   deleteEventName: string = '';
   setCopied: string = '';
-
+  
   imageAfterGetting: string = '';
-
+  
   // ------------------------------
   paypalIntegrated: boolean = false;
   // ------------------------------
-
-
+  
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private apiService: APIService,
     private http: HttpClient
   ) {}
-
+  
   ngOnInit() {
     console.log('calling getEvents ');
 

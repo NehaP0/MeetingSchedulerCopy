@@ -1,0 +1,76 @@
+<div>
+  <div id="topDiv">New meeting poll</div>
+
+  <div id="mainDiv">
+    <div id="selections">
+      <div class="smallDivs">
+        <div class="heading makeFlex">
+          <h4>Selections</h4>
+          <a href="/pollCalendar"
+            ><ng-icon name="bootstrapPencil"></ng-icon>Edit</a
+          >
+        </div>
+        <div class="details makeFlex">
+          <ng-icon name="bootstrapPeople"></ng-icon>
+          <p>{{ loggedInName }} (you)</p>
+        </div>
+        <div class="details makeFlex">
+          <ng-icon name="bootstrapClock"></ng-icon>
+          <p>{{ selectedDuration }} minutes</p>
+        </div>
+        <div class="details"></div>
+      </div>
+      <div class="smallDivs">
+        <h4>Event details</h4>
+        <div>
+          <p class="evDetailsHeading">Meeting name *</p>
+          <input type="text" value="{{ meetingName }}" [(ngModel)]="meetingName"/>
+        </div>
+        <div>
+            <p class="evDetailsHeading">Location</p>
+            <div id="googleMeetIcon">
+                <ng-icon name="bootstrapCameraVideo" id="meet"></ng-icon>
+                <p>Google Meet</p>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="smallDivs">
+        <h4>Optional settings</h4>
+        <div>
+            <div class="makeFlex">
+                <p class="evDetailsHeading">Reserve times</p>
+                <label class="switch">
+              <input type="checkbox" id="reserveTimesCheckBox" (change)="changeReserveCheckBox()" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div>
+            <p>
+              Put placeholders on your calendar for all offered times until one
+              of them is booked.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="makeFlex">
+            <p class="evDetailsHeading">Show votes on page</p>
+            <label class="switch">
+              <input type="checkbox" checked id="showVotesCheckBox" (change)="changeVoteCheckBox()"/>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div>
+            <p>Allow poll participants to see each other's names and votes.</p>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <div id="footer" class="smallDivs">
+      <div>
+        <a href="/pollCalendar" id="backAnchor">Back</a>
+        <button (click)="shareMeetingPollBtn()">Share meeting poll</button>
+      </div>
+    </div>
+  </div>
+</div>

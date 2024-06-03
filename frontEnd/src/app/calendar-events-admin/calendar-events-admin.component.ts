@@ -218,9 +218,9 @@ export class CalendarEventsAdminComponent {
     setTimeout(() => {
       this.calendarOptions = {
         initialView: 'dayGridMonth',
-        events: this.Meetings, //commented so that events are not shown on calendar
+        // events: this.Meetings, //commented so that events are not shown on calendar
         // dateClick: this.onDateClick.bind(this),        
-
+        events : this.formattedMeetingsHide,
         dayMaxEvents: 100,
         eventOrder: 'start',
         displayEventTime: false, //hides time

@@ -439,6 +439,8 @@ eventRoute.delete("/deleteEventAdmin", async (req, res) => {
 eventRoute.patch("/editMeet/:selectedUsersId", async (req, res) => {
   let { selectedUsersId } = req.params;
 
+  console.log("selectedUsersId ", selectedUsersId);
+
   console.log("editMeetAdmin called");
 
   console.log("reqBody", req.body);
@@ -480,14 +482,18 @@ eventRoute.patch("/editMeet/:selectedUsersId", async (req, res) => {
     console.log("findSelectedMeet ", findSelectedMeet);
 
     if (startTime.length == 8) {
+      console.log("if statement startTime.length ",startTime, startTime.length);
       findSelectedMeet[0].start = `${date}T${startTime}`;
     } else {
+      console.log("else statement startTime.length ",startTime, startTime.length);
       findSelectedMeet[0].start = `${date}T${startTime}:00`;
     }
 
     if (endTime.length == 8) {
+      console.log("if statement endTime.length ",endTime, endTime.length);
       findSelectedMeet[0].end = `${date}T${endTime}`;
     } else {
+      console.log("else statement endTime.length ",endTime, endTime.length);
       findSelectedMeet[0].end = `${date}T${endTime}:00`;
     }
 
