@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class HomePageComponent {
   loggedInName = localStorage.getItem('userLoggedInName' || '');
   loggedInEmailId = localStorage.getItem('emailID' || '');
+  usersId = localStorage.getItem('usersUniqueID' || '')
   firstChar = this.loggedInName[0];
   eventsArrayOfLoggedInUser = [];
   logOutValue = false;

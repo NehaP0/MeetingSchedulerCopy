@@ -63,6 +63,7 @@ export class CreateMeetingComponent implements OnInit {
   workingHrEnd = ""
 
   avatar = ""
+  image = ""
   API_URL = 'http://localhost:3000';
 
 
@@ -167,6 +168,7 @@ export class CreateMeetingComponent implements OnInit {
       this.evDurHrs = Number(params['evDurHrs'])
       this.evDurMins = Number(params['evDurMins'])
       this.evType = params['evType']
+      this.image = params['image']
       this.avatar = `${this.API_URL}/${params['image']}`
 
       // Fetch meetings when component initializes

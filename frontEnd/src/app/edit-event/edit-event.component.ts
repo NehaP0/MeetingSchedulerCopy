@@ -50,7 +50,7 @@ export class EditEventComponent {
       // if(!this.evDurMins && !this.evDurHrs){
       //   this.evDurMins = 30
       // }
-      let location = "zoom"
+      let location = "Google Meet"
 
       console.log("in else statement ", this.eventN,this.evDurHrs, this.evDurMins);
       // evName, evType, evDuration, evLocation

@@ -42,16 +42,36 @@ calendarLinkRoute.get("/", async (req, res) => {
   }
 });
 
+// calendarLinkRoute.get("/sharable", async (req, res) => {
+//   const { name, id, evType, evName, evDurHrs, evDurMins, image } = req.query;
+//   console.log("/sharable called");
+//   try {
+//     const user = await User.findOne({ name: name, emailID: id });
+
+//     loggedInUserEmail = id;
+
+//     res.redirect(
+//       `http://localhost:4200/createMeeting?name=${name}&id=${id}&evType=${evType}&evName=${evName}&evDurHrs=${evDurHrs}&evDurMins=${evDurMins}&image=${image}`
+//     );
+
+//     // res.send({message : "req is sent to me", name: name, id: id})
+//   } catch (error) {
+//     res.send({ message: error });
+//   }
+// });
+
+
 calendarLinkRoute.get("/sharable", async (req, res) => {
-  const { name, id, evType, evName, evDurHrs, evDurMins, image } = req.query;
+  const { userId, eventId } = req.query;
   console.log("/sharable called");
+  console.log("req.query ", userId);
   try {
-    const user = await User.findOne({ name: name, emailID: id });
-
-    loggedInUserEmail = id;
-
+    const user = await User.findOne({ _id : userId });
+    console.log("found user in server inin voting app")
+    loggedInUserEmail = user.emailID;
+    console.log("loggedInUserEmail ", loggedInUserEmail);
     res.redirect(
-      `http://localhost:4200/createMeeting?name=${name}&id=${id}&evType=${evType}&evName=${evName}&evDurHrs=${evDurHrs}&evDurMins=${evDurMins}&image=${image}`
+      `http://localhost:4500/?userId=${userId}&eventId=${eventId}`
     );
 
     // res.send({message : "req is sent to me", name: name, id: id})
@@ -59,6 +79,7 @@ calendarLinkRoute.get("/sharable", async (req, res) => {
     res.send({ message: error });
   }
 });
+
 
 calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
   let meetLink;

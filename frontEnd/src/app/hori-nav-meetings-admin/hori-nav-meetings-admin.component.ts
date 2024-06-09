@@ -36,14 +36,14 @@ export class HoriNavMeetingsAdminComponent {
   editEventType: string = ""
   editEventHrs: number = 0
   editEventMins: number = 0
-  editEventLocation: string = "zoom"
+  editEventLocation: string = "Google Meet"
 
   popUpForNewMeet: boolean = false
   newMeetName: string = ""
   newEventType: string = ""
   newEventHrs: number = 0
   newEventMins: number = 0
-  newEventLocation: string = "zoom"
+  newEventLocation: string = "Google Meet"
 
   showpopUpForEventAssignment = false
   public usersWOloggedInUser: Array<any> = []

@@ -36,11 +36,13 @@ export class LoginComponent implements OnInit{
       this.apiService.loginUser(user).subscribe((response)=>{
         console.log("login function called");
         
-        console.log("response ",response);
+        console.log("whole response ",response);
         const token = response['token']
-        // this.apiService.setAuthorizationHeader(token)
+        // this.apiService.setAuthorizationHeader(token)    
 
         localStorage.setItem("emailID", user.emailID);
+
+        localStorage.setItem("usersUniqueID", response["user"]);
 
 
         console.log("token ",token.token);

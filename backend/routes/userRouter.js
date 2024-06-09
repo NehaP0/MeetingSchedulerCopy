@@ -125,11 +125,11 @@ userRoute.post("/login", async (req, res) => {
   try {
     //check if user's emailId matches with the one that is there in the database
     const user = await User.findOne({ emailID: emailID });
-    // console.log(user, "line 40");
+    console.log("user ", user, "line 40");
 
     //if user does not exist in database send response invalid credentials
     if (user.length == 0) {
-      return res.send({ message: "Invalid Credentials" });
+      return res.send({ message: "Invalid Credentials"});
     } else {
       const matchPassword = bcrypt.compare(
         password,
@@ -142,7 +142,7 @@ userRoute.post("/login", async (req, res) => {
             );
             loggedInUserEmail = user.emailID;
             // console.log("user ", user);
-            return res.send({ token: { token }, message: `Login Successful.` });
+            return res.send({ token: { token }, message: `Login Successful.`, user : user._id  });
           } else {
             return res.send({ message: "Invalid Credentials" });
           }
@@ -238,9 +238,7 @@ userRoute.get("/initialUserUnavailibility", async (req, res) => {
 //   }
 // );
 
-userRoute.patch(
-  "/uploadAvatar/:emailId",
-  upload.single("image"),
+userRoute.patch("/uploadAvatar/:emailId",upload.single("image"),
   async (req, res) => {
     try {
       const userEmailId = req.params.emailId;
@@ -433,7 +431,7 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
       topTimes,
       meetingName
     );
-    sendMail(
+    sendMailForVoteSelection(
       loggedInUserEmail,
       whoHasVotedNow,
       totalNumberOfPeopleWhoHaveVotedTillNow,
@@ -472,6 +470,8 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
   //   meetingId: '665cf00117f34bddb122f593',
   //   detailObjId: '665cf00117f34bddb122f594'
   // }
+  let myMeeting = {title:"", evType:"", start:"", end:"", otherEmails: [] ,  user: "", userEmail: "", additionalInfo:""};
+
 try{
   let meetLink;
 
@@ -486,7 +486,6 @@ try{
   let votingArr = loggedInUser.voting;
   console.log("votingArr ", votingArr);
 
-  let myMeeting = {title:"", evType:"", start:"", end:"", otherEmails: [] ,  user: "", userEmail: "", additionalInfo:""};
   console.log("myMeeting ", myMeeting);
 
   votingArr.find((meeting) => {
@@ -721,11 +720,11 @@ try{
         const event = {
           summary: "Meeting scheduled",
           start: {
-            dateTime: meeting.start,
+            dateTime: myMeeting.start,
             timeZone: "Asia/Kolkata",
           },
           end: {
-            dateTime: meeting.end,
+            dateTime: myMeeting.end,
             timeZone: "Asia/Kolkata",
           },
           conferenceData: {
@@ -793,6 +792,7 @@ try{
       // if (userFound.length!==0) {
       console.log("I'll send mails");
   
+    
       const mailOptions2 = {
         from: '"My Company"', // sender address
         template: "email2", // the name of the template file, i.e., email.handlebars
@@ -804,34 +804,34 @@ try{
           //   name: userFound.name,
           name: loggedInUserName,
           // company: user,
-          eventName: title,
+          eventName: myMeeting.title,
           // eventDecription: eventDecription,
           // eventDate: eventDate,
-          eventStartTime: start,
-          eventEndTime: end,
+          eventStartTime: myMeeting.start,
+          eventEndTime: myMeeting.end,
           meetingLink: meetingLink,
-          additionalInfo: additionalInfo,
+          additionalInfo: myMeeting.additionalInfo,
         },
       };
-      for (let i = 0; i < otherEmails.length; i++) {
+      for (let i = 0; i < myMeeting.otherEmails.length; i++) {
         let mailOptions = {
           from: '"My Company"', // sender address
           template: "email1", // the name of the template file, i.e., email.handlebars
           // to: userFound.emailID,
-          to: otherEmails[i],
+          to: myMeeting.otherEmails[i],
           // subject: `Hi, ${userFound.name}`,
           subject: `Meeting Scheduled`,
           context: {
             //   name: userFound.name,
             // name: user,
             company: loggedInUserName,
-            eventName: title,
+            eventName: myMeeting.title,
             // eventDecription: eventDecription,
             // eventDate: eventDate,
-            eventStartTime: start,
-            eventEndTime: end,
+            eventStartTime: myMeeting.start,
+            eventEndTime: myMeeting.end,
             meetingLink: meetingLink,
-            additionalInfo: additionalInfo,
+            additionalInfo: myMeeting.additionalInfo,
           },
         };
         try {
@@ -844,7 +844,7 @@ try{
         }
       }
       try {
-        await transporter.sendMail(mailOptions1);
+        // await transporter.sendMail(mailOptions);
         await transporter.sendMail(mailOptions2);
         console.log(`Email sent`);
       } catch (error) {
@@ -854,8 +854,10 @@ try{
   }
 
 
+});
+
 // ------------------------------
-async function sendMail(
+async function sendMailForVoteSelection(
   loggedInUserEmail,
   whoHasVotedNow,
   totalNumberOfPeopleWhoHaveVotedTillNow,
@@ -909,12 +911,10 @@ async function sendMail(
       await transporter.sendMail(mailOptions);
       console.log(`Email sent to ${loggedInUserEmail}`);
     } catch (error) {
-      console.log(`Nodemailer error sending email to ${user}`, error);
+      console.log(`Nodemailer error sending email to ${loggedInUserEmail}`, error);
     }
   }
 }
-});
-
 // -----------------mailsending ends-------------
 
 module.exports = { userRoute, getLoggedInUserEmail: () => loggedInUserEmail };

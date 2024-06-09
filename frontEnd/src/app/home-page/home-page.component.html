@@ -162,7 +162,7 @@
               >
               , {{ event.evType }}
             </p>
-            <a
+            <!-- <a
               href="http://localhost:3000/calendarLink/sharable?name={{
                 loggedInName
               }}&id={{ loggedInEmailId }}&evType={{ event.evType }}&evName={{
@@ -171,7 +171,12 @@
                 event.evDuration.minutes
               }}&image={{ imageAfterGetting }}"
               >View booking page</a
-            >
+            > -->
+
+            <a
+            href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}&eventId={{event._id}}"
+            target="_blank">View booking page</a
+          >
 
             <div class="firstChar firstCharCard">
               <p>{{ firstChar }}</p>
@@ -179,21 +184,8 @@
             <hr />
             <div class="cardFooter">
               <button
-                ngxClipboard
-                [cbContent]="
-                  'http://localhost:3000/calendarLink/sharable?name=' +
-                  loggedInName +
-                  '&id=' +
-                  loggedInEmailId +
-                  '&evType=' +
-                  event.evType +
-                  '&evName=' +
-                  event.evName +
-                  '&evDurHrs=' +
-                  event.evDuration.hrs +
-                  '&evDurMins=' +
-                  event.evDuration.minutes
-                "
+                ngxClipboard [cbContent]=
+                "'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +event._id"
                 class="copyLinkBtn"
                 (click)="copied(event.evName)"
                 [hidden]="setCopied == event.evName"
@@ -231,3 +223,24 @@
             <button *ngIf="paypalIntegrated" (click)="makePayment()">Pay Now</button> -->
   </div>
 </div>
+
+
+
+
+<!-- href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}" -->
+
+
+<!-- [cbContent]="
+'http://localhost:3000/calendarLink/sharable?name=' +
+loggedInName +
+'&id=' +
+loggedInEmailId +
+'&evType=' +
+event.evType +
+'&evName=' +
+event.evName +
+'&evDurHrs=' +
+event.evDuration.hrs +
+'&evDurMins=' +
+event.evDuration.minutes
+" -->

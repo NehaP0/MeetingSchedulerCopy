@@ -1292,5 +1292,6 @@ export class APIService {
     let body = { meetingId, detailObjId };
 
     return this.httpClient.post(`${this.API_URL}/user/votingMeetConfirmed`, body).toPromise();
+    
   }
 }

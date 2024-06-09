@@ -143,7 +143,8 @@ import { PollingPageComponent } from './polling-page/polling-page.component';
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
        bootstrapCCircleFill, bootstrapPlusCircleFill, typAttachmentOutline, remixCalendar2Line, remixStackshareLine, circumRoute , bootstrapClock, octApps, iconoirCrown,
        bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick, tablerEdit, remixDeleteBin6Line, radixCross2,
-       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo}),
+       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo
+    }),
 
       OAuthModule.forRoot({
       resourceServer: {

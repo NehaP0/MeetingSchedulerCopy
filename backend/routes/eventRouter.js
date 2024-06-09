@@ -412,7 +412,7 @@ eventRoute.delete("/deleteEventAdmin", async (req, res) => {
       console.log("in for loop ", meetingsArrayOfThatEvent);
       meetingsArrayOfThatEvent[i]["evName"] = evName;
       meetingsArrayOfThatEvent[i]["evType"] = evType;
-      findSelectedUser[0].meetingsWtOthers.push(meetingsArrayOfThatEvent[i]);
+      // findSelectedUser[0].meetingsWtOthers.push(meetingsArrayOfThatEvent[i]);
     }
     // console.log("meetingsArrayOfThatEvent later ",meetingsArrayOfThatEvent);
     // console.log("meetingsWtOthers ",findSelectedUser[0].meetingsWtOthers);

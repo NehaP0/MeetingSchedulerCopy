@@ -41,7 +41,7 @@ export class CreateNewEventTypeComponent {
       if(!min && !hrs){
         min = 30
       }
-      let location = "zoom"
+      let location = "Google Meet"
 
       console.log("in else statement ", eventName, hrs, min);
       // evName, evType, evDuration, evLocation

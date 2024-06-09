@@ -8,7 +8,7 @@
     /* display: flex; */
     /* justify-content: center; */
     /* color: #1271fb; */
-    height: 100vh;
+    /* height: 100vh; */
     border: 1px solid #f2f8ff;
   }
   #mainDiv{
@@ -256,7 +256,7 @@ form label{
 #monthCalendar{
     /* height: 300px; */
     margin-right: 10px;
-    height: 80vh;
+    /* height: 80vh; */
     width: 100%;
 
 }

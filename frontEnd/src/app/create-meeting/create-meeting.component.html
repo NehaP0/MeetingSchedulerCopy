@@ -15,8 +15,8 @@
         <div id="belowGreyStrip">
           <p>{{loggedInName}}</p>
           <p>{{evName || "Event name here"}}</p>
-          <div id="avatarDiv" *ngIf="avatar">            
-            <img [src]="avatar" alt="img">
+          <div id="avatarDiv" *ngIf="image">            
+            <img *ngIf="image" [src]="avatar" alt="img">
           </div>
 
           <div id="timeAndLocation">
@@ -28,7 +28,7 @@
             </div>
             <div>
               <ng-icon name="octLocation"></ng-icon>
-              <p id="locationP">{{"zoom" || "Add a location for it to show here"}}</p>
+              <p id="locationP">{{"Google Meet" || "Add a location for it to show here"}}</p>
             </div>
           </div>
           <hr>
