@@ -47,17 +47,19 @@
             Add Guests
           </button>
           <label *ngIf="addGuests" for="guests">Guest Email(s)</label>
-          <input
-            *ngIf="addGuests"
-            type="text"
-            name="Guests"
-            id="Guests"
-            ngModel
-          />
+          
+
+            <input
+              *ngIf="addGuests"
+              type="text"
+              name="Guests"
+              id="Guests"
+              ngModel
+            />
+          </div>
           <p *ngIf="addGuests">
             Notify up to 10 additional guests of the scheduled event.
           </p>
-        </div>
 
         <label for="additional"
           >Please share anything that will help prepare for our meeting.</label

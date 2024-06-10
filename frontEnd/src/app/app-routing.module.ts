@@ -48,7 +48,7 @@ const routes: Routes = [
   { path: 'selectDateTime', component: SelectDateTimeComponent },
   { path: 'createMeeting', component: CreateMeetingComponent },
   { path: 'makeMeeting', component: MakeMeetingComponent },
-  { path: 'listAllEventTypesComponent', component: ListAllEventTypesComponent },
+  { path: 'myEvents', component: ListAllEventTypesComponent },
   { path: 'scheduledEvents', component: ScheduledEventsComponent },
   { path: 'editEvent', component: EditEventComponent },
   { path: 'users', component: AllusersComponent },

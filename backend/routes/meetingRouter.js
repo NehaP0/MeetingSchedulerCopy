@@ -26,6 +26,7 @@ const auth = require('../middlewares/Authenticator');
 
 
 meetingRoute.post("/createMeeting", async(req, res)=>{
+    console.log("createMeeting called");
 
     let meetLink;
 

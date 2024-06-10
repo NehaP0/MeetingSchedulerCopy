@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { APIService } from '../api.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 class ImageSnippet {
   constructor(public src: string, public file: File) {}
@@ -15,7 +17,8 @@ export class BrandingComponent {
   selectedImage: any;
   toShowImg: any;
 
-  constructor(private http: HttpClient, private apiService: APIService) {}
+  constructor(private http: HttpClient, private apiService: APIService,    private route: ActivatedRoute,
+    private router: Router) {}
 
   onFileSelected(event: any) {
     this.selectedImage = event.target.files[0];
@@ -52,6 +55,8 @@ export class BrandingComponent {
           console.log('Image uploaded successfully:', response.imageUrl);
           // Optionally, you can handle success response here, like showing a success message.
           alert('Image uploaded successfully.');
+          this.router.navigate(['home']);
+
         },
         (error) => {
           console.error('Error uploading image:', error);

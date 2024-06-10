@@ -126,6 +126,10 @@ createClicked(){
   this.showPopUp = !this.showPopUp
 }
 
+createEvent(){
+  this.router.navigate(['/createNewEventType'])
+}
+
 meetingPoll(){
   this.router.navigate(['/pollCalendar'])
 }

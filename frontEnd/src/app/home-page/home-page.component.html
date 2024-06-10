@@ -90,10 +90,9 @@
           </div>
           <div>
             <p>{{ loggedInName }}</p>
-            <a href="/listAllEventTypesComponent"
-              >http://localhost:3000/calendarLink?name={{ loggedInName }}&id={{
-                loggedInEmailId
-              }}&image={{ imageAfterGetting }}</a
+            <a href="/myEvents"
+            
+              >http://localhost:4200/myEvents</a
             >
           </div>
         </div>
@@ -101,7 +100,7 @@
           <button id="newEventType" (click)="goToCreateNewEventPage()">
             New Event Type
           </button>
-          <ng-icon name="ionSettingsOutline"></ng-icon>
+          <!-- <ng-icon name="ionSettingsOutline"></ng-icon> -->
         </div>
       </div>
       <hr />
@@ -119,6 +118,7 @@
       </div>
     </div>
  
+    <div><h4 id="pleaseWait" *ngIf="!eventsArrayOfLoggedInUser.length">Please Wait...</h4></div>
     <div id="divForCards">
       <ng-container *ngIf="eventsArrayOfLoggedInUser.length">
         <div

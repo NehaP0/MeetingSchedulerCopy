@@ -25,6 +25,7 @@
                   <div>
                     <p>TIME: {{ detailObj.start | date: 'short' }} - {{ detailObj.end | date: 'short' }}</p>
                     <p>NUMBER OF INVITEES WHO VOTED: {{ detailObj.whoVoted.length }}</p>
+                    
                     <table *ngIf="detailObj.whoVoted.length">
                       <ng-container *ngFor="let whoVotedObj of detailObj.whoVoted">
                         <tr>{{ whoVotedObj.whoVotedName }}</tr>

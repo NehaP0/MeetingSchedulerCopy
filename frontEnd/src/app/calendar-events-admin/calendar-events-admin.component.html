@@ -11,12 +11,13 @@
             <h4>Meeting details: </h4>
             <!-- <ng-container *ngIf="newObj"> -->
             <!-- <div *ngFor="let meet of selectedDateMeets; let i = index"> -->
-            <div><span class="title">Meeting with : </span><span>{{newObj.name}}</span></div>
-            <div> <span class="title">Event name : </span> <span>{{newObj.evName}}</span> </div>
+            <div><span class="title" *ngIf="newObj.name">Meeting with : </span><span>{{newObj.name}}</span></div>
+            <div><span class="title" *ngIf="!newObj.name">Meeting created with poll </span></div>
+            <div> <span class="title" *ngIf="newObj.name">Event name : </span> <span>{{newObj.evName}}</span> </div>
             <div> <span class="title">Event type : </span> <span>{{newObj.evType}}</span> </div>
             <div><span class="title">Date : </span><span>{{newObj.date}}</span></div>
             <div><span class="title">Time : </span><span>{{newObj.startTime}} to {{newObj.endTime}}</span></div>
-            <div><span class="title">Email Id : </span><span>{{newObj.emailId}}</span></div>
+            <div><span class="title" *ngIf="newObj.emailId && newObj.name">Email Id : </span><span>{{newObj.emailId}}</span></div>
             <hr>
             <!-- </div> -->
             <!-- </ng-container> -->

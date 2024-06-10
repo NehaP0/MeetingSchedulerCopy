@@ -39,6 +39,7 @@ export class HomePageComponent {
   ) {}
   
   ngOnInit() {
+  
     console.log('calling getEvents ');
 
     this.apiService.getEvents();
@@ -49,6 +50,12 @@ export class HomePageComponent {
       this.apiService.eventsArray$.subscribe((eventsArray) => {
         console.log('events in ts ', eventsArray);
         this.eventsArrayOfLoggedInUser = eventsArray;
+
+        if(this.eventsArrayOfLoggedInUser.length==0){
+          this.router.navigate(['login']);
+    
+        }
+
       });
     }, 2500);
   }

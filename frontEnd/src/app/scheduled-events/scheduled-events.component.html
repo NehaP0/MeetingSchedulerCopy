@@ -8,12 +8,12 @@
             <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
                 <h4>Meeting details: </h4>
                         <div><span class="title" *ngIf="newObj.name">Meeting with : </span><span>{{newObj.name}}</span></div>
-                        <div><span class="title" *ngIf="!newObj.name">Meeting created with poll </span></div>
+                        <!-- <div><span class="title" *ngIf="!newObj.name">Meeting created with poll </span></div> -->
 
                         <div> <span class="title">Event type : </span> <span>{{newObj.evType}}</span> </div>
                         <div><span class="title">Date : </span><span>{{newObj.date}}</span></div>
                         <div><span class="title">Time : </span><span>{{newObj.startTime}} to {{newObj.endTime}}</span></div>
-                        <div><span class="title" *ngIf="newObj.emailId">Email Ids of participants : </span>
+                        <div><span class="title" *ngIf="newObj.emailId && newObj.name">Email Ids of participants : </span>
                             <span *ngFor="let email of newObj.emailId; let i = index">
                                 <p>{{email}}</p>
                             </span>
@@ -60,7 +60,7 @@
                 <h4>Edit Meet: </h4>          
                 
                 <p>Add attendees:</p>
-                <div *ngFor="let attendee of attendees; let i = index">
+                <div *ngFor="let attendee of attendees; let i = index; trackBy: trackByIndex">
                     <div>
                         <div class="makeFlex">
                             <label for="meetWith">Email Id : </label>

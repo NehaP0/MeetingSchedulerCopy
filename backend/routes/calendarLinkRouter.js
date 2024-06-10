@@ -30,14 +30,17 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 //to get calendar by link
 calendarLinkRoute.get("/", async (req, res) => {
   const { name, id } = req.query;
+  console.log("calendarLinkRoute am called");
 
   try {
-    const user = await User.findOne({ name: name, emailID: id });
+    // const user = await User.findOne({ name: name, emailID: id });
+    console.log(`redirecting to http://localhost:4200/calendarByLink?name=${name}&id=${id}`);
 
     res.redirect(`http://localhost:4200/calendarByLink?name=${name}&id=${id}`);
 
     // res.send({message : "req is sent to me", name: name, id: id})
   } catch (error) {
+    console.log("error occured ", error);
     res.send({ message: error });
   }
 });
@@ -71,7 +74,8 @@ calendarLinkRoute.get("/sharable", async (req, res) => {
     loggedInUserEmail = user.emailID;
     console.log("loggedInUserEmail ", loggedInUserEmail);
     res.redirect(
-      `http://localhost:4500/?userId=${userId}&eventId=${eventId}`
+      `http://localhost:4500/create?userId=${userId}&eventId=${eventId}`
+
     );
 
     // res.send({message : "req is sent to me", name: name, id: id})
@@ -82,6 +86,7 @@ calendarLinkRoute.get("/sharable", async (req, res) => {
 
 
 calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
+  console.log("postMeetFromMeetPage called ");
   let meetLink;
 
   // let importedloggedInUserEmail = getLoggedInUserEmail();

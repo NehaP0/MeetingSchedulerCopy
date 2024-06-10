@@ -276,8 +276,11 @@ userRoute.get("/getImage/:emailId", async (req, res) => {
   }
 });
 
+//to generate a poll and its link
+//working fine
+//generates voting poll link and pushes the user preferred times in his db
 userRoute.patch("/updatePoll/:emailId", async (req, res) => {
-  console.log("update poll called ");
+  console.log("update poll called to generate a poll and its link ");
   // To Generate a 12-character random string
   function generateRandomString(length) {
     const characters =
@@ -321,14 +324,21 @@ userRoute.patch("/updatePoll/:emailId", async (req, res) => {
   }
 });
 
+
+//when user pastes the voting link in browser, redirects user to new app
+//working fine
 userRoute.get("/vs", async (req, res) => {
+  console.log("vs called ");
   const { shortId } = req.query;
   shortIdvariable = shortId;
   res.redirect("http://localhost:4300/");
 });
 
+//finds the user whose calendar it is,and sends his shortId, to show the prefferd voting times
 userRoute.get("/getUserDeetsForVoting", async (req, res) => {
+  console.log("/getUserDeetsForVoting called ");
   try {
+    //change this (user)
     let user = await User.findOne({ emailID: loggedInUserEmail });
     console.log("user sending ", user);
     console.log("sending response ", { user: user, shortId: shortIdvariable });
@@ -338,6 +348,10 @@ userRoute.get("/getUserDeetsForVoting", async (req, res) => {
   }
 });
 
+//when some user selects his time from voting poll
+//goes to the user whose cal, and finds that particular event of voting and pushes the deets of what user has voted for
+//sends mail to user whose calendar (here i am sending to logged in user, so change that)
+//works fine
 userRoute.post("/getUserVoteSelection", async (req, res) => {
   console.log("received request ");
   console.log("req body ", req.body);
@@ -363,15 +377,8 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
     //variables req for mail sending end
 
     votingArr.find((obj) => {
-      console.log(
-        "obj.uniqueId, req.body.shortIdVal",
-        obj.uniqueId,
-        req.body.shortIdVal
-      );
-      console.log(
-        "obj.uniqueId == req.body.shortIdVal",
-        obj.uniqueId == req.body.shortIdVal
-      );
+      console.log("obj.uniqueId, req.body.shortIdVal",obj.uniqueId,req.body.shortIdVal);
+      console.log("obj.uniqueId == req.body.shortIdVal",obj.uniqueId == req.body.shortIdVal);
 
       if (obj.uniqueId == req.body.shortIdVal) {
         console.log("uniqueId found ", req.body.shortIdVal);
@@ -396,15 +403,13 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
               obj.details[j]["whoVoted"].push(whoVotedObj);
 
               reqObjectForMailSending = obj;
-              console.log(obj.details[j]["whoVoted"]);
+              console.log("whoVoted ",obj.details[j]["whoVoted"]);
 
               whoHasVotedNow = req.body.whoVotedName;
-              totalNumberOfPeopleWhoHaveVotedTillNow +=
-                obj.details[j]["whoVoted"].length;
-              noOfVotesForTopTimes = Math.max(
-                noOfVotesForTopTimes,
-                obj.details[j]["whoVoted"].length
-              );
+              console.log("who has voted now ", whoHasVotedNow);
+              totalNumberOfPeopleWhoHaveVotedTillNow += obj.details[j]["whoVoted"].length;
+              noOfVotesForTopTimes = Math.max(noOfVotesForTopTimes, obj.details[j]["whoVoted"].length );
+
               // whoAllVotedForTopTimes
               let maxVotedTime = 0;
               let nameOfMaxVotedTime = "";
@@ -412,6 +417,9 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
                 maxVotedTime = obj.details[j]["whoVoted"].length;
                 nameOfMaxVotedTime = obj.details[j]["start"];
                 meetingName = obj.evName;
+                console.log("maxVotedTime ", maxVotedTime);
+                console.log("nameOfMaxVotedTime ", nameOfMaxVotedTime)
+                console.log("meetingName ", meetingName)
               }
               topTimes = nameOfMaxVotedTime;
             }
@@ -422,8 +430,7 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
       }
     });
 
-    console.log(
-      "loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, topTimes, meetingName",
+    console.log("loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, topTimes, meetingName",
       loggedInUserEmail,
       whoHasVotedNow,
       totalNumberOfPeopleWhoHaveVotedTillNow,
@@ -447,7 +454,11 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
   }
 });
 
+
+//for polling results page in scheduled events to show all the times
+//working fine
 userRoute.get("/getVotingEvents", async (req, res) => {
+  console.log("/getVotingEvents called");
   try {
     let user = await User.findOne({ emailID: loggedInUserEmail });
     console.log("user found ", user);
@@ -461,6 +472,13 @@ userRoute.get("/getVotingEvents", async (req, res) => {
     res.send({ err: error });
   }
 });
+
+
+//whose calendar it is, when he confirms the final voting time to schedule
+//generates meet link
+//puts the meeting in users actual calendar, and also in calendar of who all voted
+//sends email to whose calendar and who all voted even for other times
+// Deletes that meeting from voting array
 
 userRoute.post("/votingMeetConfirmed", async (req, res) => {
   console.log("votingMeetConfirmed called ");
@@ -514,6 +532,16 @@ try{
   });
 
   console.log("myMeeting new", myMeeting);
+
+
+    // Delete this meeting from voting array now
+    votingArr = votingArr.filter((meeting) => !meeting._id.equals(meetingId));
+    loggedInUser.voting = votingArr;
+    console.log("loggedInUser.voting ", loggedInUser.voting);
+
+    // Save the updated user document
+    await loggedInUser.save();
+    console.log("deleted from voting");
 
 
   let {
@@ -857,8 +885,7 @@ try{
 });
 
 // ------------------------------
-async function sendMailForVoteSelection(
-  loggedInUserEmail,
+async function sendMailForVoteSelection(loggedInUserEmail,
   whoHasVotedNow,
   totalNumberOfPeopleWhoHaveVotedTillNow,
   noOfVotesForTopTimes,
@@ -867,6 +894,8 @@ async function sendMailForVoteSelection(
 ) {
   // -------------------mail sending starts-----------------
   // initialize nodemailer
+  console.log("sendMailForVoteSelection called ");
+  console.log("in sendMailForVoteSelection loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,topTimes,meetingName ", loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,topTimes,meetingName);
   console.log("nodemailer working");
   var transporter = nodemailer.createTransport({
     service: "gmail",

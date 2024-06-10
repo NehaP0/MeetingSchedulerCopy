@@ -3,6 +3,15 @@ const { User, Meeting, Event } = require("../models/userAndMeeting");
 const { getLoggedInUserEmail } = require("./userRouter");
 const auth = require("../middlewares/Authenticator");
 
+
+const hbs = require("nodemailer-express-handlebars");
+const nodemailer = require("nodemailer");
+const path = require("path");
+const { log } = require("console");
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+
 const eventRoute = express.Router();
 
 eventRoute.post("/createEvent", auth, async (req, res) => {
@@ -65,6 +74,8 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
 });
 
 eventRoute.get("/getEvents", async (req, res) => {
+  console.log("getEvents called ");
+
   let importedloggedInUserEmail = getLoggedInUserEmail();
   console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
 
@@ -330,6 +341,11 @@ eventRoute.post("/assignEventAdmin", async (req, res) => {
   } = req.body;
 
   console.log("gotten body data", req.body);
+  // {
+  //   assignEventToThisUserId: '665da7dfbcf62662eda44a45',
+  //   idOfEventToBAssigned: '665d9c42bcf62662eda449fd',
+  //   userIdToWhomEventBelongs: '665d9c43bcf62662eda44a00'
+  // }
 
   try {
     let finduserToWhomEventBelongs = await User.find({
@@ -337,7 +353,6 @@ eventRoute.post("/assignEventAdmin", async (req, res) => {
     });
     let userNameToWhomEventBelongs = finduserToWhomEventBelongs[0].name;
     console.log("User to whom event belongs", userNameToWhomEventBelongs);
-
     let finduserToWhomEventIsToBeAssigned = await User.find({
       _id: assignEventToThisUserId,
     });
@@ -374,7 +389,11 @@ eventRoute.post("/assignEventAdmin", async (req, res) => {
       { _id: assignEventToThisUserId },
       { $push: { events: eventToBAssigned } }
     );
-    return res.send({ message: `Event assignment succesfull.` });
+
+    await sendMail(userNameToWhomEventBelongs,finduserToWhomEventBelongs[0].emailID
+      , userNameToWhomEventIsToBeAssigned, finduserToWhomEventIsToBeAssigned[0].emailID, eventToBAssigned.evName)
+    
+      return res.send({ message: `Event assignment succesfull.` });
 
     // return res.status(200).json({message : `Event created`})
   } catch (err) {
@@ -482,18 +501,18 @@ eventRoute.patch("/editMeet/:selectedUsersId", async (req, res) => {
     console.log("findSelectedMeet ", findSelectedMeet);
 
     if (startTime.length == 8) {
-      console.log("if statement startTime.length ",startTime, startTime.length);
+      console.log("if statement startTime.length ", startTime, startTime.length);
       findSelectedMeet[0].start = `${date}T${startTime}`;
     } else {
-      console.log("else statement startTime.length ",startTime, startTime.length);
+      console.log("else statement startTime.length ", startTime, startTime.length);
       findSelectedMeet[0].start = `${date}T${startTime}:00`;
     }
 
     if (endTime.length == 8) {
-      console.log("if statement endTime.length ",endTime, endTime.length);
+      console.log("if statement endTime.length ", endTime, endTime.length);
       findSelectedMeet[0].end = `${date}T${endTime}`;
     } else {
-      console.log("else statement endTime.length ",endTime, endTime.length);
+      console.log("else statement endTime.length ", endTime, endTime.length);
       findSelectedMeet[0].end = `${date}T${endTime}:00`;
     }
 
@@ -564,6 +583,81 @@ eventRoute.patch(
     }
   }
 );
+
+
+
+
+
+async function sendMail(
+  userNameToWhomEventBelongs,emailIDofuserToWhomEventBelongs
+  , userNameToWhomEventIsToBeAssigned, emailIDofuserToWhomEventIsToBeAssigned, evName
+) {
+  // -------------------mail sending starts-----------------
+  // initialize nodemailer
+  console.log("nodemailer working");
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "nehaphadtare334@gmail.com",
+      pass: "xtjc dyqr evlk bfcj",
+    },
+  });
+
+  // point to the template folder
+  const handlebarOptions = {
+    viewEngine: {
+      partialsDir: path.resolve("../views/"),
+      defaultLayout: false,
+    },
+    viewPath: path.resolve("../views/"),
+  };
+
+  // use a template file with nodemailer
+  transporter.use("compile", hbs(handlebarOptions));
+
+  //   for (const user of users) {
+  await findUserFunction();
+  async function findUserFunction() {
+    // let userFound = await User.find( { "name": usersName} )
+    // if (userFound.length!==0) {
+    console.log("I'll send mails");
+    const mailOptions1 = {
+      from: '"My Company"', // sender address
+      template: "email4", // the name of the template file, i.e., email.handlebars
+      // to: userFound.emailID,
+      to: emailIDofuserToWhomEventBelongs,
+      // subject: `Hi, ${userFound.name}`,
+      subject: `Event Assigned.`,
+      context: {
+        userNameToWhomEventBelongs: userNameToWhomEventBelongs,
+        userNameToWhomEventIsToBeAssigned: userNameToWhomEventIsToBeAssigned,
+        evName: evName,
+      },
+    };
+    const mailOptions2 = {
+      from: '"My Company"', // sender address
+      template: "email5", // the name of the template file, i.e., email.handlebars
+      // to: userFound.emailID,
+      to: emailIDofuserToWhomEventIsToBeAssigned,
+      // subject: `Hi, ${userFound.name}`,
+      subject: `Event Assigned.`,
+      context: {
+        userNameToWhomEventIsToBeAssigned: userNameToWhomEventIsToBeAssigned,
+        userNameToWhomEventBelongs: userNameToWhomEventBelongs,
+        evName: evName
+      },
+    };
+    try {
+      await transporter.sendMail(mailOptions1);
+      await transporter.sendMail(mailOptions2);
+      console.log(`Email sent`);
+    } catch (error) {
+      console.log(`Nodemailer error sending email to ${userNameToWhomEventIsToBeAssigned} & ${userNameToWhomEventBelongs}`, error);
+    }
+  }
+}
+
+
 
 module.exports = eventRoute;
 

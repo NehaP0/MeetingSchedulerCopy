@@ -1,6 +1,6 @@
 * {
-    /* background-color: black;
-    color: green; */
+    /* /* background-color: black; */
+    /* color: green;  */
 }
 
 #parentDiv {
@@ -217,3 +217,36 @@ ng-icon {
     display: flex;
     justify-content: center;    
 }
+
+
+/* -------MontCalendar starts------------- */
+
+
+::ng-deep #calendar .fc-toolbar-title{
+    font-size: 15px;
+}
+::ng-deep #calendar .fc-button{
+    background-color: #dddddd;
+    color: black;
+    padding: 0px;
+    border: none;
+    font-size: 10px;
+}
+::ng-deep #calendar a.fc-daygrid-day-number{
+    font-weight:500;
+    font-size: 14px;  
+    color: #0060E6;
+}
+
+
+::ng-deep a{
+    color: rgb(12, 12, 12);
+    text-decoration: none;
+    /* font-weight:300;
+    font-size: 14px; */
+    font-size: 13px;
+    font-weight: 400;
+}
+
+
+/* -------MontCalendar ends--------- */

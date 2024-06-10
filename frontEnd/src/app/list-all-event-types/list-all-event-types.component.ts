@@ -13,6 +13,9 @@ export class ListAllEventTypesComponent {
 
   eventsArrayOfLoggedInUser = [];
 
+  usersId = localStorage.getItem('usersUniqueID' || '')
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -43,7 +46,9 @@ export class ListAllEventTypesComponent {
 
     let avatar = localStorage.getItem('avatar')
     window.open(
-      `http://localhost:3000/calendarLink/sharable?name=${this.loggedInName}&id=${this.loggedInEmailId}&evType=${event.evType}&evName=${event.evName}&evDurHrs=${event.evDuration.hrs}&evDurMins=${event.evDuration.minutes}&image=${avatar}`
+      // `http://localhost:3000/calendarLink/sharable?name=${this.loggedInName}&id=${this.loggedInEmailId}&evType=${event.evType}&evName=${event.evName}&evDurHrs=${event.evDuration.hrs}&evDurMins=${event.evDuration.minutes}&image=${avatar}`
+      `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventId=${event._id}`
+
     );
   }
 }

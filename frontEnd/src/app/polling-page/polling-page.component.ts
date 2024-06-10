@@ -56,6 +56,8 @@ export class PollingPageComponent implements OnInit {
     console.log("confirmBookSlot called in ts meetingId, detailObjId ", meetingId, detailObjId);
     let response = this.apiService.meetingByPollConfirmed(meetingId, detailObjId)
     alert("Thankyou for confirming. You and attendees will receive a mail for the meeting link.")
+    this.router.navigate(['/home'])
+
     // console.log("response ", response);
     
     // alert(response['message'])

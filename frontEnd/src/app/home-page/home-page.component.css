@@ -248,9 +248,11 @@ a:hover{
 }
 #leftDiv{
     display: flex;
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
+    justify-content: space-between;
+
     /* border: 2px solid red; */
-    /* width: 60%; */
+    width: 25%;
     font-size: 14px;
 }
 #rightDiv{
@@ -266,6 +268,11 @@ a:hover{
     /* border: 1px solid green; */
     margin-left: 5px;
 }
+#pleaseWait{
+    font-weight: 300;
+    text-align: center;
+    /* font-style: italic; */
+}
 
 #divForCards{
     margin-top: 30px;
@@ -276,7 +283,6 @@ a:hover{
     /* row-gap: 20px; */
 }
 .settingsBtnDiv{
-
     display: flex;
     justify-content: flex-end;
 }

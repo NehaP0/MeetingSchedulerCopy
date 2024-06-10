@@ -660,12 +660,17 @@ export class ScheduledEventsComponent implements OnInit {
     
     
     this.editMeet = false
-    if(this.newObj.date==this.newEditObj.date && this.newObj.startTime==`${this.newEditObj.startTime}:00` && this.newObj.endTime==`${this.newEditObj.endTime}:00` || this.newObj.date==this.newEditObj.date && this.newObj.startTime==this.newEditObj.startTime && this.newObj.endTime==this.newEditObj.endTime){
-      alert('Date and time are same as previous.')
-    }
-    else{
+    // if(this.newObj.date==this.newEditObj.date && this.newObj.startTime==`${this.newEditObj.startTime}:00` && this.newObj.endTime==`${this.newEditObj.endTime}:00` || this.newObj.date==this.newEditObj.date && this.newObj.startTime==this.newEditObj.startTime && this.newObj.endTime==this.newEditObj.endTime){
+    //   alert('Date and time are same as previous.')
+    // }
+    // else{
       this.apiService.editMeetingfromUserSide(this.selectedUserEmailId, this.meetId, this.newEditObj.date, this.newEditObj.startTime, this.newEditObj.endTime, this.newEditObj.name, this.newEditObj.emailId)  
-    }    
+    // }    
+  }
+
+
+  trackByIndex(index: number, item: any): any {
+    return index;
   }
 
 

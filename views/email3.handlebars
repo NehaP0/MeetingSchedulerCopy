@@ -7,7 +7,9 @@
 </head>
 <body>
   <h2>Hello,  </h2>
-  <p>{{whoHasVotedNow}} has shared their preferred meeting times.</p>
+  <div>
+    <span>{{whoHasVotedNow}}</span> <span>has shared their preferred meeting times.</span>
+  </div>
 
   {{!-- <p>{{totalNumOfPeopleVoted}} invitees have shared their preferences from the meeting times you offered.</p>
   <p>TOP TIMES:</p>
@@ -16,8 +18,10 @@
         <li>{{noOfVotesForTopTimes}}</li>        
     </ul> --}}
 {{!-- <button>Book meeting time</button> --}}
-<p>Meeting name: </p>
-<p>{{evName}}</p>
+<div>
+  <span>Meeting name: </span><span>{{evName}}</span>
+</div>
+
 </body>
 </html>
 
