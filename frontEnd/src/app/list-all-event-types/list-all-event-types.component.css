@@ -2,11 +2,14 @@
     margin: 0;
     padding: 0;
 }
+#parentDiv{
+    padding-top: 50px;
+}
 #childDiv{
     width: 85%;
-    box-shadow: rgba(56, 57, 58, 0.2) 0px 8px 24px;;
+    box-shadow: rgba(56, 57, 58, 0.2) 0px 8px 24px;
+    margin-top: 50px;
     margin: auto;
-    padding-top: 50px;
     /* height: 110vh; */
     padding: 30px;
 }
@@ -83,4 +86,12 @@ ng-icon {
 }
 ng-icon{
     display: flex;
+}
+
+
+@media (max-width: 780px){
+    #eventsDiv{
+        display: block;
+    }
+
 }

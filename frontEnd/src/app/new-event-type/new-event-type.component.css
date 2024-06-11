@@ -201,6 +201,7 @@ h4{
     font-weight: bold;
 }
 #callCardsDiv{
+    /* border: 1px solid red; */
     width: 50%  ;  
 }
 .oneCard{
@@ -215,7 +216,6 @@ h4{
     border: 1px solid #0069FF;
 }
 img{
-    border: 1px solid red;
     width: 50px;
     height : 50px
 }
@@ -239,4 +239,29 @@ img{
 .arrowDiv ng-icon{
     font-size: 25px;
     /* border: 1px solid black; */
+}
+.eventTypeLogos{
+    width:80px;
+    height: 80px;
+}
+.eventTypeLogos img{
+    width: 100%;
+    height: 100%;
+    margin:auto
+}
+
+
+
+
+@media (max-width: 780px){
+    #callCardsDiv{
+        width: 80%  ;  
+    }
+}
+
+@media (max-width: 575px){
+    #callCardsDiv{
+        width: 90%  ;  
+    }
+ 
 }

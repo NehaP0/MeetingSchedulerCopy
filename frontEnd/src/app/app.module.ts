@@ -35,7 +35,7 @@ import {circumRoute} from '@ng-icons/circum-icons'
 import {octApps, octLocation} from '@ng-icons/octicons'
 import {iconoirCrown} from '@ng-icons/iconoir';
 import {tablerEdit} from '@ng-icons/tabler-icons'
-import {radixCross2} from '@ng-icons/radix-icons'
+import {radixCross2, radixHamburgerMenu} from '@ng-icons/radix-icons'
 
 import { NewEventTypeComponent } from './new-event-type/new-event-type.component';
 import { CreateNewEventTypeComponent } from './create-new-event-type/create-new-event-type.component';
@@ -143,7 +143,7 @@ import { PollingPageComponent } from './polling-page/polling-page.component';
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
        bootstrapCCircleFill, bootstrapPlusCircleFill, typAttachmentOutline, remixCalendar2Line, remixStackshareLine, circumRoute , bootstrapClock, octApps, iconoirCrown,
        bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick, tablerEdit, remixDeleteBin6Line, radixCross2,
-       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo
+       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo, radixHamburgerMenu
     }),
 
       OAuthModule.forRoot({

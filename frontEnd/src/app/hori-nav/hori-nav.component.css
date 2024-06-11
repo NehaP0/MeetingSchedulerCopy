@@ -1,30 +1,33 @@
-#logOut{
+#logOut {
     width: 60px;
 }
-.firstChar{
+
+.firstChar {
     width: 40px;
     height: 40px;
     border-radius: 100px;
     background-color: #cccccc;
 }
-.firstChar>p{
+
+.firstChar>p {
     text-align: center;
     padding: 10px 0px;
     margin: 0px;
     /* margin: auto; */
 }
-button{
+
+button {
     /* display: flex; */
     border-radius: 50px;
     border: 1px solid #0069FF;
     /* margin: auto; */
-    padding: 0px 10px ;
+    padding: 0px 10px;
 }
 
 
-#parentOfHori{
+#parentOfHori {
     display: flex;
-    justify-content:flex-end;
+    justify-content: flex-end;
     font-size: 14px;
     padding-top: 20px;
     padding-right: 20px;
@@ -32,14 +35,16 @@ button{
     /* margin-bottom: 30px; */
     /* font-weight: bold; */
 }
-#horiNav{
+
+#horiNav {
     /* display:flex; */
     /* width: 28%; */
     /* border: 1px solid red; */
     /* justify-content: space-between; */
     font-size: 12px;
 }
-#firstCharBtn{
+
+#firstCharBtn {
     border: none;
     background-color: white;
     display: flex;
@@ -47,7 +52,8 @@ button{
     /* border: 1px solid red; */
 }
 
-#logOutButton, #brandingButton{
+#logOutButton,
+#brandingButton {
     margin-top: 10px;
     padding: 10px 20px 10px 20px;
     border-radius: 2px;
@@ -57,23 +63,30 @@ button{
     width: 80px;
     border: 1px solid rgb(218, 214, 214)
 }
-#brandingButton{
+
+#brandingButton {
     margin-top: 50px;
 }
 
-#firstCharBtn>ng-icon{
+#firstCharBtn>ng-icon {
     /* display: flex; */
     margin-top: 15px;
 }
-#firstCharBtn>.firstChar, #firstCharDiv>.firstChar{
+
+#firstCharBtn>.firstChar,
+#firstCharDiv>.firstChar {
     padding-top: 10px;
 }
-#firstCharDiv>.firstChar{
+
+#firstCharDiv>.firstChar {
     text-align: center;
 }
-#horiNav > #lookAround, #horiNav > #inviteUser{
+
+#horiNav>#lookAround,
+#horiNav>#inviteUser {
     color: #0069FF;
 }
+
 /* #lookAround, #inviteUser{
     font-weight: bold;
 }
@@ -86,8 +99,21 @@ button{
 } */
 
 
-#divForuserNameLinkAndButton{
+#divForuserNameLinkAndButton {
     /* border: 2px solid brown; */
     display: flex;
     justify-content: space-between;
+}
+
+
+
+@media (max-width: 780px) {
+    #horiNav {
+        position: absolute;
+        margin-top: -70px;
+        width: 10%;
+        justify-content: flex-end;
+        /* border: 1px solid green; */
+    }
+
 }

@@ -1,3 +1,10 @@
+.forMedScreen{
+    display: none;
+}
+
+#hamburger, #logoInSmallScreen{
+    font-size: 25px;
+}
 #logOut{
     width: 60px;
 }
@@ -209,4 +216,21 @@ button{
     justify-content: space-evenly;
     width: 110%;
     background-color: white;
+}
+
+
+
+
+@media (max-width: 780px){
+    .forMedScreen{
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 5px;
+        /* border: 1px solid red; */
+        width: 15%;
+        margin-left: 10px;
+    }
+    #verticalNav{
+        display: none;
+    }
 }

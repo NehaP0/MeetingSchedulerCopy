@@ -1,3 +1,6 @@
+#parent{
+  margin-left: 60px;
+}
 #topDiv {
   padding: 40px 10px;
   border-bottom: 1px solid rgb(230, 227, 227);
@@ -109,4 +112,25 @@ button{
   cursor: pointer;
   background-color: #1271fb;
   color : white;
+}
+
+
+@media (max-width: 780px){
+  #parent{
+    margin-left: 0px;
+  }
+  #mainDiv {
+    display: block;
+  }
+  #mainDiv > :nth-child(1){
+    width: 50%;
+    margin: auto;
+    /* border: 1px solid red; */
+    text-align: center;
+  }
+  #mainDiv > :nth-child(2) {
+    width: 90%;
+    margin: auto;
+  }
+
 }
