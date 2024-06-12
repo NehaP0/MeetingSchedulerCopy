@@ -63,6 +63,12 @@ export class EntireUserAdminComponent {
   Events: any[] = [];
 
 
+  searchQuery: string = '';
+  tempStorage = []
+  filteredArr = []
+  tryingToFilter = false
+
+
   // calendarOptions: CalendarOptions = {
   //   plugins: [dayGridPlugin, interactionPlugin],
   //   initialView: 'dayGridMonth',
@@ -108,6 +114,8 @@ export class EntireUserAdminComponent {
       this.apiService.eventsArray$.subscribe((eventsArray) => {
         console.log("events in ts ", eventsArray)
         this.eventsArrayOfSelectedUser = eventsArray
+        this.tempStorage = this.eventsArrayOfSelectedUser
+
       })
 
     }, 1000);
@@ -384,5 +392,18 @@ export class EntireUserAdminComponent {
   //   // this.callTable()
   //   // this.calendarInstance.destroy();
   // }
+
+
+  filterItems() {
+    this.tryingToFilter = true
+    const query = this.searchQuery.toLowerCase();  
+    console.log("query",query);
+  
+    
+    this.filteredArr = this.tempStorage.filter((item) => {
+        console.log("item ", item);
+        return item.evName.toLowerCase().includes(query) || item.evType.toLowerCase().includes(query) || item.evLocation.toLowerCase().includes(query) || item.evDuration.hrs.toString().includes(query) || item.evDuration.minutes.toString().includes(query)
+      });
+    }
 
 }

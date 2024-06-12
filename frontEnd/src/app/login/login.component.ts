@@ -53,12 +53,10 @@ export class LoginComponent implements OnInit{
         userForm.resetForm()       
 
         if(response['message'] == "Login Successful."){
-
-          this.router.navigate(['/home'])  
+          setTimeout(()=>{
+            this.router.navigate(['/home'])  
+          }, 1000)
         }
-        
-        // setTimeout(()=>{
-        // }, 1000)
         console.log("After login ", this.userLoggedIn);         
       },
       (error)=>{

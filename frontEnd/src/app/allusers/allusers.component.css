@@ -189,4 +189,46 @@ ng-icon:hover{
 }
 
 
+
+#filterDiv{
+  /* border: 1px solid green; */
+  /* display: flex; */
+  /* margin: 30px -20px;  */
+  width: 40%;
+}
+#divForSearch ng-icon{
+  display: flex;
+  font-size: 18px;
+  color: rgb(138, 136, 136);
+}
+#divForSearch{
+  display: flex;
+  border: 1px solid grey;
+  margin-left: 20px;
+}
+#divForSearch{
+  padding: 8px;
+  border-radius: 5px;
+}
+#searchIP{
+  border: none;
+  outline: none;
+}
+
+
+#pleaseWait{
+  font-weight: 300;
+  text-align: center;
+  font-size: 20px;
+  /* font-style: italic; */
+  margin-top: 40px;
+}
+#cannotFind{
+  font-weight: 300;
+  text-align: center;
+  font-size: 15px;
+  font-style: italic;
+  margin-top: 40px;
+  color: rgb(88, 88, 88);
+}
   

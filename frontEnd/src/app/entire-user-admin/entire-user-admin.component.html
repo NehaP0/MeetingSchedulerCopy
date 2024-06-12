@@ -125,7 +125,14 @@
 
             </div>
 
-
+            <div id="filterDiv">
+                <!-- <div id="filterTag"><button><p>My Calendly</p><ng-icon name="bootstrapChevronDown"></ng-icon></button></div>-->
+                <div id="divForSearch">
+                    <ng-icon name="ionSearchOutline"></ng-icon>
+                    <input type="text" id="searchIP" placeholder="Search" [(ngModel)]="searchQuery"
+                        (input)="filterItems()">
+                </div>
+            </div>
 
             <table id="table" *ngIf="tableView">
                 <thead>
@@ -143,7 +150,7 @@
 
 
                 <tbody>
-                    <ng-container *ngIf="eventsArrayOfSelectedUser.length">
+                    <ng-container *ngIf="eventsArrayOfSelectedUser.length && !tryingToFilter">
                         <tr *ngFor="let event of eventsArrayOfSelectedUser; let i = index">
                             <td class="name">{{event.evName}}</td>
                             <td class="type">{{event.evType}}</td>
@@ -164,8 +171,39 @@
 
                         </tr>
                     </ng-container>
-                </tbody>
-            </table>
+
+                    <ng-container *ngIf="filteredArr.length  && tryingToFilter">
+                        <tr *ngFor="let event of filteredArr; let i = index">
+                            <td class="name">{{event.evName}}</td>
+                            <td class="type">{{event.evType}}</td>
+                            <td class="duration">
+                                <span *ngIf="event.evDuration.hrs != 0">{{event.evDuration.hrs}} hrs</span>
+                                <span *ngIf="event.evDuration.minutes != 0">{{event.evDuration.minutes}} mins</span>
+                            </td>
+                            <td class="location">{{event.evLocation}}</td>
+                            <td class="meetings"><button
+                                    (click)="showMeetings(event._id, event.evName, event.evType, event.evDuration.hrs, event.evDuration.minutes)">Meetings</button></td>
+                            <td class="assign"><button (click)="popUpForEventAssignment(event._id, event.evName)">Assign
+                                    To</button></td>
+                            <td><button
+                                    (click)="editEvent(event._id, event.evName, event.evType, event.evDuration.hrs, event.evDuration.minutes, event.evLocation)"><ng-icon
+                                        name="tablerEdit"></ng-icon></button></td>
+                            <td><button (click)="deleteEventPopup(event._id, event.evName)"><ng-icon
+                                        name="remixDeleteBin6Line"></ng-icon></button></td>
+
+                        </tr>
+                    </ng-container>
+
+
+                    
+                    </tbody>
+                    </table>
+                    <div>
+                        <h4 id="pleaseWait" *ngIf="!eventsArrayOfSelectedUser.length && !tryingToFilter">Please Wait...</h4>
+                    </div>
+                    <div id="cannotFind" *ngIf="!filteredArr.length && tryingToFilter">
+                        <p>Sorry, it looks like nothing matches that search criteria.</p>
+                    </div>
 
 <!-- 
             <div id="divForCalendar" *ngIf="calendarView">

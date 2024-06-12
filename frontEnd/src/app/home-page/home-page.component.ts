@@ -16,30 +16,48 @@ export class HomePageComponent {
   firstChar = this.loggedInName[0];
   eventsArrayOfLoggedInUser = [];
   logOutValue = false;
-  filterTerm: string = '';
   showSetting: boolean = false;
   showSettingFor: string = '';
   showPopup: boolean = false;
   deleteEventId: string = '';
   deleteEventName: string = '';
   setCopied: string = '';
-  
+
   imageAfterGetting: string = '';
-  
+
   // ------------------------------
   paypalIntegrated: boolean = false;
+  // ------------------------------ 
+
+  searchQuery: string = '';
+  tempStorage = []
+  filteredArr = []
+  tryingToFilter = false
+
   // ------------------------------
-  
-  
+
+  // items = [
+  //   { name: 'Apple', category: 'Fruit' },
+  //   { name: 'Banana', category: 'Fruit' },
+  //   { name: 'Carrot', category: 'Vegetable' },
+  //   { name: 'Date', category: 'Fruit' },
+  //   { name: 'Eggplant', category: 'Vegetable' },
+  // ];
+
+  // -------------------------------
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private apiService: APIService,
     private http: HttpClient
-  ) {}
-  
+  ) { }
+
   ngOnInit() {
-  
+
+    // this.filteredItems = this.items
+
+
     console.log('calling getEvents ');
 
     this.apiService.getEvents();
@@ -50,10 +68,12 @@ export class HomePageComponent {
       this.apiService.eventsArray$.subscribe((eventsArray) => {
         console.log('events in ts ', eventsArray);
         this.eventsArrayOfLoggedInUser = eventsArray;
+        // ===========================================
+        this.tempStorage = this.eventsArrayOfLoggedInUser
+        // ===========================================
 
-        if(this.eventsArrayOfLoggedInUser.length==0){
+        if (this.eventsArrayOfLoggedInUser.length == 0) {
           this.router.navigate(['login']);
-    
         }
 
       });
@@ -191,39 +211,65 @@ export class HomePageComponent {
     //  }, 1000);
   }
 
-// ----------------------------------------------
+  // ----------------------------------------------
 
-// integratePayPal() {
-//   // Call backend API to integrate PayPal account
-//   this.http.post<any>('http://localhost:3000/paypal/integrate', {}).subscribe((response) => {
-//     console.log("integrate paypal called ");
+  // integratePayPal() {
+  //   // Call backend API to integrate PayPal account
+  //   this.http.post<any>('http://localhost:3000/paypal/integrate', {}).subscribe((response) => {
+  //     console.log("integrate paypal called ");
 
-//     // Set flag to indicate PayPal integration
-//     this.paypalIntegrated = true;
-//     console.log("response ",response);    
-//     alert(response['message'])
-//   }, (error) => {
-//     console.error(error);
-//   });
-// }
+  //     // Set flag to indicate PayPal integration
+  //     this.paypalIntegrated = true;
+  //     console.log("response ",response);    
+  //     alert(response['message'])
+  //   }, (error) => {
+  //     console.error(error);
+  //   });
+  // }
 
-// makePayment() {
-//   const paymentData = {
-//     // Add payment details if needed
-//   };
+  // makePayment() {
+  //   const paymentData = {
+  //     // Add payment details if needed
+  //   };
 
-//   this.http.post<any>('http://localhost:3000/paypal/payment', paymentData).subscribe((response) => {
-//     console.log("make payment called ");
-    
-//     window.location.href = response.approvalUrl;
-//     console.log("response ",response);   
+  //   this.http.post<any>('http://localhost:3000/paypal/payment', paymentData).subscribe((response) => {
+  //     console.log("make payment called ");
 
-//     alert(response['message'])
-//   }, (error) => {
-//     console.error(error);
-//   });
-// }
+  //     window.location.href = response.approvalUrl;
+  //     console.log("response ",response);   
 
+  //     alert(response['message'])
+  //   }, (error) => {
+  //     console.error(error);
+  //   });
+  // }
+
+
+  // document.getElementById('searchBox').addEventListener('input', function() {
+  //   const query = this.value.toLowerCase();
+  //   const filteredItems = items.filter(item => item.name.toLowerCase().includes(query));
+  //   displayResults(filteredItems);
+  // });
+
+  // function displayResults(results) {
+  //   const resultsDiv = document.getElementById('results');
+  //   resultsDiv.innerHTML = '';
+  //   results.forEach(item => {
+  //     const div = document.createElement('div');
+  //     div.textContent = `${item.name} (${item.category})`;
+  //     resultsDiv.appendChild(div);
+  //   });
+  // }
+
+  filterItems() {
+    this.tryingToFilter = true
+    const query = this.searchQuery.toLowerCase();
+    this.filteredArr = this.tempStorage.filter((item) => {
+      return item.evName.toLowerCase().includes(query) || item.evType.toLowerCase().includes(query) || item.evDuration["minutes"].toString().includes(query) || item.evDuration["hrs"].toString().includes(query)
+    });
+  }
 
 
 }
+
+

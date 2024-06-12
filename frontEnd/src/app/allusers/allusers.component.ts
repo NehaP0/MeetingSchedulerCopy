@@ -47,6 +47,12 @@ export class AllusersComponent implements OnInit{
   };
 
 
+  searchQuery: string = '';
+  tempStorage = []
+  filteredArr = []
+  tryingToFilter = false
+
+
   constructor(private apiService : APIService, private route:ActivatedRoute,private router:Router){
     // this.subscription = this.apiService.userLoggedInEmailId$.subscribe((userLoggedInEmailId) => {
     //   this.loggedInEmailId = userLoggedInEmailId;
@@ -92,6 +98,8 @@ export class AllusersComponent implements OnInit{
         // }
       }
       this.usersWOloggedInUser = usersWOloggedInUserArray
+      this.tempStorage = this.usersWOloggedInUser
+
     })
   }
 
@@ -199,5 +207,21 @@ editUserFull(editUserName, editUserEmail){
 
   this.router.navigate(['/entireUserAdmin'])
 }
+
+filterItems() {
+  this.tryingToFilter = true
+  const query = this.searchQuery.toLowerCase();  
+  console.log("query",query);
+
+  
+  this.filteredArr = this.tempStorage.filter((item) => {
+      console.log("item ", item);
+      console.log(item.name.toLowerCase(), query, item.name.toLowerCase().includes(query));
+      console.log(item.emailID.toLowerCase(), query , item.emailID.toLowerCase().includes(query));
+
+           
+      return item.name.toLowerCase().includes(query) || item.emailID.toLowerCase().includes(query) || item._id.toLowerCase().includes(query)
+    });
+  }
 
 }

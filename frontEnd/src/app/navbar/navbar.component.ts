@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService } from '../api.service';
 
@@ -23,13 +23,20 @@ export class NavbarComponent {
   setCopied : string = ""
   showPopUp: boolean = false
 
+  // changeIsActive = false
+  // isActive = "isInActive";
+
+  openTheNav = false
 
   constructor(private route:ActivatedRoute,private router:Router,private apiService: APIService){}
 
 
 ngOnInit(){
     console.log("calling getEvents ");
+    // console.log("isActive ", this.isActive);
     
+    
+
     this.apiService.getEvents()
 
     
@@ -41,7 +48,6 @@ ngOnInit(){
 
     }, 2500);
   }
-  
 
   // openModal() {
   //   alert("opened")
@@ -132,6 +138,27 @@ createEvent(){
 
 meetingPoll(){
   this.router.navigate(['/pollCalendar'])
+}
+
+
+// toggleNavbar() {
+
+//   this.changeIsActive = !this.changeIsActive
+
+//   if(this.changeIsActive){
+//     this.isActive = "isActive";
+//   }
+//   else{
+//     this.isActive = "isInActive";
+
+//   }
+//   console.log("this.isActive ", this.isActive);
+  
+// }
+
+
+toggleNavbar() {
+  this.openTheNav = !this.openTheNav  
 }
 
 }

@@ -1,9 +1,56 @@
 <div class="forMedScreen">
-    <ng-icon name="radixHamburgerMenu" id="hamburger"></ng-icon>
+    <ng-icon name="radixHamburgerMenu" id="hamburger" (click)="toggleNavbar()"></ng-icon>
     <a href="/home"><ng-icon id="logo" name="bootstrapCCircleFill" id="logoInSmallScreen"></ng-icon></a>
 
+
+    <div [class.bgnight]="openTheNav" class="hey">
+        <!-- <div id="upperDivHover"> -->
+        <div>
+
+            <!-- <div id="logoDivExpand"><a href="/home"><ng-icon id="logoExpand" name="bootstrapCCircleFill"></ng-icon><p>Calendly</p></a></div> -->
+            <div><button id="plusSignExpand" name="bootstrapPlusCircleFill" (click)="createClicked()">+ Create</button></div>
+            <div id="popUp" *ngIf="showPopUp">
+                <button class="popUpBtns" (click)="createEvent()">
+                    <!-- <div>icon</div> -->
+                    <div>
+                        <div class="heading"><p>Event Type</p></div>
+                        <div  class="text"><p>Create a new template for your regularly scheduled events.</p></div>
+                    </div>
+                </button>
+                <button class="popUpBtns" (click)="meetingPoll()">
+                    <!-- <div>icon</div> -->
+                    <div>
+                        <div class="heading"><p>Meeting poll</p></div>
+                        <div class="text"><p>SChedule a group meeting after offering times for a vote.</p></div>
+                    </div>
+                </button>
+            </div>
+
+
+            <div><a href="/home"><ng-icon class="commonSizeIcon" id="attachIconExpand" name="typAttachmentOutline"></ng-icon><p>Event Types</p></a></div>
+            <div><a href="/scheduledEvents"><ng-icon class="commonSizeIcon" name="remixCalendar2Line"></ng-icon><p>Scheduled events</p></a></div>
+            <!-- <div><a href="/workflows"><ng-icon class="commonSizeIcon" name="remixStackshareLine"></ng-icon><p>Workflows</p></a></div> -->
+            <!-- <div><ng-icon id="makeBoldExpand" name="circumRoute"></ng-icon><p>Routing</p></div> -->
+        </div>
+
+        <!-- <div id="lowerDivHover"> -->
+        <div>
+
+            <div><a href="/customise"><ng-icon href="" class="commonSizeIcon" name="bootstrapClock"></ng-icon><p>Availability</p></a></div>
+            <!-- <div><ng-icon class="commonSizeIcon" name="octApps"></ng-icon><p>Integration & apps</p></div> -->
+            <div><a href="/users"><ng-icon class="commonSizeIcon" name="iconoirCrown"></ng-icon><p>Admin center</p></a></div>
+            <!-- <div><ng-icon class="commonSizeIcon" name="bootstrapQuestionCircle"></ng-icon><p>Help</p></div> -->
+        </div>
+
+    </div>
+
 </div>
-<div class="showhim" id="verticalNav" >
+<!-- <h1 [class.active-class]="isActive" [ngClass]>Show me</h1> -->
+ <!-- <h1 [ngClass]="[isActive]">Show me</h1>
+
+<button (click)="toggleNavbar()">make active true</button> -->
+
+<div class="showhim" id="verticalNav">
     <div  class="ok">
         <div id="upperDiv">
             <ng-icon id="logo" name="bootstrapCCircleFill"></ng-icon>

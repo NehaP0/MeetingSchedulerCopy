@@ -4,6 +4,7 @@
 
 #hamburger, #logoInSmallScreen{
     font-size: 25px;
+    cursor: pointer;
 }
 #logOut{
     width: 60px;
@@ -30,14 +31,11 @@
     overflow-x:hidden;
 }
 .showhim:hover .showme{
-    display : block;
+    display : block;    
+}
     
-}
 .showhim:hover .ok{
-display : none;
-}
-#lowerDiv, #lowerDivHover{
-    /* margin-top: 50px; */
+    display : none;
 }
 #verticalNav ng-icon{
     margin: auto;
@@ -64,9 +62,9 @@ display : none;
     border-radius: 5px;
     padding : 10px;
     font-weight: bold;
-}
-#upperDivHover>div:hover{
-    background-color: #F2F8FF;
+    }
+    #upperDivHover>div:hover{
+        background-color: #F2F8FF;
 }
 
 
@@ -217,7 +215,32 @@ button{
     width: 110%;
     background-color: white;
 }
+/* .showme{ 
+    display: none;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+.showhim:hover .showme{
+    display : block;    
+}
+    
+.showhim:hover .ok{
+    display : none;
+}*/
+/* .isActive{
+    display: block;
+    width: 20%;
+    z-index: 10;
+    background-color: white;
+    padding: 10px 5px;  
+    height: 100vh; 
+}
+.isInActive{
+    display: none;
+    overflow:scroll;
+    overflow-x:hidden;
 
+} */
 
 
 
@@ -230,7 +253,73 @@ button{
         width: 15%;
         margin-left: 10px;
     }
+    #hamburger{
+        display: block;
+    }
     #verticalNav{
         display: none;
+    }
+    .hey{
+        display: none;
+    } 
+    .bgnight{
+        display: block;
+    }   
+
+    
+    .bgnight{
+        margin-top: 30px;
+        width: 50%;
+        z-index: 10;
+        background-color: rgb(228, 223, 223);
+        transition: all 0.5s;
+        padding: 10px 5px;  
+        height: 100vh; 
+        display : block;    
+        border-right: 1px solid lightgray;
+        position: absolute;  
+    }
+    .bgnight ng-icon{
+        margin: auto;
+        margin-bottom: 40px;
+    }
+    .bgnight a{
+        text-decoration: none !important;
+        color: #1A1A1A;
+    }
+
+    .bgnight p, .bgnight ng-icon, .bgnight p, .bgnight ng-icon{
+        display: inline;
+    }
+    .bgnight button{
+        width: 100%;
+        padding: 10px 10px;
+    }
+    .bgnight p, .bgnight p{
+        margin-left: 20px;
+        /* background-color: red; */
+    }
+    .bgnight div{
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .bgnight>div, .bgnight>div{
+        width:90%;
+        margin: auto;
+        margin-bottom: 30px;
+        border-radius: 5px;
+        padding : 10px;
+        font-weight: bold;
+    }
+    .bgnight p:hover{
+        background-color: #F2F8FF;
+    }
+}
+
+
+
+@media (max-width: 575px){
+    .bgnight{
+        width: 80%;
     }
 }

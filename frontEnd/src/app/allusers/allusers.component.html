@@ -1,19 +1,29 @@
 <app-admin-nav-bar></app-admin-nav-bar>
-<body>    
+
+<body>
     <div id="usersDiv">
         <div class="heading">
             <h2>All Users</h2>
+            <div id="filterDiv">
+                <!-- <div id="filterTag"><button><p>My Calendly</p><ng-icon name="bootstrapChevronDown"></ng-icon></button></div>-->
+                <div id="divForSearch">
+                    <ng-icon name="ionSearchOutline"></ng-icon>
+                    <input type="text" id="searchIP" placeholder="Search" [(ngModel)]="searchQuery"
+                        (input)="filterItems()">
+                </div>
+            </div>
             <h2 id="newUser" (click)="newUserBtn()"> + New user</h2>
+
         </div>
 
         <table id="table">
             <thead>
                 <tr>
-                <th>FULL NAME</th>
-                <th>EMAIL ID</th>
-                <th>EDIT</th>
-                <th>DELETE</th>
-                <!-- <th>Calendar shareable link</th> -->
+                    <th>FULL NAME</th>
+                    <th>EMAIL ID</th>
+                    <th>EDIT</th>
+                    <th>DELETE</th>
+                    <!-- <th>Calendar shareable link</th> -->
                 </tr>
             </thead>
 
@@ -38,30 +48,57 @@
                     <label for="">Email Id</label> -->
                 </form>
                 <div class="popupBtns">
-                    <button class="cancelBtn" (click)="editUserFull(editUserName, editUserEmail)">Show User Events</button>
+                    <button class="cancelBtn" (click)="editUserFull(editUserName, editUserEmail)">Show User
+                        Events</button>
                     <button class="cnfmBtn" (click)="editUserConfirmation()">Finish</button>
                 </div>
             </div>
 
-            
+
 
             <tbody>
-                <ng-container *ngIf="usersWOloggedInUser.length">
-                <tr *ngFor="let user of usersWOloggedInUser; let i = index">
-                    <td class="name">{{user.name}}</td>
-                    <td>{{user.emailID}}</td>
-                    <!-- <td> -->
-                    <!-- <button (clnameick)="goToCalendarPage(user., user.emailID)">Schedule Meet</button> -->
-                    <!-- <button><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">Schedule Meet</a> </button> -->
+                <ng-container *ngIf="usersWOloggedInUser.length && !tryingToFilter">
+                    <tr *ngFor="let user of usersWOloggedInUser; let i = index">
+                        <td class="name">{{user.name}}</td>
+                        <td>{{user.emailID}}</td>
+                        <!-- <td> -->
+                        <!-- <button (clnameick)="goToCalendarPage(user., user.emailID)">Schedule Meet</button> -->
+                        <!-- <button><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">Schedule Meet</a> </button> -->
 
-                    <!-- <td><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td> -->
-                    <td class="buttonCol"><button (click)="editUser(user._id, user.name, user.emailID)"><ng-icon name="tablerEdit"></ng-icon></button></td>
-                    <td class="buttonCol"><button (click)="deleteUser(user._id, user.name)"><ng-icon name="remixDeleteBin6Line"></ng-icon></button></td>
+                        <!-- <td><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td> -->
+                        <td class="buttonCol"><button (click)="editUser(user._id, user.name, user.emailID)"><ng-icon
+                                    name="tablerEdit"></ng-icon></button></td>
+                        <td class="buttonCol"><button (click)="deleteUser(user._id, user.name)"><ng-icon
+                                    name="remixDeleteBin6Line"></ng-icon></button></td>
 
-                </tr>
+                    </tr>
+                </ng-container>
+
+                <ng-container *ngIf="filteredArr.length && tryingToFilter">
+                    <tr *ngFor="let user of filteredArr; let i = index">
+                        <td class="name">{{user.name}}</td>
+                        <td>{{user.emailID}}</td>
+                        <!-- <td> -->
+                        <!-- <button (clnameick)="goToCalendarPage(user., user.emailID)">Schedule Meet</button> -->
+                        <!-- <button><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">Schedule Meet</a> </button> -->
+
+                        <!-- <td><a href="http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}">http://localhost:3000/calendarLink?name={{user.name}}&id={{user.emailID}}</a></td> -->
+                        <td class="buttonCol"><button (click)="editUser(user._id, user.name, user.emailID)"><ng-icon
+                                    name="tablerEdit"></ng-icon></button></td>
+                        <td class="buttonCol"><button (click)="deleteUser(user._id, user.name)"><ng-icon
+                                    name="remixDeleteBin6Line"></ng-icon></button></td>
+
+                    </tr>
                 </ng-container>
             </tbody>
         </table>
+
+        <div>
+            <h4 id="pleaseWait" *ngIf="!usersWOloggedInUser.length && !tryingToFilter">Please Wait...</h4>
+        </div>
+        <div id="cannotFind" *ngIf="!filteredArr.length && tryingToFilter">
+            <p>Sorry, it looks like nothing matches that search criteria.</p>
+        </div>
 
     </div>
 
@@ -76,4 +113,3 @@
     </div> -->
 
 </body>
-

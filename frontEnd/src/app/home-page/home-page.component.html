@@ -77,11 +77,11 @@
     <div id="eventsDiv">
       <p id="eventTypeHeading">Event types</p>
       <div id="filterDiv">
-        <!-- <div id="filterTag"><button><p>My Calendly</p><ng-icon name="bootstrapChevronDown"></ng-icon></button></div>
+        <!-- <div id="filterTag"><button><p>My Calendly</p><ng-icon name="bootstrapChevronDown"></ng-icon></button></div>-->
                 <div id="divForSearch">
                     <ng-icon name="ionSearchOutline"></ng-icon>
-                    <input type="text" id="searchIP" placeholder="Filter">
-                </div> -->
+                    <input type="text" id="searchIP" placeholder="Filter" [(ngModel)]="searchQuery" (input)="filterItems()">
+                </div> 
       </div>
       <div id="divForuserNameLinkAndButton">
         <div id="leftDiv">
@@ -118,13 +118,102 @@
       </div>
     </div>
  
-    <div><h4 id="pleaseWait" *ngIf="!eventsArrayOfLoggedInUser.length">Please Wait...</h4></div>
+    <div><h4 id="pleaseWait" *ngIf="!eventsArrayOfLoggedInUser.length && !tryingToFilter">Please Wait...</h4></div>
+    <div  id="cannotFind" *ngIf="!filteredArr.length && tryingToFilter">
+      <p>Sorry, it looks like nothing matches that search criteria.</p>
+      <p>You can search by name, type of event, or duration,.</p>
+    </div>
+
+    
     <div id="divForCards">
-      <ng-container *ngIf="eventsArrayOfLoggedInUser.length">
+      <ng-container *ngIf="eventsArrayOfLoggedInUser.length && !tryingToFilter">
         <div
           class="card"
           style="width: 23re m"
           *ngFor="let event of eventsArrayOfLoggedInUser; let i = index"
+        >
+          <!-- <div class="card" style="width: 23rem;" *ngFor="let event of eventsArrayOfLoggedInUser; let i = index | filter:filterTerm"> -->
+
+          <div class="purpleLine"></div>
+          <div class="card-body">
+            <div class="settingsBtnDiv">
+              <button
+                class="settingsButtonOnCard"
+                (click)="settingsCalled(event._id)"
+              >
+                <ng-icon name="ionSettingsOutline"></ng-icon
+                ><ng-icon
+                  class="downArrow"
+                  name="bootstrapCaretDownFill"
+                ></ng-icon>
+              </button>
+            </div>
+            <div
+              *ngIf="showSetting"
+              [hidden]="showSettingFor != event._id"
+              class="settingsExpansionDiv"
+            >
+              <button (click)="editEvent(event._id)">Edit</button>
+              <button (click)="deleteEventPopup(event._id, event.evName)">
+                Delete
+              </button>
+            </div>
+            <p class="card-title">{{ event.evName }}</p>
+            <p class="card-subtitle mb-2 text-mute d">
+              <span *ngIf="event.evDuration.hrs != 0"
+                >{{ event.evDuration.hrs }} hrs</span
+              >
+              <span *ngIf="event.evDuration.minutes != 0"
+                >{{ event.evDuration.minutes }} mins</span
+              >
+              , {{ event.evType }}
+            </p>
+            <!-- <a
+              href="http://localhost:3000/calendarLink/sharable?name={{
+                loggedInName
+              }}&id={{ loggedInEmailId }}&evType={{ event.evType }}&evName={{
+                event.evName
+              }}&evDurHrs={{ event.evDuration.hrs }}&evDurMins={{
+                event.evDuration.minutes
+              }}&image={{ imageAfterGetting }}"
+              >View booking page</a
+            > -->
+
+            <a
+            href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}&eventId={{event._id}}"
+            target="_blank">View booking page</a
+          >
+
+            <div class="firstChar firstCharCard">
+              <p>{{ firstChar }}</p>
+            </div>
+            <hr />
+            <div class="cardFooter">
+              <button
+                ngxClipboard [cbContent]=
+                "'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +event._id"
+                class="copyLinkBtn"
+                (click)="copied(event.evName)"
+                [hidden]="setCopied == event.evName"
+              >
+                <ng-icon name="ionCopyOutline"></ng-icon>
+                <p>Copy link</p>
+              </button>
+              <button class="copyLinkBtn" [hidden]="setCopied != event.evName">
+                <ng-icon id="tickIcon" name="typTick"></ng-icon>
+                <p>Copied</p>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <ng-container *ngIf="filteredArr.length && tryingToFilter">
+        <div
+          class="card"
+          style="width: 23re m"
+          *ngFor="let event of filteredArr; let i = index"
         >
           <!-- <div class="card" style="width: 23rem;" *ngFor="let event of eventsArrayOfLoggedInUser; let i = index | filter:filterTerm"> -->
 
@@ -227,6 +316,8 @@
 
 
 
+
+
 <!-- href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}" -->
 
 
@@ -244,3 +335,19 @@ event.evDuration.hrs +
 '&evDurMins=' +
 event.evDuration.minutes
 " -->
+
+
+
+
+
+<!-- <div>
+  <input type="text" [(ngModel)]="searchQuery" (input)="filterItems()" placeholder="Search...">
+</div>
+<div id="results">
+  <div *ngFor="let item of filteredItems">
+    {{ item.evName}}
+  </div>
+</div> -->
+
+
+

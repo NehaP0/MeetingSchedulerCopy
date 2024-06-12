@@ -93,7 +93,6 @@ const userSchema = mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    required: true,
   },
   events: [eventSchema],
   userAvailability: {
