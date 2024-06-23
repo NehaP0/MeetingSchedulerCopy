@@ -194,8 +194,8 @@ export class UserAvailabilityAdminComponent {
     }
 
     console.log("working hrs ", this.workingHrs);
-    // uncomment  
-    this.apiService.userWorkingHrs(this.workingHrs)
+    // /ncomment  
+    this.apiService.userWorkingHrsAdmin(this.workingHrs, this.selectedUserEmail)
 
 
   }

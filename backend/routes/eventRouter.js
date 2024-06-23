@@ -40,21 +40,58 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
     // currentDateTime = currentDateTime.split('+')[0] //2024-02-19T12:25:36
     //const meeting =  await Meeting.create({start, end, user:user, userEmail:userEmail, currentDateTime})
 
-    const event = await Event.create({
-      evName,
-      evType,
-      evDuration,
-      evLocation,
-      meetings: [
-        {
-          start: "2019-01-18T09:00:00+05:30",
-          end: "2019-01-18T09:30:00+05:30",
-          user: "abc",
-          userEmail: "abc@gmail.com",
-          currentDateTime: "2019-01-18T09:00:00",
-        },
-      ],
-    });
+    let event;
+    if(evType = "One-on-One"){
+      event = await Event.create({
+        evName,
+        evType,
+        evDuration,
+        evLocation,
+        meetings: [
+          {
+            start: "2019-01-18T09:00:00+05:30",
+            end: "2019-01-18T09:30:00+05:30",
+            user: "abc",
+            userEmail: "abc@gmail.com",
+            currentDateTime: "2019-01-18T09:00:00",
+          },
+        ],
+        allowInviteesToAddGuests : true,
+        surnameReq:false,
+        questionsToBeAsked : [
+          {
+            question : "Please share anything that will help prepare for our meeting.",
+            answerRequiredOrNot : false,
+            showThisQuestionOrNot: true
+          }
+        ]
+        });
+    }
+    else{
+      event = await Event.create({
+        evName,
+        evType,
+        evDuration,
+        evLocation,        
+        surnameReq:false,
+        meetings: [
+          {
+            start: "2019-01-18T09:00:00+05:30",
+            end: "2019-01-18T09:30:00+05:30",
+            user: "abc",
+            userEmail: "abc@gmail.com",
+            currentDateTime: "2019-01-18T09:00:00",
+          },
+        ],
+        questionsToBeAsked : [
+          {
+            question : "Please share anything that will help prepare for our meeting.",
+            answerRequiredOrNot : false,
+            showThisQuestionOrNot: true
+          }
+        ]
+      });
+    }
     //  console.log(meeting);
     console.log("User line 58", event);
 
@@ -164,7 +201,7 @@ eventRoute.patch("/editEvent", auth, async (req, res) => {
   // let importedloggedInUserEmail = "nehaphadtare334@gmail.com"
   console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
-  let { evId, evName, evType, evDuration, evLocation } = req.body;
+  let { evId, evName, evType, evDuration, evLocation, description } = req.body;
 
   console.log("gotten body data", req.body);
 
@@ -178,7 +215,8 @@ eventRoute.patch("/editEvent", auth, async (req, res) => {
     let eventsArray = await findLoggedInUser[0].events;
 
     console.log("eventsArray", eventsArray);
-    console.log("Duation", evDuration);
+    console.log("Duration", evDuration);
+    console.log("Description", description);
 
     for (let i = 0; i < eventsArray.length; i++) {
       if (eventsArray[i]._id == evId) {
@@ -187,13 +225,58 @@ eventRoute.patch("/editEvent", auth, async (req, res) => {
           "duration in for loop ",
           eventsArray[i].evDuration,
           eventsArray[i].evDuration["hrs"],
-          eventsArray[i].evDuration["minutes"]
+          eventsArray[i].evDuration["minutes"],
+          eventsArray[i].description
         );
 
         eventsArray[i].evName = evName;
         eventsArray[i].evType = evType;
         eventsArray[i].evDuration = evDuration;
         eventsArray[i].evLocation = evLocation;
+        eventsArray[i].description = description
+
+        break;
+      }
+    }
+
+    await findLoggedInUser[0].save();
+
+    return res.send({ message: `Saved` });
+
+    // return res.status(200).json({message : `Event created`})
+  } catch (err) {
+    return res.send({ message: `Failed to edit event: ${err}` });
+
+    // return res.status(500).json({message : `Event creation failed : ${err}`})
+  }
+});
+
+eventRoute.patch("/editEventIfUserCanAddGuests", auth, async (req, res) => {
+  console.log("editEventIfUserCanAddGuests called");
+  let importedloggedInUserEmail = getLoggedInUserEmail();
+  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
+  console.log("reqBody", req.body);
+  let { evId, allowInviteesToAddGuests } = req.body;
+
+  console.log("gotten body data", req.body);
+
+  try {
+    let findLoggedInUser = await User.find({
+      emailID: importedloggedInUserEmail,
+    });
+    let loggedInUserName = findLoggedInUser[0].name;
+
+    console.log("User found", loggedInUserName);
+    let eventsArray = await findLoggedInUser[0].events;
+
+    console.log("eventsArray", eventsArray);
+
+    for (let i = 0; i < eventsArray.length; i++) {
+      if (eventsArray[i]._id == evId) {
+        console.log(eventsArray[i].allowInviteesToAddGuests);
+
+        eventsArray[i].allowInviteesToAddGuests = allowInviteesToAddGuests
+
         break;
       }
     }
@@ -201,12 +284,8 @@ eventRoute.patch("/editEvent", auth, async (req, res) => {
     await findLoggedInUser[0].save();
 
     return res.send({ message: `Event edited` });
-
-    // return res.status(200).json({message : `Event created`})
   } catch (err) {
     return res.send({ message: `Failed to edit event: ${err}` });
-
-    // return res.status(500).json({message : `Event creation failed : ${err}`})
   }
 });
 
@@ -314,6 +393,15 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
           currentDateTime: "2019-01-18T09:00:00",
         },
       ],
+      allowInviteesToAddGuests: true,
+      surnameReq:false,
+      questionsToBeAsked : [
+        {
+          question : "Please share anything that will help prepare for our meeting.",
+          answerRequiredOrNot : false,
+          showThisQuestionOrNot: true
+        }
+      ]
     });
     //  console.log(meeting);
     console.log("User line 272", event);
@@ -527,6 +615,165 @@ eventRoute.patch("/editMeet/:selectedUsersId", async (req, res) => {
   }
 });
 
+
+// eventRoute.patch("/editMeet/:selectedUsersId", async (req, res) => {
+//   let { selectedUsersId } = req.params;
+//   let meetLink;
+
+
+//   console.log("selectedUsersId ", selectedUsersId);
+
+//   console.log("editMeetAdmin called");
+
+//   console.log("reqBody", req.body);
+
+//   let {
+//     selectedEventId,
+//     selectedMeetingId,
+//     date,
+//     startTime,
+//     endTime,
+//     name,
+//     emailId,
+//   } = req.body;
+
+//   console.log("gotten body data", req.body);
+
+//   try {
+//     let findSelectedUser = await User.find({ _id: selectedUsersId });
+//     let selectedUserName = findSelectedUser[0].name;
+
+//     console.log("User found ", selectedUserName);
+//     let eventsArray = await findSelectedUser[0].events;
+
+//     console.log("eventsArray", eventsArray);
+
+//     let findSelectedEvent = eventsArray.filter((event) => {
+//       return event._id.toString() == selectedEventId;
+//     });
+//     console.log(findSelectedEvent);
+
+//     let eventMeetings = findSelectedEvent[0].meetings;
+
+//     console.log("eventMeetings ", eventMeetings);
+
+//     let findSelectedMeet = eventMeetings.filter((meet) => {
+//       return meet._id.toString() == selectedMeetingId;
+//     });
+
+//     console.log("findSelectedMeet ", findSelectedMeet);
+
+//     if (startTime.length == 8) {
+//       console.log("if statement startTime.length ", startTime, startTime.length);
+//       findSelectedMeet[0].start = `${date}T${startTime}`;
+//     } else {
+//       console.log("else statement startTime.length ", startTime, startTime.length);
+//       findSelectedMeet[0].start = `${date}T${startTime}:00`;
+//     }
+
+//     if (endTime.length == 8) {
+//       console.log("if statement endTime.length ", endTime, endTime.length);
+//       findSelectedMeet[0].end = `${date}T${endTime}`;
+//     } else {
+//       console.log("else statement endTime.length ", endTime, endTime.length);
+//       findSelectedMeet[0].end = `${date}T${endTime}:00`;
+//     }
+
+//     findSelectedMeet[0].user = name;
+//     findSelectedMeet[0].userEmail = emailId;
+
+//     await findSelectedUser[0].save();
+
+
+//     // ========================================================================
+//     let emailsOfUsersFoundInDb = [];
+//     let emailsOfUsersNotFoundInDb = [];
+//     let otherEmails = reqBody.emailId
+
+
+//     for (let i = 0; i < otherEmails.length; i++) {
+//       let findHimInDb = await User.find({ emailID: otherEmails[i] });
+//       if (findHimInDb) {
+//         emailsOfUsersFoundInDb.push(otherEmails[i]);
+//         // console.log("phoneNumber ", findHimInDb[0].phoneNumber);
+//         // phoneNumbersOfUsersFoundInDb.push(findHimInDb[0].phoneNumber)
+//       } else {
+//         emailsOfUsersNotFoundInDb.push(otherEmails[i]);
+//       }
+//     }
+
+
+//     console.log("emailsOfUsersFoundInDb ", emailsOfUsersFoundInDb);
+
+//     // ppl who are found in db, put the meeting in their meetingsWtOthers array
+//     try {
+//       for (let i = 0; i < emailsOfUsersFoundInDb.length; i++) {
+//         // const meeting =  await Meeting.create({start, end})
+//         // hardcoding right now evType evName
+//         // const meeting =  await Meeting.create({start, end, user, userEmail, currentDateTime, evType:"One-on-One", evName: "Morning Scrum"})
+//         let meeting;
+//           meeting = await Meeting.create({
+//             start,
+//             end,
+//             user: selectedUserName,
+//             userEmail: findSelectedUser[0].emailID,
+//             currentDateTime,
+//             evType,
+//             evName: title,
+//           });
+//           console.log(
+//             "meeting of ppl who were in meeting with others in form",
+//             meeting
+//           );
+        
+
+//         await User.updateOne(
+//           { emailID: emailsOfUsersFoundInDb[i] },
+//           { $push: { meetingsWtOthers: meeting } }
+//         );
+//         console.log("updated meeting for ", emailsOfUsersFoundInDb[i]);
+//       }
+//     } catch (err) {
+//       console.log("meeting of emailsOfUsersFoundInDb not updated.", err);
+//     }
+
+
+//     try {
+//       meetLink = await createMeetingLink();
+//       console.log("Meeting link created:", meetLink);
+
+//       // Continue with nodemailer code
+//       await sendMail(
+//         meetLink,
+//         selectedUserName,
+//         findSelectedUser[0].emailID,
+//         otherEmails,
+//         additionalInfo
+//       );
+//       // await sendMsg([loggedInUserPhoneNumber, ...phoneNumbersOfUsersFoundInDb]);
+//       // await sendMsg([...phoneNumbersOfUsersFoundInDb]);
+
+//       return res
+//         .status(200)
+//         .json({
+//           message:
+//             "Meeting scheduled successfully. A calendar invitation has been mailed to the attendees.",
+//         });
+//     } catch (err) {
+//       console.log("Error creating meeting link:", err);
+//     }
+
+//     // ========================================================================
+
+
+
+
+//     return res.send({ message: `Meeting edited.` });
+//   } catch (err) {
+//     return res.send({ message: `Failed to edit meet: ${err}` });
+//   }
+// });
+
 eventRoute.patch(
   "/editMeetFromUserSide/:selectedUsersEmailId",
   async (req, res) => {
@@ -584,6 +831,116 @@ eventRoute.patch(
   }
 );
 
+
+// eventRoute.patch("/addQuestionToMeet/:selectedUsersEmailId", async (req, res) => {
+//   let { selectedUsersEmailId } = req.params;
+//   let {question, isRequired, showThisQuestion, eventId} = req.body
+//   console.log("selectedUsersEmailId ", selectedUsersEmailId);
+//   console.log("question, isRequired, showThisQuestion, eventId ", question, isRequired, showThisQuestion, eventId);
+//   try { 
+    
+//     let findSelectedUser = await User.findOne({ emailID: selectedUsersEmailId });
+//     let selectedUserName = findSelectedUser.name;
+
+//     console.log("User found ", selectedUserName);
+//     let eventsArray = await findSelectedUser.events;
+
+//     console.log("eventsArray", eventsArray);
+
+//     let questionObj = {
+//       question : question,
+//       answerRequiredOrNot : isRequired,
+//       showThisQuestionOrNot : showThisQuestion
+//     }
+
+//     let ans = eventsArray.find((event)=>{
+//       return event._id.toString() == eventId
+//     })
+
+//     console.log("event found ", ans);
+
+//     ans.questionsToBeAsked.push(questionObj)
+
+//     await findSelectedUser.save();
+
+
+//     // for (let i = 0; i < eventsArray.length; i++) {
+//     //   let found = false;
+//     //   let eventMeetingsArray = eventsArray[i].meetings;
+
+//     //   eventMeetingsArray.find((meeting)=>{
+//     //     return meeting._id.toString() == meetId
+//     //   })
+
+//       // for (let j = 0; j < eventMeetingsArray.length; j++) {
+//       //   console.log("eventMeetingsArray[j] ", eventMeetingsArray[j]);
+//       //   console.log("eventMeetingsArray[j].start ",eventMeetingsArray[j].start);
+//       //   console.log("eventMeetingsArray[j].id ", eventMeetingsArray[j]._id);
+
+
+//         //     if (eventMeetingsArray[j]._id.toString() == meetId) {
+//         //       console.log("found");
+//         //       found = true;
+//         //       eventMeetingsArray[j].start = `${date}T${startTime}`;
+//         //       eventMeetingsArray[j].end = `${date}T${endTime}`;
+//         //       eventMeetingsArray[j].user = name;
+//         //       eventMeetingsArray[j].userEmail = emailId;
+
+//         //       await findSelectedUser[0].save();
+//         //       break;
+//         //     }
+//         //   }
+//         //   if (found == true) {
+//         //     break;
+//       // }
+//     // }
+
+    
+//     return res.send({message : "received question"})
+//   } catch (error) {
+//     return res.send({ message: `Error in receiving question: ${error}` });
+//   }
+
+// }
+// );
+
+
+
+eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) => {
+  let { selectedUsersEmailId } = req.params;
+  let {evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked} = req.body
+  console.log("selectedUsersEmailId ", selectedUsersEmailId);
+  console.log("evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked ", evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked);
+  try { 
+    
+    let findSelectedUser = await User.findOne({ emailID: selectedUsersEmailId });
+    let selectedUserName = findSelectedUser.name;
+
+    console.log("User found ", selectedUserName);
+    let eventsArray = await findSelectedUser.events;
+
+    console.log("eventsArray", eventsArray);
+
+    let ans = eventsArray.find((event)=>{
+      return event._id.toString() == evId
+    })
+
+    console.log("event found ", ans);
+
+    ans.questionsToBeAsked = questionsToBeAsked
+    ans.evLinkEnd = eventLink
+    ans.surnameReq = surnameReq
+    ans.allowInviteesToAddGuests = allowInviteesToAddGuests
+
+    await findSelectedUser.save();
+
+    return res.send({message : "Saved"})
+  } catch (error) {
+    return res.send({ message: `Error : ${error}` });
+  }
+
+}
+);
 
 
 

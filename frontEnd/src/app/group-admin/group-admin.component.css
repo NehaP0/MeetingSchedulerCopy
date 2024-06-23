@@ -1,0 +1,70 @@
+#body{
+    /* background-color: grey;
+    height : 100vh */
+    border : 1px solid rgb(223, 220, 220);
+    height: 100vh;
+    background-color: rgb(223, 220, 220);
+
+}
+.popUp{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width : 30%;
+    margin: auto;
+    margin-top: 15%;
+    height: 200px;
+    /* border : 1px solid red; */
+    background-color: white;
+}
+.text{
+    /* width: 90px; */
+    margin-left: 30%;
+    padding-top: 50px;
+    /* border: 1px solid red; */
+}
+.btn{
+    /* display: flex; */
+    color: white;
+    border-radius: 40px;
+    border: 1px solid #0069FF;
+    /* margin: auto; */
+    background-color: #1c77fb ;
+    padding: 10px 10px ;
+    margin-left: 35%;
+}
+
+#btnDiv{
+    /* width: 90%; */
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+    /* border: 1px solid red; */
+}
+.popUpTwo{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width : 30%;
+    margin: auto;
+    margin-top: 15%;
+    height: 300px;
+    /* border : 1px solid red; */
+    background-color: white;
+    padding: 0px 50px;
+}
+#btnDiv{
+    margin: auto;
+}
+.popUpTwoBtns{
+    color: white;
+    border-radius: 40px;
+    padding: 5px 20px ;   
+}
+#continueBtn{
+    background-color: #1c77fb ;
+    border: none;
+}
+#cancelBtn{
+    border : 1px solid #1c77fb;
+    color: #1c77fb;
+}
+#grpName{
+    padding: 10px;
+}

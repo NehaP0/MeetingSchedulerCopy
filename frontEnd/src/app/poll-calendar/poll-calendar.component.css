@@ -91,14 +91,14 @@ select {
 /* -------weekCalendar ends--------- */
 
 #footer{
-  margin-top: -200px;
+  margin-top: -300px;
   display: flex;
   justify-content: flex-end;
   padding: 20px 10px;
 }
 #footerChildDiv{
   background-color: white;  
-  position: fixed;
+  position: absolute;
   width:30%;
   display: flex;
   margin-right: 10px;

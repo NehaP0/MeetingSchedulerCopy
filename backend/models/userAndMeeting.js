@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const questionSchema = mongoose.Schema({
+  question: {
+    type: String
+  },
+  answerRequiredOrNot: {
+    type: Boolean
+  },
+  showThisQuestionOrNot: {
+    type: Boolean
+  },
+  _id: {
+    type: String,
+  }
+})
+
 const meetingSchema = mongoose.Schema({
   start: {
     type: String,
@@ -9,7 +24,10 @@ const meetingSchema = mongoose.Schema({
     required: true,
   },
   user: {
-    type: String,
+    type: String
+  },
+  userSurname : {
+    type: String
   },
   userEmail: {
     type: Array,
@@ -24,6 +42,9 @@ const meetingSchema = mongoose.Schema({
   },
   evType: {
     type: String,
+  },
+  description: {
+    type: String
   },
 });
 
@@ -45,6 +66,10 @@ const eventSchema = mongoose.Schema({
     required: true,
   },
   meetings: [meetingSchema],
+  allowInviteesToAddGuests: { type: Boolean },
+  surnameReq:{ type : Boolean},
+  questionsToBeAsked: [questionSchema],
+  evLinkEnd : {type: String}
 });
 
 const availabilitySchema = mongoose.Schema({
@@ -55,18 +80,18 @@ const availabilitySchema = mongoose.Schema({
 });
 
 const whoVoted = mongoose.Schema({
-  whoVotedName : {type: String},
-  whoVotedEmail : {type: String}
+  whoVotedName: { type: String },
+  whoVotedEmail: { type: String }
 })
 
 const votingSchema = mongoose.Schema(
   {
     evName: { type: String },
-    reserveTimes : {type : Boolean},
-    showVotes : {type : Boolean},
+    reserveTimes: { type: Boolean },
+    showVotes: { type: Boolean },
     link: { type: String },
-    location : {type: String},
-    uniqueId : { type: String },
+    location: { type: String },
+    uniqueId: { type: String },
     details: [
       {
         start: { type: String },
@@ -107,6 +132,8 @@ const userSchema = mongoose.Schema({
     type: [votingSchema]
   },
 });
+
+
 
 const User = mongoose.model("User", userSchema);
 

@@ -79,6 +79,15 @@ userRoute.post("/postuser", async (req, res) => {
       evDuration: { hrs: 0, minutes: 30 },
       evLocation: "zoom",
       meetings: [meeting],
+      allowInviteesToAddGuests : true,
+      surnameReq:false,
+      questionsToBeAsked : [
+        {
+          question : "Please share anything that will help prepare for our meeting.",
+          answerRequiredOrNot : false,
+          showThisQuestionOrNot: true
+        }
+      ]
     });
     // const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom"})
     console.log(event);
@@ -114,6 +123,7 @@ userRoute.patch("/patchuser", auth, async (req, res) => {
 
     return res.send({ message: "Availability Updated" });
   } catch (err) {
+    console.log("error ", err);
     return res.send({ message: `User availability updation : ${err}` });
   }
 });

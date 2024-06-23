@@ -1,7 +1,214 @@
-<app-navbar></app-navbar>
+<app-navbar [class.makeBlur]="makeBlur"></app-navbar>
 
 <body>
-    <div id="leftDiv">
+    <div *ngIf="popUpToAddNewQuestion" class="popUpToAddNewQuestion">
+        <!-- <div class="popUpToAddNewQuestion"> -->
+
+        <div class="popUpForNewQuestionHeading eventNameHeading">
+            <p class="label">Edit Question</p>
+            <p id="closePopUpToAddNewQuestion" (click)="closeAddNewQuest()">X</p>
+        </div>
+        <div>
+            <p class="label">Question</p>
+            <input type="text" id="questionBox" [(ngModel)]="questionInput" (input)="typingQuestionInput()" />
+            <div id="warningDiv">
+                <p *ngIf="showWarningToAddQuestion" class="warning">This field is required.</p>
+            </div>
+
+            <div class="makeItFlex requiredDiv">
+                <input type="checkbox" [(ngModel)]="required" />
+                <p>Required</p>
+            </div>
+        </div>
+        <div>
+            <p class="label">Status</p>
+            <div class="makeItFlex statusOnOff">
+                <input type="checkbox" [(ngModel)]="status" />
+                <p *ngIf="status">On</p>
+                <p *ngIf="!status">Off</p>
+            </div>
+        </div>
+        <button (click)="doneClickedOfNewQuestionPopUp()">Done</button>
+    </div>
+
+
+    <div *ngIf="openNameQuestionPopUp" class="popUpToAddNewQuestion makeSmallPopup">
+        <div class="popUpForNewQuestionHeading eventNameHeading">
+            <p class="label">Edit Name Question</p>
+            <p id="closePopUpToAddNewQuestion" (click)="closeEditNameQuestionPopUp()">X</p>
+        </div>
+
+        <div>
+            <p class="label">Name Input</p>
+            <!-- <input type="text" id="questionBox" [(ngModel)]="questionInput" (input)="typingQuestionInput()" /> -->
+            <select name="" id="selectTagForName" (change)="NameSelected()" [(ngModel)]="selectedValue">
+                <option value="Name">Name</option>
+                <option value="First Name, Last Name">First Name, Last Name</option>
+            </select>
+            <button (click)="closeEditNameQuestionPopUp()">Done</button>
+        </div>
+
+    </div>
+
+
+    <div class="slider" [class.eventDetailsSlider]="showEventDetailsSlider">
+        <button (click)="goBack()" class="goBackBtn">
+            < Event Type Summary</button>
+
+                <h4>Edit Event Type</h4>
+
+                <hr>
+                <label class="makeItBold">Event name</label>
+                <input [(ngModel)]="eventN" type="text" id="eventName" placeholder="Name your event" name="eventName"
+                    #eventName>
+                <label class="redWarning" *ngIf="showWarning">Please provide an event name.</label>
+
+                <label class="makeItBold">Duration</label>
+                <div>
+                    <label for="hrs">Hours</label>
+                    <input [(ngModel)]="evDurHrs" type="number" name="hrs" placeholder="0" #hrs>
+
+                    <label for="min">Minutes</label>
+                    <input [(ngModel)]="evDurMins" type="number" name="min" placeholder="30" #min>
+                    <label class="redWarning" *ngIf="showTimeWarning">Please provide an event duration.</label>
+                </div>
+
+                <label class="makeItBold">Location</label>
+                <div id="zoom">
+                    <ng-icon id="zoomIcon" name="heroVideoCamera"></ng-icon>
+                    <p id="zoomP">Google Meet</p>
+                </div>
+
+                <label class="makeItBold">Description/Instructions</label>
+                <div id="description">
+                    <textarea [(ngModel)]="descriptionText"
+                        placeholder="Write a summary and any details your invitee should know about the event."></textarea>
+                </div>
+
+                <div class="bottomDiv">
+                    <div>
+                        <button (click)="goBack()">Cancel</button>
+                        <button (click)="continueEditFunctn()">Continue</button>
+                    </div>
+                </div>
+    </div>
+
+
+    <div class="slider" [class.hostsAndInviteesSlider]="showHostsAndInviteesSlider">
+        <button (click)="goBack()" class="goBackBtn">
+            < Event Type Summary</button>
+                <h4>Hosts and invitees</h4>
+                <hr>
+                <label class="makeItBold">Host</label>
+
+                <div class="makeItFlex" class="flexWithStyling">
+                    <div>image</div>
+                    <p>{{loggedInName}} (you)</p>
+                </div>
+
+                <label class="makeItBold">Invitees</label>
+                <div class="makeItFlex checkBoxDivStyling">
+                    <input type="checkbox" id="" (change)="checkBoxChanged()"
+                        [checked]="allowInviteesToAddGuests">
+                    <p>Allow invitees to add guests</p>
+                </div>
+
+                <div class="bottomDiv">
+                    <div>
+                        <button (click)="goBack()">Cancel</button>
+                        <button (click)="continueInviteesFunctn()">Continue</button>
+                    </div>
+                </div>
+
+
+    </div>
+
+    <!-- ======================================================================== -->
+
+
+    <div class="slider" [class.bookingPageSlider]="bookingPageSlider" [class.makeBlur]="makeBlur">
+        <button (click)="goBack()" class="goBackBtn">
+            < Event Type Summary</button>
+
+                <h4>Booking page options</h4>
+
+                <hr>
+                <label class="makeItBold">Event link *</label>
+                <input [(ngModel)]="customisedLink" type="text" id="customisedLink" [(ngModel)]="eventLink"
+                    name="eventLink">
+
+                <label class="makeItBold">Booking form</label>
+                <p class="makeItBold">Invitee questions</p>
+                <div>
+                    <div class="makeItFlex bookingFrmInviteeQuests" id="topInviteeQuests">
+                        <div class="iconDiv"><ng-icon name="matLockOutline"></ng-icon></div>
+                        <div class="questionDiv">
+                            <span>Name, </span>
+                            <span *ngIf="surnameReq">Last Name, </span>
+                            <span>Email</span>
+                            <!-- Name, Email -->
+                        </div>
+                        <div class="iconDiv"><ng-icon name="bootstrapThreeDotsVertical"
+                                (click)="editNameEmail()"></ng-icon></div>
+                        <div *ngIf="showEditOptionForNameEmail" class="popOver" (click)="openEditNameQuestionPopUp()">
+                            <ng-icon name="bootstrapPencil"></ng-icon>
+                            <p>Edit</p>
+                        </div>
+                    </div>
+                    <div class="makeItFlex bookingFrmInviteeQuests" *ngIf="evT == 'One-on-One'">
+                        <div class="iconDiv"><ng-icon name="matLockOutline"></ng-icon></div>
+                        <div class="questionDiv">Allow invitees to add guests</div>
+                        <div class="iconDiv" (click)="editInvitees()"><ng-icon name="bootstrapThreeDotsVertical"></ng-icon></div>
+
+                        <div *ngIf="showEditOptionForInvitees" class="popOver">
+                            <input type="checkbox" name="" id="" [checked]="allowInviteesToAddGuests" (change)="allowInviteesChanged()">
+                            <p *ngIf="allowInviteesToAddGuests">On</p>
+                            <p *ngIf="!allowInviteesToAddGuests">Off</p>
+                        </div>
+
+                    </div>
+                    <div *ngIf="questionsToBeAsked.length" class="allQuestionsDivParent">
+                        <div class="makeItFlex bookingFrmInviteeQuests" id="bottomInviteeQuests"
+                            *ngFor="let question of questionsToBeAsked; let i = index">
+                            <div class="allQuestionsDiv">
+                                <div class="iconDiv"><ng-icon name="phosphorDotsSixVerticalBold"></ng-icon></div>
+                                <div class="questionsToAsk">
+                                    <p>{{question.question}}</p>
+                                </div>
+                                <div *ngIf="!question.showThisQuestionOrNot" id="offStatus">OFF</div>
+                                <div class="iconDivOfQuestions" (click)="editQuestion(question._id, question.question)"><ng-icon name="bootstrapThreeDotsVertical"></ng-icon>
+                                </div>
+                                <div *ngIf="showEditOptionForQuestionId==question._id && showEditOptionForQuestion" class="popOverForQuests" (click)="openAddNewQuest()">
+                                    <div class="popOverDivs">
+                                        <ng-icon name="bootstrapPencil"></ng-icon>
+                                        <p>Edit</p>
+                                    </div>
+                                    <div class="popOverDivs makeRed" (click)="deleteQuestion(question._id)">
+                                        <ng-icon name="remixDeleteBin6Line"></ng-icon>
+                                        <p>Delete</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="addNewQuest" (click)="openAddNewQuest()">
+                    <p>+ Add new question</p>
+                </div>
+
+                <div class="bottomDiv">
+                    <div>
+                        <button (click)="goBack()">Cancel</button>
+                        <button (click)="continueBookingFunctn()">Continue</button>
+                    </div>
+                </div>
+
+    </div>
+
+
+    <!-- ======================================================================= -->
+
+    <!-- <div id="leftDiv">
         <a href="/createNewEventType">< Cancel</a>
         <h4>Edit Event Type</h4>
 
@@ -28,15 +235,103 @@
         </div>
 
         <div id="bottomDiv">
-            <!-- <hr> -->
             <div>
                 <button>Cancel</button>
-                <!-- <button (click)="continueFunctn(eventName.value, hrs.value, min.value)"><a href="http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}">Continue</a></button> -->
                 <button (click)="continueFunctn()">Continue</button>
             </div>
         </div>
+    </div> -->
+
+    <div id="leftDiv" [class.makeBlur]="makeBlur">
+
+        <div id="aboveHeading">
+            <div>
+                <a href="/home">
+                    < Done</a>
+            </div>
+            <div class="makeItFlex" id="aboveHeadingRightDiv">
+                <!-- <button class="otherBtns"><ng-icon name="ionSettingsOutline"></ng-icon></button> -->
+                <button
+                ngxClipboard [cbContent]=
+                "'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +evId"
+
+                 class="otherBtns"><ng-icon name="octLink"></ng-icon></button>
+                <!-- <button id="shareBtn"><ng-icon name="heroArrowUturnRight"></ng-icon>Share</button> -->
+            </div>
+        </div>
+
+
+        <p class="eventNameHeading">{{eventN}}</p>
+        <hr>
+
+        <div class="smallDivs" (click)="turnOnShowEventDetailsSlider()">
+            <div class="makeItFlex">
+                <div><ng-icon name="radixHamburgerMenu"></ng-icon></div>
+                <p class="headings">Event details</p>
+            </div>
+            <div>
+                <span *ngIf="evDurHrs">{{evDurHrs}} hrs </span>
+                <span *ngIf="evDurMins">{{evDurMins}} mins</span>
+            </div>
+        </div>
+        <hr>
+
+        <div class="smallDivs" (click)="turnOnShowHostsAndInviteesSlider()">
+            <div class="makeItFlex">
+                <div><ng-icon name="matPeopleOutline"></ng-icon></div>
+                <p class="headings">Hosts and Invitees</p>
+            </div>
+            <div>
+                <p>{{loggedInName}} (you)</p>
+                <p>{{evT}}</p>
+            </div>
+        </div>
+        <hr>
+
+        <div class="smallDivs">
+            <div class="makeItFlex">
+                <div><ng-icon name="remixCalendar2Line"></ng-icon></div>
+                <p class="headings">Scheduling settings</p>
+            </div>
+            <div>
+                <p>rolling calendar days</p>
+            </div>
+        </div>
+        <hr>
+
+        <div class="smallDivs" (click)="turnOnBookingPageSlider()">
+            <div class="makeItFlex">
+                <div><ng-icon name="bootstrapCreditCard"></ng-icon></div>
+                <p class="headings">Booking page options</p>
+            </div>
+            <div>
+                <span>Asking for</span>
+                <span> name, </span>
+                <span *ngIf="surnameReq">last name, </span>
+                <span>email </span>
+                <span *ngIf="questionsToBeAsked.length">,+{{questionsToBeAsked.length}} questions</span>
+            </div>
+        </div>
+        <hr>
+
+        <!-- <div class="smallDivs">
+            <div class="makeItFlex">
+                <div><ng-icon name="matMailOutline"></ng-icon></div>
+                <p class="headings">Communications</p>
+            </div>
+            <div>
+                <p>Calendar invitations</p>
+            </div>
+        </div>
+        <hr> -->
+
     </div>
-    <div id="rightDiv">
+
+
+
+
+
+    <div id="rightDiv" [class.makeBlur]="makeBlur">
         <div id="eventDeets">
             <div id="greyStrip">
                 <p>This is a preview. </p>
@@ -57,13 +352,12 @@
                     </div>
                 </div>
                 <hr>
-                <div id="previewDiv">
+                <!-- <div id="previewDiv">
                     <p id="previewP">
                         A preview of your availability will show on the next step
                     </p>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 </body>
-

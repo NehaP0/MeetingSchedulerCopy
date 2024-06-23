@@ -199,8 +199,10 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
             start,
             end,
             user: user,
+            userSurname : "",
             userEmail: [userEmail, ...otherEmails],
             currentDateTime,
+            description : additionalInfo
           });
           console.log("meeting of logged in user ", meeting);
           console.log("foundEvent.meetings ", foundEvent.meetings);
@@ -264,6 +266,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
               start,
               end,
               user: loggedInUserName,
+              userSurname : "",
               userEmail: loggedInUserEmail,
               currentDateTime,
               evType,
@@ -275,6 +278,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
               start,
               end,
               user: user,
+              userSurname : "",
               userEmail: userEmail,
               currentDateTime,
               evType,
@@ -302,6 +306,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         meetLink = await createMeetingLink();
         console.log("Meeting link created:", meetLink);
 
+        console.log("in sendMail functn, I am sending ", meetLink, loggedInUserName, importedloggedInUserEmail,otherEmails,additionalInfo);
         // Continue with nodemailer code
         await sendMail(
           meetLink,
@@ -439,11 +444,13 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     meetingLink,
     loggedInUserName,
     importedloggedInUserEmail,
+    otherEmails,
     additionalInfo
   ) {
     // -------------------mail sending starts-----------------
     // initialize nodemailer
     console.log("nodemailer working");
+    console.log("sendMail got ", meetingLink, loggedInUserName, importedloggedInUserEmail, additionalInfo);
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -673,6 +680,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
             start,
             end,
             user: user,
+            userSurname : "",
             userEmail: userEmail,
             currentDateTime,
           });
@@ -728,6 +736,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
               start,
               end,
               user: selectedUserName,
+              userSurname : "",
               userEmail: selectedUserEmail,
               currentDateTime,
               evType,
@@ -739,6 +748,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
               start,
               end,
               user: user,
+              userSurname : "",
               userEmail: userEmail,
               currentDateTime,
               evType,

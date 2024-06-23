@@ -39,6 +39,7 @@ export class ListAllEventTypesComponent {
     console.log('event ', event);
     localStorage.setItem('evName', event.evName);
     localStorage.setItem('evType', event.evType);
+    
 
     // localStorage.setItem("evType",event.evName)
     // localStorage.setItem("evDurHrs",event.evDuration.hrs)

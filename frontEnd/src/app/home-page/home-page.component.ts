@@ -173,6 +173,10 @@ export class HomePageComponent {
           this.eventsArrayOfLoggedInUser[i].evName
         );
         localStorage.setItem('evId', id);
+        localStorage.setItem('allowInviteesToAddGuests', this.eventsArrayOfLoggedInUser[i].allowInviteesToAddGuests)
+        localStorage.setItem('surnameReq', this.eventsArrayOfLoggedInUser[i].surnameReq)
+        localStorage.setItem('questionsToBeAsked', JSON.stringify(this.eventsArrayOfLoggedInUser[i].questionsToBeAsked))
+
       }
     }
   }

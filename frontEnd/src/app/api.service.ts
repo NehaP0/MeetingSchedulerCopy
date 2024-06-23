@@ -95,7 +95,7 @@ export class APIService {
 
   private headers: HttpHeaders = new HttpHeaders();
 
-  constructor(private httpClient: HttpClient, private router: Router) {}
+  constructor(private httpClient: HttpClient, private router: Router) { }
 
   getallusers() {
     return this.httpClient.get(`${this.API_URL}/allUsersRoute/`, {
@@ -538,11 +538,80 @@ export class APIService {
     this.patchUserAvailability();
   }
 
+
   patchUserAvailability() {
     console.log('pathUserAvailability called');
 
     //     this.userLoggedInEmailIdSubject.next(user.emailID);
     let emailID = localStorage.getItem('emailID');
+    // let userAvailability = {};
+    let userAvailability = {
+      duration: {},
+      workingHrs: {},
+      workingDays: [],
+      nonWorkingDays: [],
+    };
+
+    // this.userLoggedInEmailId$.subscribe((userLoggedInEmailIdValue) => {
+    //   emailID = userLoggedInEmailIdValue;
+    // });
+    // console.log("log in id ",this.userLoggedInEmailId$);
+
+    console.log(this.duration$, this.workingHrs$);
+
+    userAvailability.duration = this.duration$;
+    userAvailability.workingHrs = this.workingHrs$;
+
+    this.userAvailabelOnArray$.subscribe((userAvailabelOnArrayValue) => {
+      console.log('available value ', userAvailabelOnArrayValue);
+
+      userAvailability.workingDays = userAvailabelOnArrayValue;
+      console.log('available on ', userAvailabelOnArrayValue);
+    });
+
+    this.userUnavailabelOnArray$.subscribe((userUnavailabelOnArrayValue) => {
+      userAvailability.nonWorkingDays = userUnavailabelOnArrayValue;
+      console.log('unavailable on ', userUnavailabelOnArrayValue);
+    });
+
+    console.log(userAvailability);
+
+    return this.httpClient
+      .patch(
+        `${this.API_URL}/user/patchuser`,
+        { emailID, userAvailability },
+        {
+          headers: {
+            // Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
+      .subscribe(
+        (response) => {
+          console.log(response);
+          alert(response['message']);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+  }
+
+
+
+  userWorkingHrsAdmin(wrkngHrsObj, selectedUserEmail) {
+    this.workingHrs$ = wrkngHrsObj;
+    console.log('workingHrs ', this.workingHrs$);
+    this.patchUserAvailabilityAdmin(selectedUserEmail);
+  }
+
+
+  patchUserAvailabilityAdmin(selectedUserEmail) {
+    console.log('pathUserAvailability called');
+
+    //     this.userLoggedInEmailIdSubject.next(user.emailID);
+    let emailID = selectedUserEmail;
     // let userAvailability = {};
     let userAvailability = {
       duration: {},
@@ -731,12 +800,11 @@ export class APIService {
     hrs: number,
     min: number,
     location: string,
-    evType: string
+    evType: string,
+    description: string
   ) {
     // let {evName, evType, evDuration, evLocation} = req.body
 
-    let loggedInName = localStorage.getItem('userLoggedInName' || '');
-    let loggedInEmailId = localStorage.getItem('emailID' || '');
 
     console.log(
       'editEvtn called in apiService',
@@ -744,7 +812,8 @@ export class APIService {
       hrs,
       min,
       location,
-      evType
+      evType,
+      description
     );
 
     let event = {
@@ -753,6 +822,7 @@ export class APIService {
       evType: evType,
       evDuration: { hrs: hrs, minutes: min },
       evLocation: location,
+      description
     };
     // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
 
@@ -771,6 +841,30 @@ export class APIService {
     if (response['message'] == 'Event edited') {
       window.open('/home', '_self');
     }
+  }
+
+  async editEventIfUserCanAddGuests(evId: string, allowInviteesToAddGuests: boolean) {
+
+    console.log('editEventIfUserCanAddGuests called in apiService', evId, allowInviteesToAddGuests);
+
+    let objToSend = {
+      evId, allowInviteesToAddGuests
+    }
+
+    const response = await this.httpClient
+      .patch(`${this.API_URL}/event/editEventIfUserCanAddGuests`, objToSend, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .toPromise();
+    console.log('gotten response ', response['message']);
+    alert(response['message']);
+    // if (response['message'] == 'Event edited') {
+    //   window.open('/home', '_self');
+    // }
+
+
   }
 
   // setDateAndTime(eventDate: string, eventTime: string) {
@@ -1288,10 +1382,27 @@ export class APIService {
   }
 
   meetingByPollConfirmed(meetingId: string, detailObjId: string) {
-    console.log('meetingByPollConfirmed functn called and meet details ids',meetingId,detailObjId);
+    console.log('meetingByPollConfirmed functn called and meet details ids', meetingId, detailObjId);
     let body = { meetingId, detailObjId };
-
     return this.httpClient.post(`${this.API_URL}/user/votingMeetConfirmed`, body).toPromise();
-    
   }
+
+  // async addQuestionToMeeting(question, isRequired, showThisQuestion, loggedInEmailId, eventId){    
+  //   console.log('id value after login ', loggedInEmailId);
+  //   let body = {question, isRequired, showThisQuestion, eventId}    
+
+
+  //   const response = await this.httpClient.patch(`${this.API_URL}/event/addQuestionToMeet/${loggedInEmailId}`, body).toPromise();
+  //   alert(response['message'])
+  // }
+
+  async editUserFormForEventFnctn(evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked,loggedInEmailId){
+    let body = {evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked}    
+
+
+    const response = await this.httpClient.patch(`${this.API_URL}/event/addQuestionForForm/${loggedInEmailId}`, body).toPromise();
+    alert(response['message'])
+    return response['message']
+  }
+
 }

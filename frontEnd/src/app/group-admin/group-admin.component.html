@@ -1,0 +1,22 @@
+<app-admin-nav-bar></app-admin-nav-bar>
+
+
+<div id="body">
+    <div class="popUp" *ngIf="askForGrpCreation">
+        <p class="text">Click to create a group</p>
+        <button class="btn" (click)="createGrpBtn()">Create a group</button>
+    </div>
+
+    <div class="popUpTwo" *ngIf="grpNamePopUp">
+        <p class="text">Create a new group</p>
+        <div>
+            <p>Name</p>
+            <input type="text" id="grpName" [(ngModel)]="grpName">
+        </div>
+        <div id="btnDiv">
+            <button class="popUpTwoBtns" id="cancelBtn" (click)="cancelBtn()">Cancel</button>
+            <button class="popUpTwoBtns" id="continueBtn" (click)="continueBtn()">Continue</button>
+        </div>
+    </div>
+
+</div>

@@ -32,6 +32,7 @@ import { PollCalendarComponent } from './poll-calendar/poll-calendar.component';
 import {VotingEventDetailsComponent} from './voting-event-details/voting-event-details.component'
 import {PollLinkPopUpComponent} from './poll-link-pop-up/poll-link-pop-up.component'
 import { PollingPageComponent } from './polling-page/polling-page.component';
+import { GroupAdminComponent } from './group-admin/group-admin.component';
 
 
 const routes: Routes = [
@@ -65,7 +66,8 @@ const routes: Routes = [
   { path: 'pollCalendar', component: PollCalendarComponent },
   { path : 'votingEventDetails', component : VotingEventDetailsComponent},
   {path : 'pollLinkPopUp', component : PollLinkPopUpComponent},
-  {path: 'pollingPage', component : PollingPageComponent}
+  {path: 'pollingPage', component : PollingPageComponent},
+  {path: 'group', component : GroupAdminComponent},
 ];
 
 @NgModule({

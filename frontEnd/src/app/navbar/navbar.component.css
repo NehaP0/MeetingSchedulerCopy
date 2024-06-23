@@ -23,12 +23,12 @@
     transition: all 0.5s;
     padding: 10px 5px;  
     height: 100vh; 
-
 }
 .showme{ 
     display: none;
-    overflow:scroll;
-    overflow-x:hidden;
+    /* overflow: scroll;
+    overflow-x: hidden; */
+    height: 100vh; 
 }
 .showhim:hover .showme{
     display : block;    
@@ -63,8 +63,8 @@
     padding : 10px;
     font-weight: bold;
     }
-    #upperDivHover>div:hover{
-        background-color: #F2F8FF;
+#upperDivHover>div:hover{
+    background-color: #F2F8FF;
 }
 
 
@@ -72,7 +72,6 @@
     height: 100vh;
     /* position: relative;
     overflow: visible; */
-
 }
 #logo, #plusSign, #logoExpand{
     font-size: 30px;

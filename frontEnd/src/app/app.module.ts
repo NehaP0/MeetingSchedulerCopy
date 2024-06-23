@@ -26,16 +26,18 @@ import { HomePageComponent } from './home-page/home-page.component';
 
 
 import { NgIconsModule } from '@ng-icons/core';
-import { heroUsers, heroVideoCamera, heroGlobeAsiaAustralia } from '@ng-icons/heroicons/outline';
+import { heroUsers, heroVideoCamera, heroGlobeAsiaAustralia, heroUserGroup, heroArrowUturnRight } from '@ng-icons/heroicons/outline';
 import {ionSettingsOutline, ionCopyOutline, ionSearchOutline, ionLogInOutline, ionMailOpenOutline} from '@ng-icons/ionicons'
-import {bootstrapStars, bootstrapCaretDownFill, bootstrapChevronDown, bootstrapCCircleFill, bootstrapPlusCircleFill, bootstrapClock, bootstrapQuestionCircle, bootstrapArrowLeft, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo} from '@ng-icons/bootstrap-icons'
+import {bootstrapStars, bootstrapCaretDownFill, bootstrapChevronDown, bootstrapCCircleFill, bootstrapPlusCircleFill, bootstrapClock, bootstrapQuestionCircle, bootstrapArrowLeft, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo, bootstrapCreditCard, bootstrapThreeDotsVertical} from '@ng-icons/bootstrap-icons'
 import {remixUserAddLine, remixCalendar2Line, remixStackshareLine, remixArrowRightSLine, remixDeleteBin6Line} from '@ng-icons/remixicon'
 import {typAttachmentOutline, typTick} from '@ng-icons/typicons'
 import {circumRoute} from '@ng-icons/circum-icons'
-import {octApps, octLocation} from '@ng-icons/octicons'
+import {octApps, octLocation, octLink} from '@ng-icons/octicons'
 import {iconoirCrown} from '@ng-icons/iconoir';
 import {tablerEdit} from '@ng-icons/tabler-icons'
 import {radixCross2, radixHamburgerMenu} from '@ng-icons/radix-icons'
+import {matPeopleOutline, matMailOutline, matLockOutline} from '@ng-icons/material-icons/outline'
+import {phosphorDotsSixVerticalBold} from '@ng-icons/phosphor-icons/bold'
 
 import { NewEventTypeComponent } from './new-event-type/new-event-type.component';
 import { CreateNewEventTypeComponent } from './create-new-event-type/create-new-event-type.component';
@@ -72,6 +74,8 @@ import { VotingEventDetailsComponent } from './voting-event-details/voting-event
 import { PollLinkPopUpComponent } from './poll-link-pop-up/poll-link-pop-up.component';
 import { NavForScheduledEventsComponent } from './nav-for-scheduled-events/nav-for-scheduled-events.component';
 import { PollingPageComponent } from './polling-page/polling-page.component';
+import { GroupAdminComponent } from './group-admin/group-admin.component';
+import { GroupsListAdminComponent } from './groups-list-admin/groups-list-admin.component';
 // import { CallbackComponentComponent } from './callback-component/callback-component.component';
 
 // import { NavbarComponent } from './navbar/navbar.component';
@@ -121,6 +125,8 @@ import { PollingPageComponent } from './polling-page/polling-page.component';
     PollLinkPopUpComponent,
     NavForScheduledEventsComponent,
     PollingPageComponent,
+    GroupAdminComponent,
+    GroupsListAdminComponent,
     // CallbackComponentComponent,
     // NavbarComponent,
     // ScheduleMeetComponent
@@ -143,8 +149,8 @@ import { PollingPageComponent } from './polling-page/polling-page.component';
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
        bootstrapCCircleFill, bootstrapPlusCircleFill, typAttachmentOutline, remixCalendar2Line, remixStackshareLine, circumRoute , bootstrapClock, octApps, iconoirCrown,
        bootstrapQuestionCircle, remixArrowRightSLine, heroVideoCamera, octLocation, heroGlobeAsiaAustralia, bootstrapArrowLeft, typTick, tablerEdit, remixDeleteBin6Line, radixCross2,
-       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo, radixHamburgerMenu
-    }),
+       ionLogInOutline, ionMailOpenOutline, bootstrapPencil, bootstrapPeople, bootstrapCameraVideo, radixHamburgerMenu, heroUserGroup, matPeopleOutline, bootstrapCreditCard, matMailOutline, octLink, 
+       heroArrowUturnRight, matLockOutline, bootstrapThreeDotsVertical, phosphorDotsSixVerticalBold}),
 
       OAuthModule.forRoot({
       resourceServer: {
