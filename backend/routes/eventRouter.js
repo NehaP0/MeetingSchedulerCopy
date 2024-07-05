@@ -101,6 +101,13 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
         startTimIncrements: {
           status: true,
           mins: 30
+        },
+        redirectTo : {
+          confirmationPage : {status : true},
+          externalUrl : {
+            status : false,
+            link : ""
+          }
         }
 
       });
@@ -166,6 +173,13 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
         startTimIncrements: {
           status: true,
           mins: 30
+        },
+        redirectTo : {
+          confirmationPage : {status : true},
+          externalUrl : {
+            status : false,
+            link : ""
+          }
         }
       });
     }
@@ -525,6 +539,13 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
       startTimIncrements: {
         status: true,
         mins: 30
+      },
+      redirectTo : {
+        confirmationPage : {status : true},
+        externalUrl : {
+          status : false,
+          link : ""
+        }
       }
     });
     //  console.log(meeting);
@@ -1032,7 +1053,7 @@ eventRoute.patch(
 
 eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) => {
   let { selectedUsersEmailId } = req.params;
-  let { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked } = req.body
+  let { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo } = req.body
   console.log("selectedUsersEmailId ", selectedUsersEmailId);
   console.log("evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked ", evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked);
   try {
@@ -1055,7 +1076,7 @@ eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) =
     ans.evLinkEnd = eventLink
     ans.surnameReq = surnameReq
     ans.allowInviteesToAddGuests = allowInviteesToAddGuests
-
+    ans.redirectTo = redirectTo
     await findSelectedUser.save();
 
     return res.send({ message: "Saved" })

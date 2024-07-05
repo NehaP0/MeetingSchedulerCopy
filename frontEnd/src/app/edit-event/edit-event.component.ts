@@ -38,6 +38,10 @@ export class EditEventComponent {
   surnameReqStr = localStorage.getItem("surnameReq")
   surnameReq: Boolean
   questionsToBeAsked = JSON.parse(localStorage.getItem("questionsToBeAsked"))
+  redirectTo = {}
+  redirectToValue = ""
+  externalSiteUrl = ""
+  showWarningForExternalUrl = false
 
   eventLink = this.eventN
   customisedLink = ""
@@ -389,9 +393,18 @@ export class EditEventComponent {
         this.evDurHrs = reqEventObj["evDuration"]["hrs"]
         this.evDurMins = reqEventObj["evDuration"]["minutes"]
         this.eventLink = this.eventN
+        this.redirectTo = reqEventObj["redirectTo"]
         if(reqEventObj['evType']=='Group'){
           this.maxInviteesPerEvent = reqEventObj['maxInviteesPerEventForGrpEvent']
           this.displayRemainingSPotsOrNot = reqEventObj['displayRemainingSpotsOnBookingPageGrp']
+        }
+
+        if(reqEventObj["redirectTo"]["confirmationPage"]["status"]){
+          this.redirectToValue = "cloduraPage"
+        }
+        else{
+          this.redirectToValue = "externalSite"
+          this.externalSiteUrl = reqEventObj["redirectTo"]["externalUrl"]["link"]
         }
 
         // ===========================
@@ -781,12 +794,43 @@ export class EditEventComponent {
     console.log("lastNameNeeded ", this.surnameReq);
     console.log("allow invitees to add guests ", this.allowInviteesToAddGuests);
     console.log("questionsArr ", this.questionsToBeAsked);
+    console.log("redirectToValue ", this.redirectToValue);
+    
+    let goAhead = true
 
-    this.apiService.editUserFormForEventFnctn(this.evId, this.eventLink, this.surnameReq, this.allowInviteesToAddGuests, this.questionsToBeAsked, this.loggedInEmailId)
-    setTimeout(() => {
-      this.bookingPageSlider = false
-      this.getAllEventEditings()
-    }, 1000)
+    if(this.redirectToValue == "cloduraPage"){
+      this.redirectTo = {
+        confirmationPage : {status : true},
+        externalUrl : {
+          status : false,
+          link : ""
+        }
+      }
+    }
+    else if(this.redirectToValue == "externalSite"){
+      if(this.externalSiteUrl == ""){
+        goAhead = false
+        this.showWarningForExternalUrl = true
+      }
+      else{
+        this.showWarningForExternalUrl = false
+        this.redirectTo = {
+          confirmationPage : {status : false},
+          externalUrl : {
+            status : true,
+            link : this.externalSiteUrl
+          }
+        }
+      }
+    }
+
+    if(goAhead == true){
+      this.apiService.editUserFormForEventFnctn(this.evId, this.eventLink, this.surnameReq, this.allowInviteesToAddGuests, this.questionsToBeAsked, this.loggedInEmailId, this.redirectTo)
+      setTimeout(() => {
+        this.bookingPageSlider = false
+        this.getAllEventEditings()
+      }, 1000)
+    }
   }
 
 
@@ -1293,8 +1337,8 @@ export class EditEventComponent {
             console.log("workingStartMinutes 288 ", workingStartMinutes, typeof workingStartMinutes);
 
             if (workingStartMinutes >= 60) {
-              workingStartHours = workingStartHours + Math.abs(workingStartMinutes / 60)
-              workingStartMinutes = workingStartMinutes - 60 * (Math.abs(workingStartMinutes / 60))
+              workingStartHours = workingStartHours + Math.floor(workingStartMinutes / 60)
+              workingStartMinutes = workingStartMinutes - 60 * (Math.floor(workingStartMinutes / 60))
             }
 
             // console.log("workingStartHours 295 ",workingStartHours, typeof workingStartHours);

@@ -369,14 +369,14 @@ button:hover {
     justify-content: space-between;
 }
 
-#questionBox {
+#questionBox, #urlBox {
     width: 100%;
     height: 60px;
     border-radius: 5px;
     border: 1px solid black;
 }
 
-#questionBox:focus {
+#questionBox:focus, #urlBox:focus {
     outline: 1px solid #0069FF;
     border: 1px solid #0069FF;
 
@@ -486,7 +486,7 @@ button:hover {
     height: 300px
 }
 
-#selectTagForName {
+#selectTagForName, #selectTagForConfirmation, #selectTagForConfirmation option {
     width: 100%;
     padding: 15px;
     margin-bottom: 30px;

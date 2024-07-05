@@ -114,11 +114,15 @@
 
                 <div *ngIf="evT == 'Group'">
                     <p>Maximum Invitees Per Event*</p>
-                    <input type="number"  [(ngModel)]="maxInviteesPerEvent" min="2">
-                    <p *ngIf="maxInviteesPerEvent<2" class="redWarning">Maximum Invitees Per Event should be greater than 1</p>
+                    <input type="number" [(ngModel)]="maxInviteesPerEvent" min="2">
+                    <p *ngIf="maxInviteesPerEvent<2" class="redWarning">Maximum Invitees Per Event should be greater
+                        than 1</p>
                     <div class="makeItFlex remainingSpotsDiv">
-                        <span><input type="checkbox" name="" id="" checked="displayRemainingSPotsOrNot" [(ngModel)]="displayRemainingSPotsOrNot"></span>
-                        <span><p>Display remaining spots on booking page</p></span>
+                        <span><input type="checkbox" name="" id="" checked="displayRemainingSPotsOrNot"
+                                [(ngModel)]="displayRemainingSPotsOrNot"></span>
+                        <span>
+                            <p>Display remaining spots on booking page</p>
+                        </span>
                     </div>
 
                 </div>
@@ -147,9 +151,9 @@
                 <input [(ngModel)]="customisedLink" type="text" id="customisedLink" [(ngModel)]="eventLink"
                     name="eventLink">
 
-                <label class="makeItBold">Booking form</label>
-                <p class="makeItBold">Invitee questions</p>
                 <div>
+                    <label class="headings">Booking form</label>
+                    <p class="makeItBold">Invitee questions</p>
                     <div class="makeItFlex bookingFrmInviteeQuests" id="topInviteeQuests">
                         <div class="iconDiv"><ng-icon name="matLockOutline"></ng-icon></div>
                         <div class="questionDiv">
@@ -210,6 +214,22 @@
                     <p>+ Add new question</p>
                 </div>
 
+
+                <div>
+                    <label class="headings">Confirmation page</label>
+                    <p class="makeItBold">After booking *</p>
+                    <select name="" id="selectTagForConfirmation" value="redirectToValue" [(ngModel)]="redirectToValue">
+                        <option value="cloduraPage">Display Clodura's confirmation page</option>
+                        <option value="externalSite">Redirect to an external site</option>
+                    </select>
+
+                    <div *ngIf="redirectToValue == 'externalSite'">
+                        <p class="makeItBold">Redirect URL *</p>
+                        <input type="text" id="urlBox" [(ngModel)]="externalSiteUrl" placeholder="https://www.example.com">
+                        <p *ngIf="showWarningForExternalUrl && !externalSiteUrl" class="warning">This field is required.</p>
+                    </div>
+                </div>
+
                 <div class="bottomDiv">
                     <div>
                         <button (click)="goBack()">Cancel</button>
@@ -219,8 +239,8 @@
 
     </div>
     <!-- ======================================================================= -->
-    
-    
+
+
     <div class="slider" [class.schedulingPageSlider]="schedulingPageSlider" [class.makeBlur]="makeBlur">
 
         <button (click)="goBack()" class="goBackBtn">
@@ -234,34 +254,41 @@
                     <p>Invitees can schedule...</p>
                     <div class="makeItFlex smallDivForDateRange">
                         <div>
-                            <input type="radio" name="group1" id="" (change)="calendarDaysFunctn()" [checked]="statusForDays">
+                            <input type="radio" name="group1" id="" (change)="calendarDaysFunctn()"
+                                [checked]="statusForDays">
                         </div>
                         <div>
                             <input type="Number" placeholder={{placeholderForDays}} [(ngModel)]="days.noOfDays" min="0">
                         </div>
-                        <select name="" id="" [(ngModel)]="allDaysSelectedOrExcludeWeekends" value="allDaysSelectedOrExcludeWeekends">
+                        <select name="" id="" [(ngModel)]="allDaysSelectedOrExcludeWeekends"
+                            value="allDaysSelectedOrExcludeWeekends">
                             <option value="calendar days">calendar days</option>
-                            <p class="makeDisplayContent">Counts every day on the calendar including days you're unavailable</p>
-                        
+                            <p class="makeDisplayContent">Counts every day on the calendar including days you're
+                                unavailable</p>
+
                             <option value="weekdays">weekdays</option>
                             <p>Excludes weekends and only counts Mon-Fri</p>
                         </select>
                     </div>
                     <div class="makeItFlex smallDivForDateRange">
                         <div>
-                            <input type="radio" name="group1" id="" (change)="openFromAndToDatesFnctn()" [checked]="withinDateRange.status">
+                            <input type="radio" name="group1" id="" (change)="openFromAndToDatesFnctn()"
+                                [checked]="withinDateRange.status">
                         </div>
                         <div>
                             <p class="makeDisplayContent">Within a date range</p>
                         </div>
                         <div *ngIf="openFromAndToDates">
-                            <input placeholder="from" type="date" value="withinDateRange.start" [(ngModel)]="withinDateRange.start">
-                            <input placeholder="to" type="date" name="" id="" value="withinDateRange.end" [(ngModel)]="withinDateRange.end" (change)="dateValidatorFunctn()">
+                            <input placeholder="from" type="date" value="withinDateRange.start"
+                                [(ngModel)]="withinDateRange.start">
+                            <input placeholder="to" type="date" name="" id="" value="withinDateRange.end"
+                                [(ngModel)]="withinDateRange.end" (change)="dateValidatorFunctn()">
                         </div>
                     </div>
                     <div class="makeItFlex smallDivForDateRange">
                         <div>
-                            <input type="radio" name="group1" id="" [checked]="indefinitely.status" (change)="indefinitelyFunctn()">
+                            <input type="radio" name="group1" id="" [checked]="indefinitely.status"
+                                (change)="indefinitelyFunctn()">
                         </div>
                         <div>
                             <p class="makeDisplayContent">Indefinitely into the future</p>
@@ -274,13 +301,17 @@
                     <label class="makeItBold headingsInSchedulingPage">Event limits</label>
 
                     <div>
-                        <div (click)="showMinNotice = !showMinNotice"><p class="subHeadingsInSchedulingPage">Minimum notice</p></div>
+                        <div (click)="showMinNotice = !showMinNotice">
+                            <p class="subHeadingsInSchedulingPage">Minimum notice</p>
+                        </div>
                         <div *ngIf="showMinNotice">
                             <p>Invitees can't schedule within...</p>
                             <div class="makeItFlex showMinNoticeDiv">
                                 <!--<input type="number" value="noOfMeetsAllowed" [(ngModel)]="noOfMeetsAllowed" (input)="noOfMeetsAllowedPerDayFunctn()" min="0"> -->
-                                <input type="number" value="valueForMinNoticeIpBox" [(ngModel)]="valueForMinNoticeIpBox" (input)="changeMinimumNotice()"  min="0">
-                                <select name="" id="" value="minsHrsOrDaysMinNotice" [(ngModel)]="minsHrsOrDaysMinNotice" (change)="changeMinimumNotice()">
+                                <input type="number" value="valueForMinNoticeIpBox" [(ngModel)]="valueForMinNoticeIpBox"
+                                    (input)="changeMinimumNotice()" min="0">
+                                <select name="" id="" value="minsHrsOrDaysMinNotice"
+                                    [(ngModel)]="minsHrsOrDaysMinNotice" (change)="changeMinimumNotice()">
                                     <option value="minutes">minutes</option>
                                     <option value="hours">hours</option>
                                     <option value="days">days</option>
@@ -292,10 +323,13 @@
                     </div>
 
                     <div>
-                        <div (click)="showDailyLimit =! showDailyLimit"><p class="subHeadingsInSchedulingPage">Daily limit</p></div>
+                        <div (click)="showDailyLimit =! showDailyLimit">
+                            <p class="subHeadingsInSchedulingPage">Daily limit</p>
+                        </div>
                         <div *ngIf="showDailyLimit">
                             <div class="makeItFlex showDailyLimitDiv">
-                                <input type="number" name="" id="" value="noOfMeetsAllowed" [(ngModel)]="noOfMeetsAllowed" (input)="noOfMeetsAllowedPerDayFunctn()" min="0">
+                                <input type="number" name="" id="" value="noOfMeetsAllowed"
+                                    [(ngModel)]="noOfMeetsAllowed" (input)="noOfMeetsAllowedPerDayFunctn()" min="0">
                                 <p>events max per day</p>
                             </div>
                         </div>
@@ -307,10 +341,13 @@
                     <label class="makeItBold headingsInSchedulingPage">Additional options</label>
 
                     <div>
-                        <div (click)="showStartTimeIncrements =! showStartTimeIncrements"><p class="subHeadingsInSchedulingPage">Start time increments</p></div>
+                        <div (click)="showStartTimeIncrements =! showStartTimeIncrements">
+                            <p class="subHeadingsInSchedulingPage">Start time increments</p>
+                        </div>
                         <div *ngIf="showStartTimeIncrements">
                             <p>Show available start times in increments of...</p>
-                            <select name="" id="" class="styleSelectTag" value="minsForstartTimIncrements" [(ngModel)]="minsForstartTimIncrements" (change)="startTimeIncFunctn()">
+                            <select name="" id="" class="styleSelectTag" value="minsForstartTimIncrements"
+                                [(ngModel)]="minsForstartTimIncrements" (change)="startTimeIncFunctn()">
                                 <option value="5">5 min</option>
                                 <option value="10">10 min</option>
                                 <option value="15">15 min</option>
@@ -328,7 +365,7 @@
                                     <option value="hoursInc">hours</option>
                                 </select>
                             </div> -->
-                            
+
                         </div>
                         <p class="makeGrey">Set the frequency of available time slots for invitees.</p>
                     </div>
@@ -399,7 +436,7 @@
         </div>
         <hr>
 
-        <div class="smallDivs"  (click)="turnOnSchedulingPageSlider()">
+        <div class="smallDivs" (click)="turnOnSchedulingPageSlider()">
             <div class="makeItFlex">
                 <div><ng-icon name="remixCalendar2Line"></ng-icon></div>
                 <p class="headings">Scheduling settings</p>
@@ -469,6 +506,7 @@
                     <div>
                         <ng-icon name="bootstrapClock"></ng-icon>
                         <span>{{evDurHrs || ""}}</span><span *ngIf="evDurHrs"> hrs </span>
+                        &nbsp; <!--  for space -->
                         <span>{{evDurMins || ""}} </span><span *ngIf="evDurMins"> mins </span>
                     </div>
                     <div>
@@ -484,28 +522,28 @@
             <!-- -------------------------------------- -->
             <div id="divForCalendarAndTime">
                 <full-calendar id="calendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
-                  [options]="calendarOptions" plugins={[dayGridPlugin]}>
+                    [options]="calendarOptions" plugins={[dayGridPlugin]}>
                 </full-calendar>
                 <div *ngIf="displayTimeDiv" class="timeDiv">
-                <!-- <div class="timeDiv"> -->
-                  <div id="timeLeftDIv">
-          
-                    <p>{{dateSelected}}</p>
-          
-          
-                    <div id="times">
-                      <div *ngFor="let oneTime of userAvailaibleArray; let i = index">
-                        <button class="oneTime" >{{oneTime}}</button> 
-                      </div>
-                      <div id="noTimesAv" *ngIf="!userAvailaibleArray.length">                        
-                        <p>No times available on {{dateSelected}}</p>
-                        <p>Please select another date.</p>
-                      </div>
+                    <!-- <div class="timeDiv"> -->
+                    <div id="timeLeftDIv">
+
+                        <p>{{dateSelected}}</p>
+
+
+                        <div id="times">
+                            <div *ngFor="let oneTime of userAvailaibleArray; let i = index">
+                                <button class="oneTime">{{oneTime}}</button>
+                            </div>
+                            <div id="noTimesAv" *ngIf="!userAvailaibleArray.length">
+                                <p>No times available on {{dateSelected}}</p>
+                                <p>Please select another date.</p>
+                            </div>
+                        </div>
+
+
                     </div>
-          
-          
                 </div>
-              </div>
             </div>
             <!-- --------------------------------------- -->
 

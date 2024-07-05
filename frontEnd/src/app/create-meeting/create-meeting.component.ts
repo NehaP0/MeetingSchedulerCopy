@@ -436,8 +436,8 @@ export class CreateMeetingComponent implements OnInit {
           console.log("workingStartMinutes 288 ", workingStartMinutes, typeof workingStartMinutes);
 
           if (workingStartMinutes >= 60) {
-            workingStartHours = workingStartHours + Math.abs(workingStartMinutes / 60)
-            workingStartMinutes = workingStartMinutes - 60 * (Math.abs(workingStartMinutes / 60))
+            workingStartHours = workingStartHours + Math.floor(workingStartMinutes / 60)
+            workingStartMinutes = workingStartMinutes - 60 * (Math.floor(workingStartMinutes / 60))
           }
 
           // console.log("workingStartHours 295 ",workingStartHours, typeof workingStartHours);
@@ -618,8 +618,8 @@ export class CreateMeetingComponent implements OnInit {
 
 
               if (minNum >= 60) {
-                hrNum = hrNum + Math.abs(minNum / 60)
-                minNum = minNum - 60 * (Math.abs(minNum / 60))
+                hrNum = hrNum + Math.floor(minNum / 60)
+                minNum = minNum - 60 * (Math.floor(minNum / 60))
               }
 
               console.log("hrNum ", hrNum, "minNum ", minNum);
@@ -830,8 +830,8 @@ export class CreateMeetingComponent implements OnInit {
     console.log("endTimeHrs ", endTimeHrs, "endTimeMins ", endTimeMins);
 
     if (endTimeMins >= 60) {
-      endTimeHrs = endTimeHrs + Math.abs(endTimeMins / 60)
-      endTimeMins = endTimeMins - 60 * (Math.abs(endTimeMins / 60))
+      endTimeHrs = endTimeHrs + Math.floor(endTimeMins / 60)
+      endTimeMins = endTimeMins - 60 * (Math.floor(endTimeMins / 60))
     }
 
     console.log("endTimeHrs ", endTimeHrs, "endTimeMins ", endTimeMins);

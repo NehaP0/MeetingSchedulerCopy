@@ -122,6 +122,13 @@ userRoute.post("/postuser", async (req, res) => {
       startTimIncrements : {
         status : true,
         mins : 30
+      },
+      redirectTo : {
+        confirmationPage : {status : true},
+        externalUrl : {
+          status : false,
+          link : ""
+        }
       }
 
     });

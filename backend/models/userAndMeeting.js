@@ -154,6 +154,20 @@ const startTimIncrementsSchema = mongoose.Schema({
   }
 })
 
+confirmationPageSchema = mongoose.Schema({
+  status : Boolean
+})
+
+externalUrlSchema = mongoose.Schema({
+  status : Boolean,
+  link : String
+})
+
+const redirection = mongoose.Schema({
+  confirmationPage : confirmationPageSchema,
+  externalUrl : externalUrlSchema
+})
+
 const eventSchema = mongoose.Schema({
   evName: {
     type: String,
@@ -181,7 +195,8 @@ const eventSchema = mongoose.Schema({
   noOfMeetsAllowedPerDay: noOfMeetsAllowedPerDaySchema,
   startTimIncrements : startTimIncrementsSchema,
   maxInviteesPerEventForGrpEvent : {type: Number},
-  displayRemainingSpotsOnBookingPageGrp : {type: Boolean}
+  displayRemainingSpotsOnBookingPageGrp : {type: Boolean},
+  redirectTo : redirection
 });
 
 const availabilitySchema = mongoose.Schema({

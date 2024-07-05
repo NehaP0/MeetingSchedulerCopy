@@ -292,8 +292,8 @@ nonWorkingDays = [0,6]
         console.log("workingStartMinutes 288 ",workingStartMinutes, typeof workingStartMinutes);
 
         if(workingStartMinutes>=60){
-          workingStartHours = workingStartHours + Math.abs(workingStartMinutes/60)
-          workingStartMinutes = workingStartMinutes - 60*(Math.abs(workingStartMinutes/60))
+          workingStartHours = workingStartHours + Math.floor(workingStartMinutes/60)
+          workingStartMinutes = workingStartMinutes - 60*(Math.floor(workingStartMinutes/60))
         }
 
         // console.log("workingStartHours 295 ",workingStartHours, typeof workingStartHours);

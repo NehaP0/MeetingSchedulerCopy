@@ -836,7 +836,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
           .status(200)
           .json({
             message:
-              "You are scheduled. A calendar invitation has been sent to your email address.",
+              "Your meeting has been scheduled. A calendar invitation has been sent to your email address.",
           });
       } catch (err) {
         console.log("Error creating meeting link:", err);

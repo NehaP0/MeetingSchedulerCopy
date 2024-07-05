@@ -1439,8 +1439,8 @@ export class APIService {
   //   alert(response['message'])
   // }
 
-  async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId) {
-    let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked }
+  async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId, redirectTo) {
+    let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo }
 
 
     const response = await this.httpClient.patch(`${this.API_URL}/event/addQuestionForForm/${loggedInEmailId}`, body).toPromise();
