@@ -1,23 +1,51 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Meeting Scheduled email.</title>
 </head>
+
 <body>
   <h2>Hello, {{name}}! </h2>
   {{!-- <p>Your meeting has been scheduled with {{company}}.</p> --}}
 
   <p>Details:</p>
-    <ul>
-        <li>Event Name: {{eventName}}</li>
-        {{!-- <li>Event Description: {{eventDecription}}</li> --}}
-        {{!-- <li>Event Date: {{eventDate}}</li> --}}
-        <li>Event Start Time: {{eventStartTime}}</li>
-        <li>Event End Time: {{eventEndTime}}</li>
-        <li>Meeting Link: {{meetingLink}}</li>
-        <li *ngIf="additionalInfo">Note: {{additionalInfo}} </li>
-    </ul>
+  <ul>
+    <li>Event Name: {{eventName}}</li>
+    {{!-- <li>Event Description: {{eventDecription}}</li> --}}
+    {{!-- <li>Event Date: {{eventDate}}</li> --}}
+    <li>Event Start Time: {{eventStartTime}}</li>
+    <li>Event End Time: {{eventEndTime}}</li>
+    <li>Meeting Link: {{meetingLink}}</li>
+    {{!-- <div *ngIf="questionsWdAnswers.length">
+      <div *ngFor="let question of questionsWdAnswers; let i=index">
+        <ul>
+          <li *ngIf="question.answer">
+            <p>{{question}}</p>
+            <p>{{question.answer}}</p>
+          </li>
+        </ul>
+      </div>
+    </div> --}}
+    {{#if additionalInfo}}
+    <div>
+      <span>Note : </span>
+      <span>{{additionalInfo}} </span>
+    </div>
+    {{/if}}
+    <div>
+      {{#each questionsWdAnswers}}
+        {{#if this.answer}}
+        <li>
+          <span>{{this.question}}</span> :
+          <span>{{this.answer}}</span>
+        </li>
+        {{/if}}
+      {{/each}}
+    </div>
+  </ul>
 </body>
+
 </html>

@@ -4,9 +4,9 @@ import { APIService } from '../api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-class ImageSnippet {
-  constructor(public src: string, public file: File) {}
-}
+// class ImageSnippet {
+//   constructor(public src: string, public file: File) {}
+// }
 
 @Component({
   selector: 'app-branding',
@@ -16,9 +16,30 @@ class ImageSnippet {
 export class BrandingComponent {
   selectedImage: any;
   toShowImg: any;
+  emailId = localStorage.getItem("emailID")
+  profileImage = ""
+  profileImageEntirePath = ""
+  cloduraBrandingReq 
 
   constructor(private http: HttpClient, private apiService: APIService,    private route: ActivatedRoute,
     private router: Router) {}
+
+  ngOnInit(){
+    this.getTheUser()       
+  }
+
+  async getTheUser(){
+    let user = await this.apiService.getParticularUser(this.emailId)
+    console.log("gotten user ", user);
+    this.profileImage = user.profileImage
+    this.profileImageEntirePath = `http://localhost:3000/${user.profileImage}`
+    this.cloduraBrandingReq = user.cloduraBranding
+
+    console.log("profileImage ", this.profileImage);
+    console.log("cloduraBrandingReq ", this.cloduraBrandingReq);     
+  }
+  
+
 
   onFileSelected(event: any) {
     this.selectedImage = event.target.files[0];
@@ -55,7 +76,9 @@ export class BrandingComponent {
           console.log('Image uploaded successfully:', response.imageUrl);
           // Optionally, you can handle success response here, like showing a success message.
           alert('Image uploaded successfully.');
-          this.router.navigate(['home']);
+          // this.router.navigate(['home']);
+          this.selectedImage = ""
+          this.getTheUser()
 
         },
         (error) => {
@@ -65,5 +88,15 @@ export class BrandingComponent {
         }
       );
     }
+  }
+
+  deleteImg(){
+    this.apiService.deleteAvatar(this.emailId)
+    this.profileImage = ""
+  }
+
+  saveCloduraBrandingChanges(){
+    console.log("cloduraBrandingReq ", this.cloduraBrandingReq);
+    this.apiService.cloduraBrandingOnOff(this.emailId, this.cloduraBrandingReq)
   }
 }

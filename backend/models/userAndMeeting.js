@@ -46,7 +46,113 @@ const meetingSchema = mongoose.Schema({
   description: {
     type: String
   },
+  questionsWdAnswers : {
+    type: Array
+  },
+  bookedForWhichEvId : {
+    type : String
+  }
+
 });
+
+const daysSchema = mongoose.Schema({
+  status: {
+    type:Boolean,
+    required: true
+  },
+  noOfDays: {
+    type: Number
+  },
+  allDays:{
+    type: Boolean
+  },
+  onlyWeekDays:{
+    type: Boolean
+  },
+})
+
+const withinDateRangeSchema = mongoose.Schema({
+  status: {
+    type:Boolean,
+    required: true
+  },
+  start: {
+    type: String
+  },
+  end:{
+    type: String
+  }
+})
+
+const whenCanInviteesScheduleSchema = mongoose.Schema({
+  status: {
+    type:Boolean,
+    required: true
+  },
+  days: daysSchema,
+  withinDateRange: withinDateRangeSchema,
+  indefinitely : {status : {
+    type:Boolean,
+    required: true
+  }}
+})
+
+const minimumNoticeSchema = mongoose.Schema({
+  status: {
+    type:Boolean,
+    required: true
+  },
+  hrs:{
+    status: {
+      type:Boolean,
+      required: true
+    },
+    noOfHrs:{
+      type:Number
+    }
+  },
+  mins:{
+    status: {
+      type:Boolean,
+      required: true
+    },
+    noOfMins:{
+      type:Number
+    }
+  },
+  days:{
+    status: {
+      type:Boolean,
+      required: true
+    },
+    noOfDays:{
+      type:Number
+    }
+  }
+})
+
+const noOfMeetsAllowedPerDaySchema = mongoose.Schema({
+  status:{
+    type:Boolean,
+    required: true
+  },
+  noOfMeetsAllowed: {
+    type: Number
+  }
+})
+
+const startTimIncrementsSchema = mongoose.Schema({
+  status:{
+    type:Boolean,
+    required: true
+  },
+  mins: {
+    type: Number
+  },
+  hrs:{
+    type: Number
+  }
+})
 
 const eventSchema = mongoose.Schema({
   evName: {
@@ -69,7 +175,13 @@ const eventSchema = mongoose.Schema({
   allowInviteesToAddGuests: { type: Boolean },
   surnameReq:{ type : Boolean},
   questionsToBeAsked: [questionSchema],
-  evLinkEnd : {type: String}
+  evLinkEnd : {type: String},
+  whenCanInviteesSchedule: whenCanInviteesScheduleSchema,
+  minimumNotice: minimumNoticeSchema,
+  noOfMeetsAllowedPerDay: noOfMeetsAllowedPerDaySchema,
+  startTimIncrements : startTimIncrementsSchema,
+  maxInviteesPerEventForGrpEvent : {type: Number},
+  displayRemainingSpotsOnBookingPageGrp : {type: Boolean}
 });
 
 const availabilitySchema = mongoose.Schema({
@@ -127,6 +239,9 @@ const userSchema = mongoose.Schema({
   meetingsWtOthers: [meetingSchema],
   profileImage: {
     type: String,
+  },
+  cloduraBranding : {
+    type : Boolean
   },
   voting: {
     type: [votingSchema]

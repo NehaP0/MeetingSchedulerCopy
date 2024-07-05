@@ -52,6 +52,7 @@ export class APIService {
   private meetingPollDetailsSubject = new BehaviorSubject<object>({});
   private votingLinkSubject = new BehaviorSubject<string>('');
   private votingArrSubject = new BehaviorSubject<any[]>([]);
+  private reqEventSubject = new BehaviorSubject<object>({});
 
   public userName$ = this.userNameSubject.asObservable();
   public emailId$ = this.emailIdSubject.asObservable();
@@ -90,6 +91,7 @@ export class APIService {
   public meetingPollDetails$ = this.meetingPollDetailsSubject.asObservable();
   public votingLink$ = this.votingLinkSubject.asObservable();
   public votingArr$ = this.votingArrSubject.asObservable();
+  public reqEvent$ = this.reqEventSubject.asObservable()
 
   API_URL = 'http://localhost:3000';
 
@@ -104,6 +106,19 @@ export class APIService {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
+  }
+
+  async getParticularUser(emailId){
+    const response = await this.httpClient.get(`${this.API_URL}/user/getParticularUser?userEmailId=${emailId}`, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }).toPromise();;
+
+    console.log("got user ", response['user']);
+    return response['user']
+    
   }
 
   registerUser(user) {
@@ -267,6 +282,8 @@ export class APIService {
 
   // --------------------------------------------------------
   async getMeetingsHide(id) {
+
+    this.emailIdSubject.next(id)
     // const usersObj = await this.httpClient.get(`${this.API_URL}/allUsersRoute/`).toPromise();
 
     // const users =  usersObj["users"]
@@ -721,7 +738,9 @@ export class APIService {
     eventName: string,
     hrs: string,
     min: string,
-    location: string
+    location: string,
+    inviteesPerEvent: number,
+    displayRemainingSpots: boolean
   ) {
     // let {evName, evType, evDuration, evLocation} = req.body
 
@@ -741,6 +760,8 @@ export class APIService {
       evType: evType,
       evDuration: { hrs: hrs, minutes: min },
       evLocation: location,
+      inviteesPerEvent,
+      displayRemainingSpots
     };
     // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
 
@@ -843,12 +864,12 @@ export class APIService {
     }
   }
 
-  async editEventIfUserCanAddGuests(evId: string, allowInviteesToAddGuests: boolean) {
+  async editEventIfUserCanAddGuests(evId: string, allowInviteesToAddGuests: boolean, maxInviteesPerEvent: number, displayRemainingSPotsOrNot: boolean) {
 
-    console.log('editEventIfUserCanAddGuests called in apiService', evId, allowInviteesToAddGuests);
+    console.log('editEventIfUserCanAddGuests called in apiService', evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot);
 
     let objToSend = {
-      evId, allowInviteesToAddGuests
+      evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot
     }
 
     const response = await this.httpClient
@@ -1140,6 +1161,7 @@ export class APIService {
       `${this.API_URL}/calendarLink/postMeetFromAdminSide`,
       body
     );
+
   }
 
   async deleteMeetByAdmin(selectedMeetId, selectedEventId, selectedUserId) {
@@ -1274,6 +1296,27 @@ export class APIService {
     );
   }
 
+  async deleteAvatar(userEmail){
+    let response =  await this.httpClient.patch<any>(
+      `${this.API_URL}/user/deleteAvatar`,
+      {userEmail}
+    ).toPromise();
+    console.log("response ", response);
+    if(response['message'] == "Image deleted"){
+      alert("Image deleted")
+    }
+  }
+
+  async cloduraBrandingOnOff(userEmail, cloduraBrandingReq){
+    let response =  await this.httpClient.patch<any>(
+      `${this.API_URL}/user/cloduraBrandingOnOff`, {userEmail, cloduraBrandingReq}
+    ).toPromise();
+    console.log("response ", response);
+    if(response['message'] == "cloduraBranding set"){
+      alert("Changes Saved")
+    }
+  }
+
   async fetchImageURL() {
     console.log('fetchImageURL called');
 
@@ -1396,8 +1439,8 @@ export class APIService {
   //   alert(response['message'])
   // }
 
-  async editUserFormForEventFnctn(evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked,loggedInEmailId){
-    let body = {evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked}    
+  async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId) {
+    let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked }
 
 
     const response = await this.httpClient.patch(`${this.API_URL}/event/addQuestionForForm/${loggedInEmailId}`, body).toPromise();
@@ -1405,4 +1448,33 @@ export class APIService {
     return response['message']
   }
 
+  async editEventCalendar(evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, loggedInEmailId) {
+    let body = { evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements }
+
+
+    const response = await this.httpClient.patch(`${this.API_URL}/event/editEvCalendar/${loggedInEmailId}`, body).toPromise();
+    alert(response['message'])
+    return response['message']
+  }
+
+
+  async getSelectedEvent(evId, loggedInEmailId) {
+    console.log("getSelectedEvent called in api ", evId, loggedInEmailId);
+
+    let reqEvent = {}
+    let response = await this.httpClient
+      .get(`${this.API_URL}/event/getParticularEvent/${loggedInEmailId}/${evId}`)
+      .toPromise();
+    console.log("sending response ", response);
+
+    if (response['message'] == "Found") {
+      reqEvent = response['reqEvent']
+      console.log("reqEvent ", reqEvent);
+      this.reqEventSubject.next(reqEvent)
+    }
+    else {
+      console.log(response['message']);
+
+    }
+  }
 }

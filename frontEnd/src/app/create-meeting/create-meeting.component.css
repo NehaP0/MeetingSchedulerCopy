@@ -274,6 +274,12 @@ ng-icon {
     font-size: 14px;  
     color: #0060E6;
 }
+::ng-deep #calendar a.fc-daygrid-day-number:hover{
+    cursor: pointer;
+}
+::ng-deep #calendar .fc-day-past a.fc-daygrid-day-number{
+    color: grey !important;
+}
 
 
 ::ng-deep a{

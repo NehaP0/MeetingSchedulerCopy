@@ -1,6 +1,7 @@
 #content {
     width: 90%;
-    height: 100vh;
+    /* height: 100vh; */
+    height: fit-content;
     margin: auto;
     /* border: 1px solid red; */
     margin-top: 30px;
@@ -49,12 +50,14 @@ ng-icon {
 
 }
 
-form>input {
+input {
     display: block;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid rgb(173, 172, 172);
     width: 100%;
+    margin-bottom: 10px;
+
 }
 
 form>button {
@@ -68,6 +71,8 @@ form>button {
     padding: 5px 10px;
     color: #1671fb;
     background-color: white;
+    border-radius: 15px;
+    margin-top: 5px;
 }
 
 #scheduleEvent {
@@ -93,6 +98,14 @@ form>label {
     color: #cf6868;
 }
 
+#addGuestsDiv{
+    margin-bottom : 5px
+  }
+  
+  .question {
+    font-weight: bold;
+  }
+
 #loadingDiv{
     z-index: 1;
     margin: auto;
@@ -106,3 +119,15 @@ form>label {
     margin: 0;
     padding: 0;
 }
+
+@media (max-width: 780px) {
+    #content {
+      display: block;
+      height: 100%;
+  
+    }
+  
+    #leftDiv {
+      width: 100%;
+    }
+  }

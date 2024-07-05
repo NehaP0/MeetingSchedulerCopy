@@ -1,0 +1,61 @@
+#content {
+    /* border: 1px solid red; */
+    /* height: 100vh; */
+    padding: 10px;
+    /* background-color: #dddddd; */
+    margin-left: 60px;
+  }
+  #events {
+    border: 1px solid rgb(179, 179, 179);
+    margin: 30px;
+    border-radius: 5px;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 23px;
+    margin-bottom: 50px;
+    box-shadow: rgba(188, 199, 209, 0.2) 0px 8px 24px;
+    padding: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    /* background-color: red; */
+  }
+  .detailsBtnClass{
+      display: flex;
+      justify-content: flex-end;
+  }
+  button {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  .meetingDetails{
+      font-size: 13px;
+      margin-left: 20%;
+  }
+  .grey{
+      color: grey;
+  }
+  .red{
+      color: rgb(250, 88, 88);
+  }
+  .meetingDetails button{
+      margin-top: 10px;
+      background-color: rgb(0, 83, 0);
+      color: white;
+  }
+  .confmCnclBtn{
+      margin: 10px 5px;
+  }
+  #cancelBtn{
+      background-color: rgb(155, 3, 3);
+  }
+  

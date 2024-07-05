@@ -6,9 +6,9 @@ body{
 #leftDiv{
     /* border-right: 1px solid rgb(165, 164, 164); */
     width: 40%;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; */
     padding: 30px;
-    /* overflow-y:hidden; */
+    overflow-y:scroll;
     height: 120vh;
 }
 #leftDiv a{
@@ -142,8 +142,18 @@ ng-icon{
     text-decoration: none !important;
     line-height:0px
 }
-#redWarning{
+.redWarning{
     color: #C84545;
     font-size: 13px;
-    font-weight:300;
+    /* font-weight:100; */
+}
+#makeFlex{
+    display: flex;
+}
+#makeFlex input{
+    height: 30px;
+    margin-right: 5px;
+}
+#makeFlex p{
+    font-weight: 400;
 }

@@ -69,6 +69,7 @@ userRoute.post("/postuser", async (req, res) => {
       user: "abc",
       userEmail: "abc@gmail.com",
       currentDateTime: "date",
+      questionsWdAnswers : []
     });
 
     console.log(meeting);
@@ -79,15 +80,50 @@ userRoute.post("/postuser", async (req, res) => {
       evDuration: { hrs: 0, minutes: 30 },
       evLocation: "zoom",
       meetings: [meeting],
-      allowInviteesToAddGuests : true,
-      surnameReq:false,
-      questionsToBeAsked : [
+      allowInviteesToAddGuests: true,
+      surnameReq: false,
+      questionsToBeAsked: [
         {
-          question : "Please share anything that will help prepare for our meeting.",
-          answerRequiredOrNot : false,
-          showThisQuestionOrNot: true
+          question: "Please share anything that will help prepare for our meeting.",
+          answerRequiredOrNot: false,
+          showThisQuestionOrNot: true,
+          // answer: "", 
+          _id: (Math.floor(Math.random() * 10000000000000001).toString())
         }
-      ]
+      ],
+      // evLinkEnd: "30 Minute Meeting".replace(/ /g, "-"),
+      whenCanInviteesSchedule: {
+        status: true,
+        days: {
+          status: false
+        },
+        withinDateRange: {
+          status: false
+        },
+        indefinitely: {
+          status: true
+        }
+      },
+      minimumNotice : {
+        status: false,
+        hrs : {
+          status : false
+        },
+        mins:{
+          status : false
+        },
+        days:{
+          status : false
+        }
+      },
+      noOfMeetsAllowedPerDay : {
+        status : false
+      },
+      startTimIncrements : {
+        status : true,
+        mins : 30
+      }
+
     });
     // const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom"})
     console.log(event);
@@ -101,6 +137,7 @@ userRoute.post("/postuser", async (req, res) => {
       userAvailability: userAvailability,
       meetingsWtOthers: [meeting],
       profileImage: "",
+      cloduraBranding : true
     });
     // const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: []})
     console.log(user);
@@ -139,7 +176,7 @@ userRoute.post("/login", async (req, res) => {
 
     //if user does not exist in database send response invalid credentials
     if (user.length == 0) {
-      return res.send({ message: "Invalid Credentials"});
+      return res.send({ message: "Invalid Credentials" });
     } else {
       const matchPassword = bcrypt.compare(
         password,
@@ -152,7 +189,7 @@ userRoute.post("/login", async (req, res) => {
             );
             loggedInUserEmail = user.emailID;
             // console.log("user ", user);
-            return res.send({ token: { token }, message: `Login Successful.`, user : user._id  });
+            return res.send({ token: { token }, message: `Login Successful.`, user: user._id });
           } else {
             return res.send({ message: "Invalid Credentials" });
           }
@@ -169,6 +206,18 @@ userRoute.post("/login", async (req, res) => {
 });
 
 console.log("loggedInUserEmail export", loggedInUserEmail);
+
+userRoute.get("/getParticularUser", async(req,res)=>{
+  console.log("/getParticularUser called");
+  const { userEmailId } = req.query;
+  try {
+    const user = await User.findOne({ emailID: userEmailId });
+
+    res.send({ msg: `got user `, user: user });
+  } catch (err) {
+    res.status(404).send({ msg: `Finding failed ${err.message}` });
+  }
+})
 
 userRoute.delete("/deleteUser", async (req, res) => {
   const { id } = req.query;
@@ -248,7 +297,7 @@ userRoute.get("/initialUserUnavailibility", async (req, res) => {
 //   }
 // );
 
-userRoute.patch("/uploadAvatar/:emailId",upload.single("image"),
+userRoute.patch("/uploadAvatar/:emailId", upload.single("image"),
   async (req, res) => {
     try {
       const userEmailId = req.params.emailId;
@@ -267,7 +316,47 @@ userRoute.patch("/uploadAvatar/:emailId",upload.single("image"),
       res.json({ success: true, message: "User data updated successfully" });
     } catch (error) {
       console.error("Error updating user data:", error);
-      res.status(500).json({ success: false, error: "Internal server error" });
+      res.status(500).json({ success: false, error: error });
+    }
+  }
+);
+
+userRoute.patch("/deleteAvatar",
+  async (req, res) => {
+    try {
+      const {userEmail} = req.body
+
+      console.log("userEmail ", userEmail);
+
+      await User.findOneAndUpdate(
+        { emailID: userEmail },
+        { $set: { profileImage: "" } }
+      );
+
+      res.json({ success: true, message: "Image deleted" });
+    } catch (error) {
+      console.error("Error deleting image", error);
+      res.status(500).json({ success: false, error: error });
+    }
+  }
+);
+
+userRoute.patch("/cloduraBrandingOnOff",
+  async (req, res) => {
+    try {
+      const {userEmail, cloduraBrandingReq} = req.body
+
+      console.log("userEmail ", userEmail, "cloduraBrandingReq ", cloduraBrandingReq);
+
+      await User.findOneAndUpdate(
+        { emailID: userEmail },
+        { $set: { cloduraBranding : cloduraBrandingReq } }
+      );
+
+      res.json({ success: true, message: "cloduraBranding set" });
+    } catch (error) {
+      console.error("Error setting cloduraBranding", error);
+      res.status(500).json({ success: false, error: error });
     }
   }
 );
@@ -387,8 +476,8 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
     //variables req for mail sending end
 
     votingArr.find((obj) => {
-      console.log("obj.uniqueId, req.body.shortIdVal",obj.uniqueId,req.body.shortIdVal);
-      console.log("obj.uniqueId == req.body.shortIdVal",obj.uniqueId == req.body.shortIdVal);
+      console.log("obj.uniqueId, req.body.shortIdVal", obj.uniqueId, req.body.shortIdVal);
+      console.log("obj.uniqueId == req.body.shortIdVal", obj.uniqueId == req.body.shortIdVal);
 
       if (obj.uniqueId == req.body.shortIdVal) {
         console.log("uniqueId found ", req.body.shortIdVal);
@@ -413,12 +502,12 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
               obj.details[j]["whoVoted"].push(whoVotedObj);
 
               reqObjectForMailSending = obj;
-              console.log("whoVoted ",obj.details[j]["whoVoted"]);
+              console.log("whoVoted ", obj.details[j]["whoVoted"]);
 
               whoHasVotedNow = req.body.whoVotedName;
               console.log("who has voted now ", whoHasVotedNow);
               totalNumberOfPeopleWhoHaveVotedTillNow += obj.details[j]["whoVoted"].length;
-              noOfVotesForTopTimes = Math.max(noOfVotesForTopTimes, obj.details[j]["whoVoted"].length );
+              noOfVotesForTopTimes = Math.max(noOfVotesForTopTimes, obj.details[j]["whoVoted"].length);
 
               // whoAllVotedForTopTimes
               let maxVotedTime = 0;
@@ -493,55 +582,55 @@ userRoute.get("/getVotingEvents", async (req, res) => {
 userRoute.post("/votingMeetConfirmed", async (req, res) => {
   console.log("votingMeetConfirmed called ");
   let { meetingId, detailObjId } = req.body;
-  console.log("body ",  meetingId, detailObjId );
+  console.log("body ", meetingId, detailObjId);
   // body  {
   //   meetingId: '665cf00117f34bddb122f593',
   //   detailObjId: '665cf00117f34bddb122f594'
   // }
-  let myMeeting = {title:"", evType:"", start:"", end:"", otherEmails: [] ,  user: "", userEmail: "", additionalInfo:""};
+  let myMeeting = { title: "", evType: "", start: "", end: "", otherEmails: [], user: "", userEmail: "", additionalInfo: "" };
 
-try{
-  let meetLink;
+  try {
+    let meetLink;
 
-  let importedloggedInUserEmail = loggedInUserEmail;
-  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
-
-
-  let loggedInUser = await User.findOne({ emailID: importedloggedInUserEmail });
-  console.log("loggedInUser ", loggedInUser);
+    let importedloggedInUserEmail = loggedInUserEmail;
+    console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
 
 
-  let votingArr = loggedInUser.voting;
-  console.log("votingArr ", votingArr);
+    let loggedInUser = await User.findOne({ emailID: importedloggedInUserEmail });
+    console.log("loggedInUser ", loggedInUser);
 
-  console.log("myMeeting ", myMeeting);
 
-  votingArr.find((meeting) => {
-    if (meeting._id == meetingId) {
-      console.log("found meeting ", meeting);
-      let foundMeeting = meeting;
-      myMeeting["title"] = foundMeeting["evName"];
-      console.log("foundMeeting.evName", foundMeeting["evName"]);
+    let votingArr = loggedInUser.voting;
+    console.log("votingArr ", votingArr);
 
-      myMeeting["evType"] = 'Group'
-      console.log("myMeeting.evType", myMeeting["evType"]);
+    console.log("myMeeting ", myMeeting);
 
-      meeting.details.find((detailsOfVoting) => {
-        console.log("detailsOfVoting._id == detailObjId ", detailsOfVoting._id, detailObjId);
-        if (detailsOfVoting._id == detailObjId) {
-          console.log("found details ", detailsOfVoting);
-          myMeeting["start"] = detailsOfVoting["start"];
-          myMeeting["end"] = detailsOfVoting["end"];
-        }
-        let whoVotedArr = detailsOfVoting.whoVoted;
-        for (let i = 0; i < whoVotedArr.length; i++) {
-          myMeeting.otherEmails.push(whoVotedArr[i]["whoVotedEmail"]);
-        }
-      });
-    }
-  });
+    votingArr.find((meeting) => {
+      if (meeting._id == meetingId) {
+        console.log("found meeting ", meeting);
+        let foundMeeting = meeting;
+        myMeeting["title"] = foundMeeting["evName"];
+        console.log("foundMeeting.evName", foundMeeting["evName"]);
 
-  console.log("myMeeting new", myMeeting);
+        myMeeting["evType"] = 'Group'
+        console.log("myMeeting.evType", myMeeting["evType"]);
+
+        meeting.details.find((detailsOfVoting) => {
+          console.log("detailsOfVoting._id == detailObjId ", detailsOfVoting._id, detailObjId);
+          if (detailsOfVoting._id == detailObjId) {
+            console.log("found details ", detailsOfVoting);
+            myMeeting["start"] = detailsOfVoting["start"];
+            myMeeting["end"] = detailsOfVoting["end"];
+          }
+          let whoVotedArr = detailsOfVoting.whoVoted;
+          for (let i = 0; i < whoVotedArr.length; i++) {
+            myMeeting.otherEmails.push(whoVotedArr[i]["whoVotedEmail"]);
+          }
+        });
+      }
+    });
+
+    console.log("myMeeting new", myMeeting);
 
 
     // Delete this meeting from voting array now
@@ -554,146 +643,146 @@ try{
     console.log("deleted from voting");
 
 
-  let {
-    title,
-    start,
-    end,
-    user,
-    userEmail,
-    otherEmails,
-    additionalInfo,
-    evType,
-  } = myMeeting;
+    let {
+      title,
+      start,
+      end,
+      user,
+      userEmail,
+      otherEmails,
+      additionalInfo,
+      evType,
+    } = myMeeting;
 
-  console.log("title, start, end, user, userEmail, otherEmails,additionalInfo, evType,",   title,start,end,user,userEmail,
-  otherEmails,
-  additionalInfo,
-  evType, );
-
-
-  // let currentDateTime = new Date();
-  // currentDateTime = moment.utc(currentDateTime).tz("Asia/Calcutta").format(); //2024-02-19T12:25:36+05:30
-  // currentDateTime = currentDateTime.split("+")[0]; //2024-02-19T12:25:36
-  // console.log(currentDateTime, start,end,"and ", start < currentDateTime, end < currentDateTime);
+    console.log("title, start, end, user, userEmail, otherEmails,additionalInfo, evType,", title, start, end, user, userEmail,
+      otherEmails,
+      additionalInfo,
+      evType,);
 
 
-  console.log("meeting will be scheduled with ",otherEmails);
+    // let currentDateTime = new Date();
+    // currentDateTime = moment.utc(currentDateTime).tz("Asia/Calcutta").format(); //2024-02-19T12:25:36+05:30
+    // currentDateTime = currentDateTime.split("+")[0]; //2024-02-19T12:25:36
+    // console.log(currentDateTime, start,end,"and ", start < currentDateTime, end < currentDateTime);
 
-  let findLoggedInUser = loggedInUser
-  console.log("findLoggedInUser ", findLoggedInUser);
 
-  let loggedInUserName = findLoggedInUser.name;
-  console.log("loggedInUserName ", loggedInUserName);
+    console.log("meeting will be scheduled with ", otherEmails);
 
-      // meeting = await Meeting.create({
-      //   start : myMeeting.start,
-      //   end : myMeeting.end,
-      //   user: "",
-      //   userEmail: "",
-      //   currentDateTime,
-      //   evType : myMeeting.evType,
-      //   evName: myMeeting.title,
-      // });
-      // console.log( "meeting ",meeting);
-  
+    let findLoggedInUser = loggedInUser
+    console.log("findLoggedInUser ", findLoggedInUser);
+
+    let loggedInUserName = findLoggedInUser.name;
+    console.log("loggedInUserName ", loggedInUserName);
+
+    // meeting = await Meeting.create({
+    //   start : myMeeting.start,
+    //   end : myMeeting.end,
+    //   user: "",
+    //   userEmail: "",
+    //   currentDateTime,
+    //   evType : myMeeting.evType,
+    //   evName: myMeeting.title,
+    // });
+    // console.log( "meeting ",meeting);
+
 
     await User.updateOne(
-      { emailID: loggedInUserEmail},
+      { emailID: loggedInUserEmail },
       { $push: { meetingsWtOthers: myMeeting } }
     );
     console.log("meetingsWtOthers of loggedInUser updated");
 
-      // ppl who are in db are put in emailsOfUsersFoundInDb array and ppl who are not in db are put in emailsOfUsersNotFoundInDb array
+    // ppl who are in db are put in emailsOfUsersFoundInDb array and ppl who are not in db are put in emailsOfUsersNotFoundInDb array
 
-      let emailsOfUsersFoundInDb = [];
-      let emailsOfUsersNotFoundInDb = [];
+    let emailsOfUsersFoundInDb = [];
+    let emailsOfUsersNotFoundInDb = [];
 
-      for (let i = 0; i < otherEmails.length; i++) {
-        let findHimInDb = await User.findOne({ emailID: otherEmails[i] });
-        console.log("findHimInDb ", findHimInDb);
-        if (findHimInDb) {
-          emailsOfUsersFoundInDb.push(otherEmails[i]);
-          console.log("pushed in emailsOfUsersFoundInDb ", otherEmails[i]);
-          // console.log("phoneNumber ", findHimInDb[0].phoneNumber);
-          // phoneNumbersOfUsersFoundInDb.push(findHimInDb[0].phoneNumber)
-        } else {
-          emailsOfUsersNotFoundInDb.push(otherEmails[i]);
-          console.log("pushed in emailsOfUsersNotFoundInDb ", otherEmails[i]);
-        }
+    for (let i = 0; i < otherEmails.length; i++) {
+      let findHimInDb = await User.findOne({ emailID: otherEmails[i] });
+      console.log("findHimInDb ", findHimInDb);
+      if (findHimInDb) {
+        emailsOfUsersFoundInDb.push(otherEmails[i]);
+        console.log("pushed in emailsOfUsersFoundInDb ", otherEmails[i]);
+        // console.log("phoneNumber ", findHimInDb[0].phoneNumber);
+        // phoneNumbersOfUsersFoundInDb.push(findHimInDb[0].phoneNumber)
+      } else {
+        emailsOfUsersNotFoundInDb.push(otherEmails[i]);
+        console.log("pushed in emailsOfUsersNotFoundInDb ", otherEmails[i]);
       }
+    }
 
-      // console.log("phoneNumbersOfUsersFoundInDb ", phoneNumbersOfUsersFoundInDb);
-      console.log("emailsOfUsersFoundInDb ", emailsOfUsersFoundInDb);
-      console.log("emailsOfUsersNotFoundInDb ", emailsOfUsersNotFoundInDb);
+    // console.log("phoneNumbersOfUsersFoundInDb ", phoneNumbersOfUsersFoundInDb);
+    console.log("emailsOfUsersFoundInDb ", emailsOfUsersFoundInDb);
+    console.log("emailsOfUsersNotFoundInDb ", emailsOfUsersNotFoundInDb);
 
 
-      // if (!findUser) {
-      //   //if who is scheduling meeting is not in db
-      //   console.log("User doesn't exists");
-      //   emailsOfUsersNotFoundInDb.push(userEmail);
-      //   console.log("in if statement ","emailsOfUsersFoundInDb ",emailsOfUsersFoundInDb,"emailsOfUsersNotFoundInDb ",emailsOfUsersNotFoundInDb);
-      // } else {
-      //   //if who is scheduling meeting is in db
-      //   emailsOfUsersFoundInDb.push(userEmail);
-      //   console.log("User found", findUser);
-      // }
-      // -----------------------------------------------------------------------------------
+    // if (!findUser) {
+    //   //if who is scheduling meeting is not in db
+    //   console.log("User doesn't exists");
+    //   emailsOfUsersNotFoundInDb.push(userEmail);
+    //   console.log("in if statement ","emailsOfUsersFoundInDb ",emailsOfUsersFoundInDb,"emailsOfUsersNotFoundInDb ",emailsOfUsersNotFoundInDb);
+    // } else {
+    //   //if who is scheduling meeting is in db
+    //   emailsOfUsersFoundInDb.push(userEmail);
+    //   console.log("User found", findUser);
+    // }
+    // -----------------------------------------------------------------------------------
 
-      // ppl who are found in db, put the meeting in their meetingsWtOthers array
-      try {
-        for (let i = 0; i < emailsOfUsersFoundInDb.length; i++) {
-          // const meeting =  await Meeting.create({start, end})
-          // hardcoding right now evType evName
-          // const meeting =  await Meeting.create({start, end, user, userEmail, currentDateTime, evType:"One-on-One", evName: "Morning Scrum"})
-          let meeting;
-            meeting = await Meeting.create(myMeeting);
-            console.log("meeting of ", meeting);
+    // ppl who are found in db, put the meeting in their meetingsWtOthers array
+    try {
+      for (let i = 0; i < emailsOfUsersFoundInDb.length; i++) {
+        // const meeting =  await Meeting.create({start, end})
+        // hardcoding right now evType evName
+        // const meeting =  await Meeting.create({start, end, user, userEmail, currentDateTime, evType:"One-on-One", evName: "Morning Scrum"})
+        let meeting;
+        meeting = await Meeting.create(myMeeting);
+        console.log("meeting of ", meeting);
 
-          await User.updateOne(
-            { emailID: emailsOfUsersFoundInDb[i] },
-            { $push: { meetingsWtOthers: meeting } }
-          );
-          console.log("updated meeting for ", emailsOfUsersFoundInDb[i]);
-        }
-      } catch (err) {
-        console.log("meeting of emailsOfUsersFoundInDb not updated.", err);
-      }
-
-      // --------new code--------
-
-      try {
-        meetLink = await createMeetingLink();
-        console.log("Meeting link created:", meetLink);
-
-        // Continue with nodemailer code
-        await sendMail(
-          meetLink,
-          loggedInUserName,
-          importedloggedInUserEmail,
-          otherEmails,
-          additionalInfo
+        await User.updateOne(
+          { emailID: emailsOfUsersFoundInDb[i] },
+          { $push: { meetingsWtOthers: meeting } }
         );
-
-        return res.status(200).json({
-          message:
-            "Meeting scheduled successfully. A calendar invitation has been mailed to the attendees.",
-        });
-      } catch (err) {
-        console.log("Error creating meeting link:", err);
-        return res
-          .status(500)
-          .json({ message: `Meeting creation failed: ${err}` });
+        console.log("updated meeting for ", emailsOfUsersFoundInDb[i]);
       }
-      // --------new code ends--------
-      // }
+    } catch (err) {
+      console.log("meeting of emailsOfUsersFoundInDb not updated.", err);
+    }
 
-      // }
-    
-    }catch (err) {
+    // --------new code--------
+
+    try {
+      meetLink = await createMeetingLink();
+      console.log("Meeting link created:", meetLink);
+
+      // Continue with nodemailer code
+      await sendMail(
+        meetLink,
+        loggedInUserName,
+        importedloggedInUserEmail,
+        otherEmails,
+        additionalInfo
+      );
+
+      return res.status(200).json({
+        message:
+          "Meeting scheduled successfully. A calendar invitation has been mailed to the attendees.",
+      });
+    } catch (err) {
+      console.log("Error creating meeting link:", err);
       return res
         .status(500)
-        .json({ message: `Meeting creation failed : ${err}` });
+        .json({ message: `Meeting creation failed: ${err}` });
     }
+    // --------new code ends--------
+    // }
+
+    // }
+
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: `Meeting creation failed : ${err}` });
+  }
 
   //  --------------------
   // meeting link creation
@@ -829,8 +918,8 @@ try{
       // let userFound = await User.find( { "name": usersName} )
       // if (userFound.length!==0) {
       console.log("I'll send mails");
-  
-    
+
+
       const mailOptions2 = {
         from: '"My Company"', // sender address
         template: "email2", // the name of the template file, i.e., email.handlebars
@@ -905,7 +994,7 @@ async function sendMailForVoteSelection(loggedInUserEmail,
   // -------------------mail sending starts-----------------
   // initialize nodemailer
   console.log("sendMailForVoteSelection called ");
-  console.log("in sendMailForVoteSelection loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,topTimes,meetingName ", loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,topTimes,meetingName);
+  console.log("in sendMailForVoteSelection loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,topTimes,meetingName ", loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, topTimes, meetingName);
   console.log("nodemailer working");
   var transporter = nodemailer.createTransport({
     service: "gmail",

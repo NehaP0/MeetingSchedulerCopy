@@ -1,0 +1,19 @@
+<app-navbar></app-navbar>
+
+<div>
+  <div id="content">
+    <h1>Polling events</h1>
+    <app-nav-for-scheduled-events></app-nav-for-scheduled-events>
+    <div id="events">
+      <table>
+        <tbody>
+            <ng-container **ngFor="let meeting of futureMeets">
+                <!-- <tr>{{meeting['start'].split("T")[0]}}</tr> -->
+
+            </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

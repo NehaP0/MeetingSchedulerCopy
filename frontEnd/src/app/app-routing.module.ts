@@ -33,6 +33,7 @@ import {VotingEventDetailsComponent} from './voting-event-details/voting-event-d
 import {PollLinkPopUpComponent} from './poll-link-pop-up/poll-link-pop-up.component'
 import { PollingPageComponent } from './polling-page/polling-page.component';
 import { GroupAdminComponent } from './group-admin/group-admin.component';
+import { UpcomingMeetingsComponent } from './upcoming-meetings/upcoming-meetings.component';
 
 
 const routes: Routes = [
@@ -68,6 +69,7 @@ const routes: Routes = [
   {path : 'pollLinkPopUp', component : PollLinkPopUpComponent},
   {path: 'pollingPage', component : PollingPageComponent},
   {path: 'group', component : GroupAdminComponent},
+  {path: 'upcomingMeetings', component: UpcomingMeetingsComponent}
 ];
 
 @NgModule({

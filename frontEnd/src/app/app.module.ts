@@ -76,6 +76,7 @@ import { NavForScheduledEventsComponent } from './nav-for-scheduled-events/nav-f
 import { PollingPageComponent } from './polling-page/polling-page.component';
 import { GroupAdminComponent } from './group-admin/group-admin.component';
 import { GroupsListAdminComponent } from './groups-list-admin/groups-list-admin.component';
+import { UpcomingMeetingsComponent } from './upcoming-meetings/upcoming-meetings.component';
 // import { CallbackComponentComponent } from './callback-component/callback-component.component';
 
 // import { NavbarComponent } from './navbar/navbar.component';
@@ -127,6 +128,7 @@ import { GroupsListAdminComponent } from './groups-list-admin/groups-list-admin.
     PollingPageComponent,
     GroupAdminComponent,
     GroupsListAdminComponent,
+    UpcomingMeetingsComponent,
     // CallbackComponentComponent,
     // NavbarComponent,
     // ScheduleMeetComponent

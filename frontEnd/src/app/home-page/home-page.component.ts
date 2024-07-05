@@ -77,7 +77,9 @@ export class HomePageComponent {
         }
 
       });
-    }, 2500);
+    }, 2000);
+
+    
   }
 
   async getImage() {
@@ -176,7 +178,11 @@ export class HomePageComponent {
         localStorage.setItem('allowInviteesToAddGuests', this.eventsArrayOfLoggedInUser[i].allowInviteesToAddGuests)
         localStorage.setItem('surnameReq', this.eventsArrayOfLoggedInUser[i].surnameReq)
         localStorage.setItem('questionsToBeAsked', JSON.stringify(this.eventsArrayOfLoggedInUser[i].questionsToBeAsked))
-
+        localStorage.setItem('whenCanInviteesSchedule', JSON.stringify(this.eventsArrayOfLoggedInUser[i].whenCanInviteesSchedule))
+        localStorage.setItem('minimumNotice', JSON.stringify(this.eventsArrayOfLoggedInUser[i].minimumNotice))
+        localStorage.setItem('noOfMeetsAllowedPerDay', JSON.stringify(this.eventsArrayOfLoggedInUser[i].noOfMeetsAllowedPerDay))
+        localStorage.setItem('startTimIncrements', JSON.stringify(this.eventsArrayOfLoggedInUser[i].startTimIncrements))
+        
       }
     }
   }

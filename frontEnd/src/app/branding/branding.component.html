@@ -16,15 +16,10 @@
 
     <div id="imageDiv">
       <!-- <p *ngIf="!selectedImage">No Logo</p> -->
-      <p *ngIf="!selectedImage">No Logo</p>
+      <p *ngIf="!selectedImage && !profileImage">No Logo</p>
 
-      <img
-        *ngIf="selectedImage"
-        id="uploadedImg"
-        [src]="toShowImg"
-        alt="Selected Image"
-        style="max-width: 100%; max-height: 300px"
-      />
+      <img *ngIf="selectedImage" class="uploadedImg" [src]="toShowImg" alt="Selected Image" />
+      <img *ngIf="!selectedImage && profileImage" class="uploadedImg" [src]="profileImageEntirePath" alt="profileImg">
       <!-- <img *ngIf="selectedImage" id="uploadedImg" [src]="selectedImage" alt="Selected Image" > -->
       <!-- <img *ngIf="selectedImage" id="uploadedImg" [src]="selectedImage" alt="Selected Image" > -->
     </div>
@@ -32,20 +27,39 @@
     <div id="belowDiv">
       <div *ngIf="!selectedImage">
         <!-- <div *ngIf="!selectedImage"> -->
-        <input
-          type="file"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          id="selectFile"
-        />
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" id="selectFile" />
         <!-- </div> -->
         <!-- <input type="file" *ngIf="selectedImage"  (change)="onFileSelected($event)"> -->
       </div>
 
-      <div *ngIf="selectedImage">
+
+      <div *ngIf="selectedImage" id="buttons">
         <button (click)="removeImg()">Remove</button>
-        <button (click)="applyImg()">Apply</button>
+        <button class="blueBtn" (click)="applyImg()">Apply</button>
+      </div>
+      <div>
+        <button class="redBtn" (click)="deleteImg()" *ngIf="profileImage && !selectedImage">Delete image</button>
       </div>
     </div>
+
+  </div>
+
+  <hr>
+
+  <div id="cloduraBranding">
+    <div id="cloduraBrandingHeading">
+      <p>Use Clodura's branding</p>
+      <input type="checkbox" name="" id="" checked="cloduraBrandingReq" [(ngModel)]="cloduraBrandingReq">
+    </div>
+
+    <div id="cloduraBrandingInfo">
+      <p>Clodura's branding will be displayed on your scheduling page, notifications, and confirmations.</p>
+    </div>
+
+    <div id="buttonsDiv" >
+      <button class="blueBtn" (click)="saveCloduraBrandingChanges()">Save Changes</button>
+      <button id="cnclBtn">Cancel</button>
+    </div>
+
   </div>
 </div>

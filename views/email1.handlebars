@@ -1,26 +1,45 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Meeting Scheduled email.</title>
 </head>
+
 <body>
-  <h2>Hello,  </h2>
+  <h2>Hello, </h2>
   <p>You have been invited to a meet with {{company}}.</p>
 
   <p>Details:</p>
-    <ul>
-        <li>Event Name: {{eventName}}</li>
-        {{!-- <li>Event Description: {{eventDecription}}</li> --}}
-        {{!-- <li>Event Date: {{eventDate}}</li> --}}
-        <li>Event Start Time: {{eventStartTime}}</li>
-        <li>Event End Time: {{eventEndTime}}</li>
-        <li>Meeting Link: {{meetingLink}}</li>
-        {{!-- <li *ngIf="additionalInfo">Note: {{additionalInfo}} </li> --}}
-        <li *ngIf="additionalInfo">Note: {{additionalInfo}} </li>
+  <ul>
+    <li>Event Name: {{eventName}}</li>
+    {{!-- <li>Event Description: {{eventDecription}}</li> --}}
+    {{!-- <li>Event Date: {{eventDate}}</li> --}}
+    <li>Event Start Time: {{eventStartTime}}</li>
+    <li>Event End Time: {{eventEndTime}}</li>
+    <li>Meeting Link: {{meetingLink}}</li>
+    {{#if additionalInfo}}
+    <div>
+      <span>Note : </span>
+      <span>{{additionalInfo}} </span>
+    </div>
+    {{/if}}
+    <div>
+      {{#each questionsWdAnswers}}
+        {{#if this.answer}}
+        <li>
+          <span>{{this.question}}</span> :
+          <span>{{this.answer}}</span>
+        </li>
+        {{/if}}
+      {{/each}}
+    </div>
 
+      {{!--
+    </div> --}}
 
-    </ul>
+  </ul>
 </body>
+
 </html>

@@ -7,16 +7,16 @@
 
         <hr>
         <p>Event name</p>
-        <input [(ngModel)]="inputText" type="text" id="eventName" placeholder="Name your event" name="eventName" #eventName>
-        <label id="redWarning" *ngIf="showWarning">Please provide an event name.</label>
+        <input [(ngModel)]="inputText" type="text" id="eventName" placeholder="Name your event" name="eventName" >
+        <label class="redWarning" *ngIf="showWarning && !inputText">Please provide an event name.</label>
 
         <p>Duration</p>
         <div>
             <label for="hrs">Hours</label>
-            <input [(ngModel)]="hours" type="number" name="hrs" placeholder="0" #hrs>
+            <input [(ngModel)]="hours" type="number" name="hrs" placeholder="0" >
 
             <label for="min">Minutes</label>
-            <input [(ngModel)]="minutes" type="number" name="min" placeholder="30" #min>
+            <input [(ngModel)]="minutes" type="number" name="min" placeholder="30" >
         </div>
 
         <p>Location</p>
@@ -25,12 +25,25 @@
             <p id="zoomP">Google Meet</p>
         </div>
 
+
+        <div *ngIf="eventType == 'Group'">
+            <p>Maximum invitees per event *</p>
+            <input type="number" min="2" [(ngModel)]="inviteesPerEvent" value={{inviteesPerEvent}}>
+            <p class="redWarning" *ngIf="inviteesPerEvent < 2">Must be greater than 1.</p>
+            <p class="redWarning" *ngIf="showEnterInviteesWarning && !inviteesPerEvent">Please enter max invitees in a spot.</p>
+
+            <div id="makeFlex">
+                <span><input type="checkbox" name="" id="" checked="displayRemainingSpots" [(ngModel)]="displayRemainingSpots"></span>
+                <span><p>Display remaining spots on booking page</p></span>
+            </div>
+        </div>
+
         <div id="bottomDiv">
             <!-- <hr> -->
             <div>
                 <button>Cancel</button>
                 <!-- <button (click)="continueFunctn(eventName.value, hrs.value, min.value)"><a href="http://localhost:3000/calendarLink?name={{loggedInName}}&id={{loggedInEmailId}}">Continue</a></button> -->
-                <button (click)="continueFunctn(eventName.value, hrs.value, min.value)">Continue</button>
+                <button (click)="continueFunctn()">Continue</button>
 
             </div>
         </div>

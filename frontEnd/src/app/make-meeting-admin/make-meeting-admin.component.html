@@ -3,49 +3,74 @@
 <div id="main">
 
 
-    <div *ngIf="loading" id="loadingDiv">
-        <p>
-            Scheduling Meeting ...
-        </p>
+  <div *ngIf="loading" id="loadingDiv">
+    <p>
+      Scheduling Meeting ...
+    </p>
+  </div>
+  <div id="content">
+
+    <div id="leftDiv">
+      <!-- <button id="backButton"><ng-icon name="bootstrapArrowLeft"></ng-icon></button> -->
+      <p>{{nameWhoseCalendar}}</p>
+      <p id="eventName">{{evName}}</p>
+      <p><ng-icon name="bootstrapClock"></ng-icon><span *ngIf="evDurHrs"> {{evDurHrs}} hrs</span> <span
+          *ngIf="evDurMins"> {{evDurMins}} mins</span></p>
+      <p><ng-icon
+          name="remixCalendar2Line"></ng-icon><span>{{startTime[0]}}{{startTime[1]}}{{startTime[2]}}{{startTime[3]}}{{startTime[4]}}</span>
+        - <span>{{endTime[0]}}{{endTime[1]}}{{endTime[2]}}{{endTime[3]}}{{endTime[4]}},
+        </span><span>{{day}},</span><span> {{month}}</span><span> {{date[8]}}{{date[9]}},</span><span>
+          {{date[0]}}{{date[1]}}{{date[2]}}{{date[3]}}</span></p>
+      <p><ng-icon name="heroGlobeAsiaAustralia"></ng-icon><span> India Standard Time</span></p>
     </div>
-    <div id="content">
+    <div id="rightDiv">
 
-        <div id="leftDiv">
-            <!-- <button id="backButton"><ng-icon name="bootstrapArrowLeft"></ng-icon></button> -->
-            <p>{{nameWhoseCalendar}}</p>
-            <p id="eventName">{{evName}}</p>
-            <p><ng-icon name="bootstrapClock"></ng-icon><span *ngIf="evDurHrs"> {{evDurHrs}} hrs</span> <span
-                    *ngIf="evDurMins"> {{evDurMins}} mins</span></p>
-            <p><ng-icon
-                    name="remixCalendar2Line"></ng-icon><span>{{startTime[0]}}{{startTime[1]}}{{startTime[2]}}{{startTime[3]}}{{startTime[4]}}</span>
-                - <span>{{endTime[0]}}{{endTime[1]}}{{endTime[2]}}{{endTime[3]}}{{endTime[4]}},
-                </span><span>{{day}},</span><span> {{month}}</span><span> {{date[8]}}{{date[9]}},</span><span>
-                    {{date[0]}}{{date[1]}}{{date[2]}}{{date[3]}}</span></p>
-            <p><ng-icon name="heroGlobeAsiaAustralia"></ng-icon><span> India Standard Time</span></p>
-        </div>
-        <div id="rightDiv">
+      <h3>Enter Details</h3>
 
-            <h3>Enter Details</h3>
+      <form #userForm="ngForm" (submit)="formSubmit(userForm)">
+        <label for="Name">Name *</label>
+        <input type="text" id="Name" name="Name" ngModel required>
+        <p *ngIf="nameBlank" class="warning">Can't be blank.</p>
 
-            <form #userForm="ngForm" (submit)="formSubmit(userForm)">
-                <label for="Name">Name *</label>
-                <input type="text" id="Name" name="Name" ngModel required>
-                <p *ngIf="nameBlank" class="warning">Can't be blank.</p>
+        <label for="Email">Email *</label>
+        <input type="email" id="Email" name="Email" ngModel required>
+        <p *ngIf="emailBlank" class="warning">Can't be blank.</p>
 
-                <label for="Email">Email *</label>
-                <input type="email" id="Email" name="Email" ngModel required>
-                <p *ngIf="emailBlank" class="warning">Can't be blank.</p>
-
-                <button id="addGuests" (click)="addguests()" type="button">Add Guests</button>
+        <!-- <button id="addGuests" (click)="addguests()" type="button">Add Guests</button>
                 <label *ngIf="addGuests" for="guests">Guest Email(s)</label>
                 <input *ngIf="addGuests" type="text" name="Guests" id="Guests" ngModel>
-                <p *ngIf="addGuests">Notify up to 10 additional guests of the scheduled event.</p>
+                <p *ngIf="addGuests">Notify up to 10 additional guests of the scheduled event.</p> -->
 
-                <label for="additional">Please share anything that will help prepare for our meeting.</label>
-                <input type="text" id="additional" name="additional" ngModel>
-
-                <button id="scheduleEvent" type="submit">Schedule Event</button>
-            </form>
+        <div id="addGuestsDiv" *ngIf="allowInviteesToAddGuests">
+          <button id="addGuests" *ngIf="!addGuests" (click)="addguests()" type="button">
+            Add Guests
+          </button>
+          <div id="guests">
+            <label *ngIf="addGuests" for="guests">Guest Email(s)</label>
+            <input *ngIf="addGuests" type="text" name="Guests" id="Guests" ngModel />
+          </div>
+          <p *ngIf="addGuests">
+            Notify up to 10 additional guests of the scheduled event.
+          </p>
         </div>
+
+        <!-- <label for="additional">Please share anything that will help prepare for our meeting.</label>
+                <input type="text" id="additional" name="additional" ngModel> -->
+
+        <div *ngIf="questionsWdAnswers.length">
+          <div *ngFor="let question of questionsWdAnswers; let i = index">
+            <div *ngIf="question['showThisQuestionOrNot']" class="questionDiv">
+              <label class="question">{{question["question"]}}</label>
+              <span *ngIf="question['answerRequiredOrNot']">*</span>
+              <input type="text" [(ngModel)]="question['answer']" name="answer">
+              <p *ngIf="showWarning && question['answerRequiredOrNot'] && !question['answer']" class="warning">Can't be
+                blank.</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="scheduleEvent" type="submit">Schedule Event</button>
+      </form>
     </div>
+  </div>
 </div>

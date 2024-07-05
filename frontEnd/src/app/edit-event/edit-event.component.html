@@ -66,10 +66,10 @@
                 <label class="makeItBold">Duration</label>
                 <div>
                     <label for="hrs">Hours</label>
-                    <input [(ngModel)]="evDurHrs" type="number" name="hrs" placeholder="0" #hrs>
+                    <input [(ngModel)]="evDurHrs" type="number" name="hrs" placeholder="0" #hrs min="0">
 
                     <label for="min">Minutes</label>
-                    <input [(ngModel)]="evDurMins" type="number" name="min" placeholder="30" #min>
+                    <input [(ngModel)]="evDurMins" type="number" name="min" placeholder="30" #min min="0">
                     <label class="redWarning" *ngIf="showTimeWarning">Please provide an event duration.</label>
                 </div>
 
@@ -101,16 +101,26 @@
                 <hr>
                 <label class="makeItBold">Host</label>
 
-                <div class="makeItFlex" class="flexWithStyling">
-                    <div>image</div>
+                <div class="makeItFlex">
+                    <!-- <div>image</div> -->
                     <p>{{loggedInName}} (you)</p>
                 </div>
 
                 <label class="makeItBold">Invitees</label>
-                <div class="makeItFlex checkBoxDivStyling">
-                    <input type="checkbox" id="" (change)="checkBoxChanged()"
-                        [checked]="allowInviteesToAddGuests">
+                <div class="makeItFlex checkBoxDivStyling" *ngIf="evT == 'One-on-One'">
+                    <input type="checkbox" id="" (change)="checkBoxChanged()" [checked]="allowInviteesToAddGuests">
                     <p>Allow invitees to add guests</p>
+                </div>
+
+                <div *ngIf="evT == 'Group'">
+                    <p>Maximum Invitees Per Event*</p>
+                    <input type="number"  [(ngModel)]="maxInviteesPerEvent" min="2">
+                    <p *ngIf="maxInviteesPerEvent<2" class="redWarning">Maximum Invitees Per Event should be greater than 1</p>
+                    <div class="makeItFlex remainingSpotsDiv">
+                        <span><input type="checkbox" name="" id="" checked="displayRemainingSPotsOrNot" [(ngModel)]="displayRemainingSPotsOrNot"></span>
+                        <span><p>Display remaining spots on booking page</p></span>
+                    </div>
+
                 </div>
 
                 <div class="bottomDiv">
@@ -158,10 +168,12 @@
                     <div class="makeItFlex bookingFrmInviteeQuests" *ngIf="evT == 'One-on-One'">
                         <div class="iconDiv"><ng-icon name="matLockOutline"></ng-icon></div>
                         <div class="questionDiv">Allow invitees to add guests</div>
-                        <div class="iconDiv" (click)="editInvitees()"><ng-icon name="bootstrapThreeDotsVertical"></ng-icon></div>
+                        <div class="iconDiv" (click)="editInvitees()"><ng-icon
+                                name="bootstrapThreeDotsVertical"></ng-icon></div>
 
                         <div *ngIf="showEditOptionForInvitees" class="popOver">
-                            <input type="checkbox" name="" id="" [checked]="allowInviteesToAddGuests" (change)="allowInviteesChanged()">
+                            <input type="checkbox" name="" id="" [checked]="allowInviteesToAddGuests"
+                                (change)="allowInviteesChanged()">
                             <p *ngIf="allowInviteesToAddGuests">On</p>
                             <p *ngIf="!allowInviteesToAddGuests">Off</p>
                         </div>
@@ -176,9 +188,11 @@
                                     <p>{{question.question}}</p>
                                 </div>
                                 <div *ngIf="!question.showThisQuestionOrNot" id="offStatus">OFF</div>
-                                <div class="iconDivOfQuestions" (click)="editQuestion(question._id, question.question)"><ng-icon name="bootstrapThreeDotsVertical"></ng-icon>
+                                <div class="iconDivOfQuestions" (click)="editQuestion(question._id, question.question)">
+                                    <ng-icon name="bootstrapThreeDotsVertical"></ng-icon>
                                 </div>
-                                <div *ngIf="showEditOptionForQuestionId==question._id && showEditOptionForQuestion" class="popOverForQuests" (click)="openAddNewQuest()">
+                                <div *ngIf="showEditOptionForQuestionId==question._id && showEditOptionForQuestion"
+                                    class="popOverForQuests" (click)="openAddNewQuest()">
                                     <div class="popOverDivs">
                                         <ng-icon name="bootstrapPencil"></ng-icon>
                                         <p>Edit</p>
@@ -204,43 +218,133 @@
                 </div>
 
     </div>
+    <!-- ======================================================================= -->
+    
+    
+    <div class="slider" [class.schedulingPageSlider]="schedulingPageSlider" [class.makeBlur]="makeBlur">
 
+        <button (click)="goBack()" class="goBackBtn">
+            < Event Type Summary</button>
+
+                <h4>Scheduling settings</h4>
+
+                <hr>
+                <div id="dateRangeDiv">
+                    <label class="makeItBold headingsInSchedulingPage">Date range</label>
+                    <p>Invitees can schedule...</p>
+                    <div class="makeItFlex smallDivForDateRange">
+                        <div>
+                            <input type="radio" name="group1" id="" (change)="calendarDaysFunctn()" [checked]="statusForDays">
+                        </div>
+                        <div>
+                            <input type="Number" placeholder={{placeholderForDays}} [(ngModel)]="days.noOfDays" min="0">
+                        </div>
+                        <select name="" id="" [(ngModel)]="allDaysSelectedOrExcludeWeekends" value="allDaysSelectedOrExcludeWeekends">
+                            <option value="calendar days">calendar days</option>
+                            <p class="makeDisplayContent">Counts every day on the calendar including days you're unavailable</p>
+                        
+                            <option value="weekdays">weekdays</option>
+                            <p>Excludes weekends and only counts Mon-Fri</p>
+                        </select>
+                    </div>
+                    <div class="makeItFlex smallDivForDateRange">
+                        <div>
+                            <input type="radio" name="group1" id="" (change)="openFromAndToDatesFnctn()" [checked]="withinDateRange.status">
+                        </div>
+                        <div>
+                            <p class="makeDisplayContent">Within a date range</p>
+                        </div>
+                        <div *ngIf="openFromAndToDates">
+                            <input placeholder="from" type="date" value="withinDateRange.start" [(ngModel)]="withinDateRange.start">
+                            <input placeholder="to" type="date" name="" id="" value="withinDateRange.end" [(ngModel)]="withinDateRange.end" (change)="dateValidatorFunctn()">
+                        </div>
+                    </div>
+                    <div class="makeItFlex smallDivForDateRange">
+                        <div>
+                            <input type="radio" name="group1" id="" [checked]="indefinitely.status" (change)="indefinitelyFunctn()">
+                        </div>
+                        <div>
+                            <p class="makeDisplayContent">Indefinitely into the future</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============daysEnd=============== -->
+
+                <div id="EventLimitsDiv">
+                    <label class="makeItBold headingsInSchedulingPage">Event limits</label>
+
+                    <div>
+                        <div (click)="showMinNotice = !showMinNotice"><p class="subHeadingsInSchedulingPage">Minimum notice</p></div>
+                        <div *ngIf="showMinNotice">
+                            <p>Invitees can't schedule within...</p>
+                            <div class="makeItFlex showMinNoticeDiv">
+                                <!--<input type="number" value="noOfMeetsAllowed" [(ngModel)]="noOfMeetsAllowed" (input)="noOfMeetsAllowedPerDayFunctn()" min="0"> -->
+                                <input type="number" value="valueForMinNoticeIpBox" [(ngModel)]="valueForMinNoticeIpBox" (input)="changeMinimumNotice()"  min="0">
+                                <select name="" id="" value="minsHrsOrDaysMinNotice" [(ngModel)]="minsHrsOrDaysMinNotice" (change)="changeMinimumNotice()">
+                                    <option value="minutes">minutes</option>
+                                    <option value="hours">hours</option>
+                                    <option value="days">days</option>
+                                </select>
+                                <p>of an event start time.</p>
+                            </div>
+                        </div>
+                        <p class="makeGrey">Set the minimum amount of notice that is required.</p>
+                    </div>
+
+                    <div>
+                        <div (click)="showDailyLimit =! showDailyLimit"><p class="subHeadingsInSchedulingPage">Daily limit</p></div>
+                        <div *ngIf="showDailyLimit">
+                            <div class="makeItFlex showDailyLimitDiv">
+                                <input type="number" name="" id="" value="noOfMeetsAllowed" [(ngModel)]="noOfMeetsAllowed" (input)="noOfMeetsAllowedPerDayFunctn()" min="0">
+                                <p>events max per day</p>
+                            </div>
+                        </div>
+                        <p class="makeGrey">Set the maximum events allowed per day.</p>
+                    </div>
+                </div>
+
+                <div id="AdditionalOptionsDiv">
+                    <label class="makeItBold headingsInSchedulingPage">Additional options</label>
+
+                    <div>
+                        <div (click)="showStartTimeIncrements =! showStartTimeIncrements"><p class="subHeadingsInSchedulingPage">Start time increments</p></div>
+                        <div *ngIf="showStartTimeIncrements">
+                            <p>Show available start times in increments of...</p>
+                            <select name="" id="" class="styleSelectTag" value="minsForstartTimIncrements" [(ngModel)]="minsForstartTimIncrements" (change)="startTimeIncFunctn()">
+                                <option value="5">5 min</option>
+                                <option value="10">10 min</option>
+                                <option value="15">15 min</option>
+                                <option value="20">20 min</option>
+                                <option value="30">30 min</option>
+                                <option value="45">45 min</option>
+                                <option value="1">1 hr</option>
+                                <option value="2">2 hr</option>
+                                <!-- <option value="custom">Custom</option> -->
+                            </select>
+                            <!-- <div class="makeItFlex showStartTimeIncrements" *ngIf="openCustom">
+                                <input type="number" name="" id="" min="0" value="custmVal" [(ngModel)]="custmVal" (input)="startTimeIncFunctn()">
+                                <select name="" id="" value="custmUnit" [(ngModel)]="custmUnit" (change)="startTimeIncFunctn()">
+                                    <option value="minutesInc">minutes</option>
+                                    <option value="hoursInc">hours</option>
+                                </select>
+                            </div> -->
+                            
+                        </div>
+                        <p class="makeGrey">Set the frequency of available time slots for invitees.</p>
+                    </div>
+
+                </div>
+
+                <div class="bottomDiv">
+                    <div>
+                        <button (click)="goBack()">Cancel</button>
+                        <button (click)="continueSchedulingFunctn()">Continue</button>
+                    </div>
+                </div>
+
+    </div>
 
     <!-- ======================================================================= -->
-
-    <!-- <div id="leftDiv">
-        <a href="/createNewEventType">< Cancel</a>
-        <h4>Edit Event Type</h4>
-
-        <hr>
-        <p>Event name</p>
-        <input [(ngModel)]="eventN" type="text" id="eventName" placeholder="Name your event" name="eventName" #eventName>
-        <label class="redWarning" *ngIf="showWarning">Please provide an event name.</label>
-
-        <p>Duration</p>
-        <div>
-            <label for="hrs">Hours</label>
-            <input [(ngModel)]="evDurHrs" type="number" name="hrs" placeholder="0" #hrs>
-
-            <label for="min">Minutes</label>
-            <input [(ngModel)]="evDurMins" type="number" name="min" placeholder="30" #min>
-            <label class="redWarning" *ngIf="showTimeWarning">Please provide an event duration.</label>
-
-        </div>
-
-        <p>Location</p>
-        <div id="zoom">
-            <ng-icon id="zoomIcon" name="heroVideoCamera"></ng-icon>
-            <p id="zoomP">Google Meet</p>
-        </div>
-
-        <div id="bottomDiv">
-            <div>
-                <button>Cancel</button>
-                <button (click)="continueFunctn()">Continue</button>
-            </div>
-        </div>
-    </div> -->
 
     <div id="leftDiv" [class.makeBlur]="makeBlur">
 
@@ -251,11 +355,18 @@
             </div>
             <div class="makeItFlex" id="aboveHeadingRightDiv">
                 <!-- <button class="otherBtns"><ng-icon name="ionSettingsOutline"></ng-icon></button> -->
-                <button
-                ngxClipboard [cbContent]=
-                "'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +evId"
+                <button ngxClipboard
+                    [cbContent]="'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +evId"
+                    (click)="makeCopiedTrue()" [hidden]="copied" class="otherBtns">
+                    <ng-icon name="octLink"></ng-icon>
+                </button>
 
-                 class="otherBtns"><ng-icon name="octLink"></ng-icon></button>
+                <div id="copied" *ngIf="copied">
+                    <div id="iconDivOfCopied">
+                        <ng-icon id="tickIcon" name="typTick"></ng-icon>
+                    </div>
+                    <p>Copied</p>
+                </div>
                 <!-- <button id="shareBtn"><ng-icon name="heroArrowUturnRight"></ng-icon>Share</button> -->
             </div>
         </div>
@@ -288,13 +399,24 @@
         </div>
         <hr>
 
-        <div class="smallDivs">
+        <div class="smallDivs"  (click)="turnOnSchedulingPageSlider()">
             <div class="makeItFlex">
                 <div><ng-icon name="remixCalendar2Line"></ng-icon></div>
                 <p class="headings">Scheduling settings</p>
             </div>
-            <div>
-                <p>rolling calendar days</p>
+            <div *ngIf="statusForDays">
+                <div *ngIf="days.status">
+                    <span>{{days.noOfDays}} days</span>
+                    <!-- <span *ngIf="days.allDays">calendar days.</span>
+                    <span *ngIf="days.onlyWeekDays">week days.</span> -->
+                </div>
+                <div *ngIf="withinDateRange.status">
+                    <span>{{withinDateRange.start}} to </span>
+                    <span>{{withinDateRange.end}}</span>
+                </div>
+                <div *ngIf="indefinitely.status">
+                    <span>Indefinitely</span>
+                </div>
             </div>
         </div>
         <hr>
@@ -310,6 +432,9 @@
                 <span *ngIf="surnameReq">last name, </span>
                 <span>email </span>
                 <span *ngIf="questionsToBeAsked.length">,+{{questionsToBeAsked.length}} questions</span>
+            </div>
+            <div class="putMarginTop">
+                <p>Calendly confirmation page</p>
             </div>
         </div>
         <hr>
@@ -352,12 +477,38 @@
                     </div>
                 </div>
                 <hr>
-                <!-- <div id="previewDiv">
-                    <p id="previewP">
-                        A preview of your availability will show on the next step
-                    </p>
-                </div> -->
+
+
             </div>
+
+            <!-- -------------------------------------- -->
+            <div id="divForCalendarAndTime">
+                <full-calendar id="calendar" defaultView="dayGridMonth" *ngIf="formattedMeetingsHide.length > 0"
+                  [options]="calendarOptions" plugins={[dayGridPlugin]}>
+                </full-calendar>
+                <div *ngIf="displayTimeDiv" class="timeDiv">
+                <!-- <div class="timeDiv"> -->
+                  <div id="timeLeftDIv">
+          
+                    <p>{{dateSelected}}</p>
+          
+          
+                    <div id="times">
+                      <div *ngFor="let oneTime of userAvailaibleArray; let i = index">
+                        <button class="oneTime" >{{oneTime}}</button> 
+                      </div>
+                      <div id="noTimesAv" *ngIf="!userAvailaibleArray.length">                        
+                        <p>No times available on {{dateSelected}}</p>
+                        <p>Please select another date.</p>
+                      </div>
+                    </div>
+          
+          
+                </div>
+              </div>
+            </div>
+            <!-- --------------------------------------- -->
+
         </div>
     </div>
 </body>
