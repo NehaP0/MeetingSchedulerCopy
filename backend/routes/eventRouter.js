@@ -1,6 +1,7 @@
 const express = require("express");
 const { User, Meeting, Event } = require("../models/userAndMeeting");
 const { getLoggedInUserEmail } = require("./userRouter");
+const { ObjectId } = require('mongodb');
 const auth = require("../middlewares/Authenticator");
 
 
@@ -21,6 +22,13 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
   console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
   let { evName, evType, evDuration, evLocation, inviteesPerEvent, displayRemainingSpots } = req.body;
+
+  let evLinkEnd = evName
+  if (evLinkEnd.includes(" ")) {
+    evLinkEnd = evLinkEnd.replace(/ /g, "-"); //g means global, i.e all spaces in string wioll be replaced with -
+  }
+  const newEventId = new ObjectId();
+  console.log("newEventId ", newEventId);
 
   console.log("gotten body data", req.body);
 
@@ -56,7 +64,7 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             user: "abc",
             userEmail: "abc@gmail.com",
             currentDateTime: "2019-01-18T09:00:00",
-            questionsWdAnswers : []
+            questionsWdAnswers: []
           },
         ],
         allowInviteesToAddGuests: true,
@@ -102,14 +110,17 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
           status: true,
           mins: 30
         },
-        redirectTo : {
-          confirmationPage : {status : true},
-          externalUrl : {
-            status : false,
-            link : ""
+        redirectTo: {
+          confirmationPage: { status: true },
+          externalUrl: {
+            status: false,
+            link: ""
           }
-        }
-
+        },
+        _id: newEventId,
+        bgClr: "white",
+        btnAndLnkClr: "#0060E6",
+        txtClr: "black"
       });
     }
     else if (evType == "Group") {
@@ -121,8 +132,8 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
         evDuration,
         evLocation,
         surnameReq: false,
-        maxInviteesPerEventForGrpEvent : inviteesPerEvent,
-        displayRemainingSpotsOnBookingPageGrp : displayRemainingSpots,
+        maxInviteesPerEventForGrpEvent: inviteesPerEvent,
+        displayRemainingSpotsOnBookingPageGrp: displayRemainingSpots,
         meetings: [
           {
             start: "2019-01-18T09:00:00+05:30",
@@ -130,7 +141,7 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             user: "abc",
             userEmail: "abc@gmail.com",
             currentDateTime: "2019-01-18T09:00:00",
-            questionsWdAnswers : []
+            questionsWdAnswers: []
           },
         ],
         questionsToBeAsked: [
@@ -174,13 +185,17 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
           status: true,
           mins: 30
         },
-        redirectTo : {
-          confirmationPage : {status : true},
-          externalUrl : {
-            status : false,
-            link : ""
+        redirectTo: {
+          confirmationPage: { status: true },
+          externalUrl: {
+            status: false,
+            link: ""
           }
-        }
+        },
+        _id: newEventId,
+        bgClr: "white",
+        btnAndLnkClr: "#0060E6",
+        txtClr: "black"
       });
     }
     //  console.log(meeting);
@@ -189,7 +204,8 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
     // Update the user document to include the new meeting
     await User.updateOne(
       { name: loggedInUserName },
-      { $push: { events: event } }
+      { $push: { eventLinks: { linkEnd: evLinkEnd, evId: newEventId }, events: event } },
+      // { $push: { events: event } }
     );
     return res.send({ message: `Event created` });
 
@@ -234,9 +250,13 @@ eventRoute.delete("/deleteEvent", auth, async (req, res) => {
     console.log("logged in user is ", findLoggedInUser);
 
     let events = findLoggedInUser[0].events;
+
+    //first put all the meetings of this event in meetingsWithOthers array, then delete this event
+
     let meetingsArrayOfThatEvent = [];
     let evName = "";
     let evType = "";
+
     for (let i = 0; i < events.length; i++) {
       let event = events[i];
       if (event._id == id) {
@@ -267,6 +287,10 @@ eventRoute.delete("/deleteEvent", auth, async (req, res) => {
     // }
     // await findLoggedInUser[0].save()
 
+    const filteredEventLinksArr = findLoggedInUser[0].eventLinks.filter((oneEvLinkObj) => {
+      return oneEvLinkObj.evId.toString() !== id
+    })
+
     const filteredEvents = findLoggedInUser[0].events.filter((event) => {
       // console.log(event._id.toString(), id);
       // console.log(typeof(event._id.toString()), typeof(id));
@@ -276,6 +300,7 @@ eventRoute.delete("/deleteEvent", auth, async (req, res) => {
 
     // console.log('filteredEvents ', filteredEvents);
     // Update the user's events array
+    findLoggedInUser[0].eventLinks = filteredEventLinksArr
     findLoggedInUser[0].events = filteredEvents;
 
     await findLoggedInUser[0].save();
@@ -285,6 +310,7 @@ eventRoute.delete("/deleteEvent", auth, async (req, res) => {
     return res.status(500).json({ message: `Event deletion failed : ${err}` });
   }
 });
+
 
 eventRoute.patch("/editEvent", auth, async (req, res) => {
   console.log("editEvent called");
@@ -304,10 +330,19 @@ eventRoute.patch("/editEvent", auth, async (req, res) => {
 
     console.log("User found", loggedInUserName);
     let eventsArray = await findLoggedInUser[0].events;
+    let eventLinksArray = await findLoggedInUser[0].eventLinks;
 
     console.log("eventsArray", eventsArray);
     console.log("Duration", evDuration);
     console.log("Description", description);
+    console.log("eventLinksArray ", eventLinksArray);
+
+    for (let i = 0; i < eventLinksArray.length; i++) {
+      if (eventLinksArray[i].evId == evId) {
+        eventLinksArray[i].linkEnd = evName;
+        break;
+      }
+    }
 
     for (let i = 0; i < eventsArray.length; i++) {
       if (eventsArray[i]._id == evId) {
@@ -347,7 +382,7 @@ eventRoute.patch("/editEventIfUserCanAddGuests", auth, async (req, res) => {
   let importedloggedInUserEmail = getLoggedInUserEmail();
   console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
-  let { evId, allowInviteesToAddGuests,maxInviteesPerEvent, displayRemainingSPotsOrNot } = req.body;
+  let { evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot } = req.body;
 
   console.log("gotten body data", req.body);
 
@@ -363,22 +398,22 @@ eventRoute.patch("/editEventIfUserCanAddGuests", auth, async (req, res) => {
     console.log("eventsArray", eventsArray);
 
     for (let i = 0; i < eventsArray.length; i++) {
-      if(eventsArray[i].evType == "Group"){
+      if (eventsArray[i].evType == "Group") {
         if (eventsArray[i]._id == evId) {
           console.log(eventsArray[i].maxInviteesPerEventForGrpEvent);
-  
+
           eventsArray[i].maxInviteesPerEventForGrpEvent = maxInviteesPerEvent
           eventsArray[i].displayRemainingSpotsOnBookingPageGrp = displayRemainingSPotsOrNot
-  
+
           break;
         }
       }
-      else{
+      else {
         if (eventsArray[i]._id == evId) {
           console.log(eventsArray[i].allowInviteesToAddGuests);
-  
+
           eventsArray[i].allowInviteesToAddGuests = allowInviteesToAddGuests
-  
+
           break;
         }
       }
@@ -387,6 +422,43 @@ eventRoute.patch("/editEventIfUserCanAddGuests", auth, async (req, res) => {
     await findLoggedInUser[0].save();
 
     return res.send({ message: `Event edited` });
+  } catch (err) {
+    return res.send({ message: `Failed to edit event: ${err}` });
+  }
+});
+
+eventRoute.patch("/editEventClrs", async (req, res) => {
+  console.log("editEventClrs called");
+
+  let { loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor } = req.body;
+
+  console.log("gotten body data", req.body);
+
+  try {
+    let findLoggedInUser = await User.findOne({
+      emailID: loggedInEmailId,
+    });
+    let loggedInUserName = findLoggedInUser.name;
+
+    console.log("User found", loggedInUserName);
+    let eventsArray = await findLoggedInUser.events;
+
+    console.log("eventsArray", eventsArray);
+
+    for (let i = 0; i < eventsArray.length; i++) {
+      if (eventsArray[i]._id == evId) {
+        eventsArray[i].bgClr = backGroundcolor
+        eventsArray[i].txtClr = textColor
+        eventsArray[i].btnAndLnkClr = btnAndLinkColor
+        break;
+      }
+
+
+    }
+
+    await findLoggedInUser.save();
+
+    return res.send({ message: `Changes saved` });
   } catch (err) {
     return res.send({ message: `Failed to edit event: ${err}` });
   }
@@ -478,6 +550,13 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
     let findSelectedUser = await User.find({ _id: selectedUserId });
     let selectedUserName = findSelectedUser[0].name;
 
+    let evLinkEnd = evName
+    if (evLinkEnd.includes(" ")) {
+      evLinkEnd = evLinkEnd.replace(/ /g, "-"); //g means global, i.e all spaces in string wioll be replaced with -
+    }
+    const newEventId = new ObjectId();
+    console.log("newEventId ", newEventId);
+
     console.log("User found", selectedUserName);
     let eventsArray = await findSelectedUser[0].events;
     console.log("eventsArray", eventsArray);
@@ -494,7 +573,7 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
           user: "abc",
           userEmail: "abc@gmail.com",
           currentDateTime: "2019-01-18T09:00:00",
-          questionsWdAnswers : []
+          questionsWdAnswers: []
         },
       ],
       allowInviteesToAddGuests: true,
@@ -540,19 +619,23 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
         status: true,
         mins: 30
       },
-      redirectTo : {
-        confirmationPage : {status : true},
-        externalUrl : {
-          status : false,
-          link : ""
+      redirectTo: {
+        confirmationPage: { status: true },
+        externalUrl: {
+          status: false,
+          link: ""
         }
-      }
+      },
+      _id: newEventId,
+      bgClr: "white",
+      btnAndLnkClr: "#0060E6",
+      txtClr: "black"
     });
     //  console.log(meeting);
     console.log("User line 272", event);
 
     // Update the user document to include the new meeting
-    await User.updateOne({ _id: selectedUserId }, { $push: { events: event } });
+    await User.updateOne({ _id: selectedUserId }, { $push: { events: event, eventLinks: { linkEnd: evLinkEnd, evId: newEventId } } });
     return res.send({ message: `Event created` });
 
     // return res.status(200).json({message : `Event created`})
@@ -977,6 +1060,82 @@ eventRoute.patch(
 );
 
 
+eventRoute.patch("/deleteMeet", async (req, res) => {
+  console.log("deleteMeet called");
+  let { emailIdOfWhoCancelled, emailIdOfWhoseCalendar, evId, meetId, cancelationReason } = req.body;
+
+  console.log("gotten body data", req.body);
+
+  try {
+    let userWhoseCalendar = await User.findOne({
+      emailID: emailIdOfWhoseCalendar,
+    });
+
+    console.log("User found", userWhoseCalendar);
+    let eventsArray = await userWhoseCalendar.events;
+
+    console.log("eventsArray", eventsArray);
+
+    let otherEmailsArr
+    let start
+    let end
+
+    for (let i = 0; i < eventsArray.length; i++) {
+      console.log(eventsArray[i]._id == evId);
+      if (eventsArray[i]._id == evId) {
+        let meetsArr = eventsArray[i].meetings
+        console.log("meetsArr ", meetsArr);
+        let meetsArrWOThatMeet = meetsArr.filter((oneMeet) => {
+          start = oneMeet.start
+          end = oneMeet.end
+          otherEmailsArr = oneMeet.userEmail
+          return oneMeet._id != meetId
+        })
+
+        console.log("meetsArrWOThatMeet ", meetsArrWOThatMeet);
+        eventsArray[i].meetings = meetsArrWOThatMeet
+        break;
+
+      }
+    }
+
+    await userWhoseCalendar.save();
+    console.log("user saved");
+
+    console.log("otherEmailsArr ", otherEmailsArr);
+
+
+    for (let i = 0; i < otherEmailsArr.length; i++) {
+      let foundUserInDb = await User.findOne({
+        emailID: otherEmailsArr[i]
+      });
+      console.log("foundUserInDb ", foundUserInDb);
+      if (foundUserInDb) {
+        let meetWdOthersArr = foundUserInDb.meetingsWtOthers
+        let meetWdOthersArrWOThatMeet = meetWdOthersArr.filter((oneMeet) => {
+          return oneMeet.start != start && oneMeet.end != end
+        })
+        foundUserInDb.meetingsWtOthers = meetWdOthersArrWOThatMeet
+      }
+
+      await foundUserInDb.save();
+      console.log("other user saved");
+
+    }
+
+    sendCancellationMails(emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end)
+
+    return res.send({ message: `Deleted` });
+
+    // return res.status(200).json({message : `Event created`})
+  } catch (err) {
+    return res.send({ message: `Failed to edit event: ${err}` });
+
+    // return res.status(500).json({message : `Event creation failed : ${err}`})
+  }
+});
+
+
 // eventRoute.patch("/addQuestionToMeet/:selectedUsersEmailId", async (req, res) => {
 //   let { selectedUsersEmailId } = req.params;
 //   let {question, isRequired, showThisQuestion, eventId} = req.body
@@ -1063,8 +1222,18 @@ eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) =
 
     console.log("User found ", selectedUserName);
     let eventsArray = await findSelectedUser.events;
-
     console.log("eventsArray", eventsArray);
+
+    let eventLinksArray = await findSelectedUser.eventLinks;
+    console.log("eventLinksArray ", eventLinksArray);
+
+    for (let i = 0; i < eventLinksArray.length; i++) {
+      if (eventLinksArray[i].evId == evId) {
+        eventLinksArray[i].linkEnd = eventLink;
+        break;
+      }
+    }
+
 
     let ans = eventsArray.find((event) => {
       return event._id.toString() == evId
@@ -1103,6 +1272,7 @@ eventRoute.patch("/editEvCalendar/:selectedUsersEmailId", async (req, res) => {
     let eventsArray = await findSelectedUser.events;
 
     console.log("eventsArray", eventsArray);
+
 
     let ans = eventsArray.find((event) => {
       return event._id.toString() == evId
@@ -1224,6 +1394,63 @@ async function sendMail(
     }
   }
 }
+
+
+async function sendCancellationMails(
+  emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end
+) {
+  let allMailIds = [emailIdOfWhoseCalendar, ...otherEmailsArr]
+  console.log("allMailIds ", allMailIds);
+  // -------------------mail sending starts-----------------
+  // initialize nodemailer
+  console.log("nodemailer working");
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "nehaphadtare334@gmail.com",
+      pass: "xtjc dyqr evlk bfcj",
+    },
+  });
+
+  // point to the template folder
+  const handlebarOptions = {
+    viewEngine: {
+      partialsDir: path.resolve("../views/"),
+      defaultLayout: false,
+    },
+    viewPath: path.resolve("../views/"),
+  };
+
+  // use a template file with nodemailer
+  transporter.use("compile", hbs(handlebarOptions));
+
+  //   for (const user of users) {
+  for (let i = 0; i < allMailIds.length; i++) {
+    let mailOptions = {
+      from: '"My Company"', // sender address
+      template: "cancelationMail", // the name of the template file, i.e., email.handlebars
+      // to: userFound.emailID,
+      to: allMailIds[i],
+      // subject: `Hi, ${userFound.name}`,
+      subject: `Meeting Canceled`,
+      context: {
+        emailIdOfWhoCancelled,
+        cancelationReason,
+        start,
+        end
+      },
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.log(
+        `Nodemailer error sending email to ${allMailIds[i]}`,
+        error
+      );
+    }
+  }
+}
+
 
 
 

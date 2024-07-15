@@ -162,10 +162,11 @@
             <p class="card-title">{{ event.evName }}</p>
             <p class="card-subtitle mb-2 text-mute d">
               <span *ngIf="event.evDuration.hrs != 0"
-                >{{ event.evDuration.hrs }} hrs</span
+                >{{event.evDuration.hrs}}hrs &nbsp; <!--  for space --></span
               >
+              
               <span *ngIf="event.evDuration.minutes != 0"
-                >{{ event.evDuration.minutes }} mins</span
+                >{{event.evDuration.minutes}}mins</span
               >
               , {{ event.evType }}
             </p>
@@ -180,8 +181,8 @@
               >View booking page</a
             > -->
 
-            <a
-            href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}&eventId={{event._id}}"
+            <a  class="makeBlue"
+            (click)="showBookingPage(event._id)"
             target="_blank">View booking page</a
           >
 
@@ -190,7 +191,7 @@
             </div>
             <hr />
             <div class="cardFooter">
-              <button
+              <!-- <button
                 ngxClipboard [cbContent]=
                 "'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +event._id"
                 class="copyLinkBtn"
@@ -199,7 +200,19 @@
               >
                 <ng-icon name="ionCopyOutline"></ng-icon>
                 <p>Copy link</p>
-              </button>
+              </button> -->
+
+
+              <button
+
+              class="copyLinkBtn"
+              (click)="copied(event.evName, event._id)"
+              [hidden]="setCopied == event.evName"
+            >
+              <ng-icon name="ionCopyOutline"></ng-icon>
+              <p>Copy link</p>
+            </button>
+
               <button class="copyLinkBtn" [hidden]="setCopied != event.evName">
                 <ng-icon id="tickIcon" name="typTick"></ng-icon>
                 <p>Copied</p>
@@ -245,7 +258,7 @@
             <p class="card-title">{{ event.evName }}</p>
             <p class="card-subtitle mb-2 text-mute d">
               <span *ngIf="event.evDuration.hrs != 0"
-                >{{ event.evDuration.hrs }} hrs</span
+                >{{ event.evDuration.hrs }} hrs&nbsp; <!--  for space --></span
               >
               <span *ngIf="event.evDuration.minutes != 0"
                 >{{ event.evDuration.minutes }} mins</span
@@ -263,7 +276,7 @@
               >View booking page</a
             > -->
 
-            <a
+            <a class="makeBlue"
             href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}&eventId={{event._id}}"
             target="_blank">View booking page</a
           >
@@ -273,7 +286,7 @@
             </div>
             <hr />
             <div class="cardFooter">
-              <button
+              <!-- <button
                 ngxClipboard [cbContent]=
                 "'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +event._id"
                 class="copyLinkBtn"
@@ -282,7 +295,18 @@
               >
                 <ng-icon name="ionCopyOutline"></ng-icon>
                 <p>Copy link</p>
-              </button>
+              </button> -->
+
+              <button
+
+              class="copyLinkBtn"
+              (click)="copied(event.evName, event._id)"
+              [hidden]="setCopied == event.evName"
+            >
+              <ng-icon name="ionCopyOutline"></ng-icon>
+              <p>Copy link</p>
+            </button>
+
               <button class="copyLinkBtn" [hidden]="setCopied != event.evName">
                 <ng-icon id="tickIcon" name="typTick"></ng-icon>
                 <p>Copied</p>

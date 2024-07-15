@@ -18,7 +18,9 @@ const moment = require("moment-timezone");
 const { log } = require("console");
 // const { getLoggedInUserEmailFromQuery } = require('./calendarLinkRouter');
 const twilio = require("twilio");
+const {ObjectId } = require('mongodb');
 require("dotenv").config();
+
 
 const userRoute = express.Router();
 
@@ -62,6 +64,8 @@ userRoute.post("/postuser", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 5);
     console.log(hashedPassword);
 
+    const newEventId = new ObjectId();
+    console.log("newEventId ", newEventId);
     // const meeting =  await Meeting.create({title: "fillingSub", start:"2019-01-18T09:00:00+05:30", end:"2019-01-18T09:30:00+05:30", })
     const meeting = await Meeting.create({
       start: "2019-01-18T09:00:00+05:30",
@@ -69,10 +73,11 @@ userRoute.post("/postuser", async (req, res) => {
       user: "abc",
       userEmail: "abc@gmail.com",
       currentDateTime: "date",
-      questionsWdAnswers : []
+      questionsWdAnswers : []     
     });
 
     console.log(meeting);
+
 
     const event = await Event.create({
       evName: "30 Minute Meeting",
@@ -129,7 +134,11 @@ userRoute.post("/postuser", async (req, res) => {
           status : false,
           link : ""
         }
-      }
+      },
+      _id : newEventId,
+      bgClr :"white",
+      btnAndLnkClr : "#0060E6",
+      txtClr : "black"
 
     });
     // const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom"})
@@ -144,7 +153,11 @@ userRoute.post("/postuser", async (req, res) => {
       userAvailability: userAvailability,
       meetingsWtOthers: [meeting],
       profileImage: "",
-      cloduraBranding : true
+      cloduraBranding : true,
+      eventLinks : [{
+        linkEnd : "30-Minute-Meeting",
+        evId : newEventId
+      }]
     });
     // const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: []})
     console.log(user);
@@ -219,6 +232,18 @@ userRoute.get("/getParticularUser", async(req,res)=>{
   const { userEmailId } = req.query;
   try {
     const user = await User.findOne({ emailID: userEmailId });
+
+    res.send({ msg: `got user `, user: user });
+  } catch (err) {
+    res.status(404).send({ msg: `Finding failed ${err.message}` });
+  }
+})
+
+userRoute.get("/getParticularUserBuUid", async(req,res)=>{
+  console.log("/getParticularUserBuUid called");
+  const { uid } = req.query;
+  try {
+    const user = await User.findOne({ _id: uid });
 
     res.send({ msg: `got user `, user: user });
   } catch (err) {

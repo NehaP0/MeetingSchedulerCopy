@@ -121,6 +121,20 @@ export class APIService {
     
   }
 
+  async getParticularUserEventLiksArr(emailId){
+    const response = await this.httpClient.get(`${this.API_URL}/user/getParticularUser?userEmailId=${emailId}`, {
+      headers: {
+        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }).toPromise();;
+
+    console.log("got user ", response['user']);
+    let user = response['user']
+    let eventLinksArr = user["eventLinks"]
+    return eventLinksArr
+  } 
+
   registerUser(user) {
     // console.log(user);
     user['userAvailability'] = {
@@ -1442,7 +1456,10 @@ export class APIService {
   async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId, redirectTo) {
     let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo }
 
-
+    console.log("editUserFormForEventFnctn called ",evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo);
+    
+    console.log("loggedInEmailId ", loggedInEmailId);
+    
     const response = await this.httpClient.patch(`${this.API_URL}/event/addQuestionForForm/${loggedInEmailId}`, body).toPromise();
     alert(response['message'])
     return response['message']
@@ -1476,5 +1493,22 @@ export class APIService {
       console.log(response['message']);
 
     }
+  }
+
+  async changeEvntClrs(loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor){
+    return this.httpClient
+    .patch(
+      `${this.API_URL}/event/editEventClrs`,
+      { loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor },
+    )
+    .subscribe(
+      (response) => {
+        console.log(response);
+        alert(response['message']);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 }

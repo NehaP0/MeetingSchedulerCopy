@@ -34,6 +34,7 @@ import {PollLinkPopUpComponent} from './poll-link-pop-up/poll-link-pop-up.compon
 import { PollingPageComponent } from './polling-page/polling-page.component';
 import { GroupAdminComponent } from './group-admin/group-admin.component';
 import { UpcomingMeetingsComponent } from './upcoming-meetings/upcoming-meetings.component';
+// import { SharePopupComponent } from './share-popup/share-popup.component';
 
 
 const routes: Routes = [
@@ -69,7 +70,8 @@ const routes: Routes = [
   {path : 'pollLinkPopUp', component : PollLinkPopUpComponent},
   {path: 'pollingPage', component : PollingPageComponent},
   {path: 'group', component : GroupAdminComponent},
-  {path: 'upcomingMeetings', component: UpcomingMeetingsComponent}
+  {path: 'upcomingMeetings', component: UpcomingMeetingsComponent},
+  // {path : 'share', component: SharePopupComponent}
 ];
 
 @NgModule({

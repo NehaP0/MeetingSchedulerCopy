@@ -6,7 +6,9 @@ import { Subscription } from 'rxjs';
 import { Calendar, CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { DatePipe } from '@angular/common';
+import { DatePipe, JsonPipe } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-edit-event',
@@ -18,6 +20,7 @@ export class EditEventComponent {
   emailID = localStorage.getItem("emailID")
   loggedInName = localStorage.getItem("userLoggedInName" || "")
   evId = localStorage.getItem("evId")
+  usersUniqueID = localStorage.getItem("usersUniqueID")
 
   // eventN = localStorage.getItem("eventName")
   evT = localStorage.getItem("evType")
@@ -28,6 +31,7 @@ export class EditEventComponent {
   evDurHrs = 0
   eventLocation = localStorage.getItem("eventLocation")
   usersId = localStorage.getItem('usersUniqueID' || '')
+  eventLinksArr = JSON.parse(localStorage.getItem("eventLinksArr"))
 
   whenCanInviteesSchedule = JSON.parse(localStorage.getItem("whenCanInviteesSchedule"))
   minimumNotice = JSON.parse(localStorage.getItem("minimumNotice"))
@@ -43,8 +47,7 @@ export class EditEventComponent {
   externalSiteUrl = ""
   showWarningForExternalUrl = false
 
-  eventLink = this.eventN
-  customisedLink = ""
+  eventLink = localStorage.getItem("eventLinkEnd" || "")
   showWarning = false
   showTimeWarning = false
   showWarningToAddQuestion = false
@@ -54,9 +57,27 @@ export class EditEventComponent {
   editedQuestion = false
   maxInviteesPerEvent
   displayRemainingSPotsOrNot
+  sharePopup = false
+  viewSelectedName = ''
+  show3Views = true
+  showCode = false
+  code = ""
+  codeCopied = false
+
+  link = ""
+
+  backGroundcolor: string = ''
+  isColorPickerVisibleForBackground: boolean = false; // To toggle color picker visibility
+  textColor: string = ''
+  isColorPickerVisibleFortextColor: boolean = false;
+  btnAndLinkColor: string = ''
+  isColorPickerVisibleForbtnAndLinkColor: boolean = false;
+  btnText = "Schedule time with me"
+  LinkText = "Schedule time with me"
+
 
   loggedInEmailId = localStorage.getItem("emailID" || "")
-
+  // eventLinksArr = JSON.parse(localStorage.getItem("eventLinksArr"))
   descriptionText = ""
 
   showEventDetailsSlider = false
@@ -222,6 +243,7 @@ export class EditEventComponent {
 
   ngOnInit() {
 
+
     console.log("days initially ", this.days);
 
 
@@ -265,12 +287,6 @@ export class EditEventComponent {
       }
     }, 2500);
     // =======================================
-
-    if (this.eventLink.includes(" ")) {
-      this.eventLink = this.eventLink.replace(/ /g, "-"); //g means global, i.e all spaces in string wioll be replaced with -
-    }
-
-
 
     if (this.allowInviteesToAddGuestsStr == "true") {//because in localStorage, everything is stored in string format, so we convert it to boolean
       this.allowInviteesToAddGuests = true
@@ -392,22 +408,44 @@ export class EditEventComponent {
         this.eventN = reqEventObj["evName"]
         this.evDurHrs = reqEventObj["evDuration"]["hrs"]
         this.evDurMins = reqEventObj["evDuration"]["minutes"]
-        this.eventLink = this.eventN
+        this.backGroundcolor = reqEventObj['bgClr']
+        this.textColor = reqEventObj['txtClr']
+        this.btnAndLinkColor = reqEventObj['btnAndLnkClr']
+
+        // this.eventLink = this.eventN
+        this.link = `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`
+
+        
         this.redirectTo = reqEventObj["redirectTo"]
-        if(reqEventObj['evType']=='Group'){
+        if (reqEventObj['evType'] == 'Group') {
           this.maxInviteesPerEvent = reqEventObj['maxInviteesPerEventForGrpEvent']
           this.displayRemainingSPotsOrNot = reqEventObj['displayRemainingSpotsOnBookingPageGrp']
         }
 
-        if(reqEventObj["redirectTo"]["confirmationPage"]["status"]){
+        if (reqEventObj["redirectTo"]["confirmationPage"]["status"]) {
           this.redirectToValue = "cloduraPage"
         }
-        else{
+        else {
           this.redirectToValue = "externalSite"
           this.externalSiteUrl = reqEventObj["redirectTo"]["externalUrl"]["link"]
         }
 
+        // let eventLinksArr = reqEventObj[""]
+
+        if (this.eventLink.includes(" ")) {
+          this.eventLink = this.eventLink.replace(/ /g, "-"); //g means global, i.e all spaces in string wioll be replaced with -
+        }
         // ===========================
+
+        // for(let i=0; i<this.eventLinksArr.length; i++){
+        //   if(this.eventLinksArr[i]["evId"] == this.evId){
+        //     console.log(this.eventLinksArr[i]["linkEnd"]);
+
+
+        //     this.eventLink = this.eventLinksArr[i]["linkEnd"]
+        //     break;
+        //   }
+        // }
       }
     })
 
@@ -517,6 +555,7 @@ export class EditEventComponent {
   theDayCellContent(info: any) {
 
 
+
     // <td aria-labelledby="fc-dom-22" role="gridcell" data-date="2024-03-06" class="fc-day fc-day-wed fc-day-past fc-daygrid-day"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a aria-label="March 6, 2024" id="fc-dom-22" class="fc-daygrid-day-number"><div>6</div></a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td>
     const dayOfWeek = info.date.getDay();
     const date = info.date.getDate();
@@ -525,6 +564,10 @@ export class EditEventComponent {
       if (dayOfWeek === this.nonWorkingDays[i]) {
         return { html: '<div style="color: grey">' + date + '</div>' };
       }
+      // else{
+      //   return { html: '<div style="color: green">' + date + '</div>' };
+
+      // }
     }
     return { html: '<div>' + date + '</div>' };
   }
@@ -600,15 +643,15 @@ export class EditEventComponent {
     console.log("continueInviteesFunctn called ");
     console.log("evId ", this.evId, "allowInviteesCheckedOrNot ", this.allowInviteesCheckedOrNot);
     console.log(this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot);
-    if(this.evT == 'Group'){
-      if(this.maxInviteesPerEvent>1){
+    if (this.evT == 'Group') {
+      if (this.maxInviteesPerEvent > 1) {
         this.apiService.editEventIfUserCanAddGuests(this.evId, this.allowInviteesCheckedOrNot, this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot)
       }
     }
-    else{
+    else {
       this.apiService.editEventIfUserCanAddGuests(this.evId, this.allowInviteesCheckedOrNot, this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot)
     }
-    setTimeout(()=>{
+    setTimeout(() => {
 
       this.getAllEventEditings()
     }, 1000)
@@ -795,36 +838,53 @@ export class EditEventComponent {
     console.log("allow invitees to add guests ", this.allowInviteesToAddGuests);
     console.log("questionsArr ", this.questionsToBeAsked);
     console.log("redirectToValue ", this.redirectToValue);
-    
+
     let goAhead = true
 
-    if(this.redirectToValue == "cloduraPage"){
-      this.redirectTo = {
-        confirmationPage : {status : true},
-        externalUrl : {
-          status : false,
-          link : ""
+    if (this.eventLink.includes(" ")) {
+      this.eventLink = this.eventLink.replace(/ /g, "-"); //g means global, i.e all spaces in string wioll be replaced with -
+    }
+    // ===========================
+
+    for (let i = 0; i < this.eventLinksArr.length; i++) {
+      if (this.eventLinksArr[i]["evId"] != this.evId) {
+        if (this.eventLinksArr[i]["linkEnd"] == this.eventLink) {
+          goAhead = false
+          alert("This event link has already been taken.")
+          break;
         }
       }
     }
-    else if(this.redirectToValue == "externalSite"){
-      if(this.externalSiteUrl == ""){
+
+
+
+    if (this.redirectToValue == "cloduraPage") {
+      this.redirectTo = {
+        confirmationPage: { status: true },
+        externalUrl: {
+          status: false,
+          link: ""
+        }
+      }
+    }
+    else if (this.redirectToValue == "externalSite") {
+      if (this.externalSiteUrl == "") {
         goAhead = false
         this.showWarningForExternalUrl = true
       }
-      else{
+      else {
         this.showWarningForExternalUrl = false
         this.redirectTo = {
-          confirmationPage : {status : false},
-          externalUrl : {
-            status : true,
-            link : this.externalSiteUrl
+          confirmationPage: { status: false },
+          externalUrl: {
+            status: true,
+            link: this.externalSiteUrl
           }
         }
       }
     }
 
-    if(goAhead == true){
+    if (goAhead == true) {
       this.apiService.editUserFormForEventFnctn(this.evId, this.eventLink, this.surnameReq, this.allowInviteesToAddGuests, this.questionsToBeAsked, this.loggedInEmailId, this.redirectTo)
       setTimeout(() => {
         this.bookingPageSlider = false
@@ -1106,6 +1166,7 @@ export class EditEventComponent {
     console.log("startTime ", this.startTimIncrements);
 
 
+    console.log("this.loggedInEmailId ", this.loggedInEmailId);
 
     this.apiService.editEventCalendar(this.evId, this.whenCanInviteesSchedule, this.minimumNotice, this.noOfMeetsAllowedPerDay, this.startTimIncrements, this.loggedInEmailId)
 
@@ -1752,6 +1813,121 @@ export class EditEventComponent {
 
   }
   // ===========setTimesAsPerMinNotice ends=======================
+
+
+  shareBtnClicked() {
+    this.sharePopup = true
+    this.makeBlur = true
+  }
+
+  closeSharePopup() {
+    this.sharePopup = false
+    this.makeBlur = false
+  }
+
+  viewSelected(whichViewSelected) {
+    console.log("whichViewSelected ", whichViewSelected);
+    this.viewSelectedName = whichViewSelected
+  }
+
+  sharePopUpContinue() {
+    console.log("link");
+
+    if (this.viewSelectedName == "") {
+      alert('You need to select any one.')
+    }
+    else {
+      this.show3Views = false
+      this.showCode = true
+
+      if (this.viewSelectedName == "Inline Embed") {
+        this.code = `<iframe src="${this.link}" style="width:100%; height:100%; border:none;" ></iframe>`
+      }
+      else if (this.viewSelectedName == "Popup Widget") {
+        this.code = `<button id="openModalButton" style="background-color: ${this.btnAndLinkColor}; padding:15px; border:none; color:white; border-radius: 20px;">${this.btnText}</button> <div id="myModal" class="modal"> <div class="modal-content"> <span class="close-button">&times;</span> <iframe src="${this.link}" style="width:100%; height:100vh; border:none;"></iframe> </div> </div> <style> .modal { display: none; position: fixed; z-index: 1; padding-top: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); overflow-y: hidden; } .modal-content { margin: auto; } .close-button { color: #aaa; float: right; font-size: 50px; } .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; } </style> <script> var modal = document.getElementById("myModal"); var btn = document.getElementById("openModalButton"); var span = document.getElementsByClassName("close-button")[0]; btn.onclick = function() { modal.style.display = "block"; }; span.onclick = function() { modal.style.display = "none"; }; window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } } </script>`
+      }
+      else {
+        this.code = `<a href="#" style="color:${this.btnAndLinkColor}; text-decoration:none" id="openModalLink">${this.LinkText}</a> <div id="myModal" class="modal"> <div class="modal-content"> <span class="close-button">&times;</span> <iframe src="${this.link}" style="width:100%; height:100vh; border:none;"></iframe> </div> </div> <style> .modal { display: none; position: fixed; z-index: 1; padding-top: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); overflow-y: hidden; } .modal-content { margin: auto; } .close-button { color: #aaa; float: right; font-size: 50px; } .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; } </style> <script> var modal = document.getElementById("myModal"); var link = document.getElementById("openModalLink"); var span = document.getElementsByClassName("close-button")[0]; link.onclick = function(event) { event.preventDefault(); modal.style.display = "block"; }; span.onclick = function() { modal.style.display = "none"; }; window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } } </script>`
+      }
+    }
+  }
+
+  changeBtnText(){
+    this.code = `<button id="openModalButton" style="background-color: ${this.btnAndLinkColor}; padding:15px; border:none; color:white; border-radius: 20px;">${this.btnText}</button> <div id="myModal" class="modal"> <div class="modal-content"> <span class="close-button">&times;</span> <iframe src="${this.link}" style="width:100%; height:100vh; border:none;"></iframe> </div> </div> <style> .modal { display: none; position: fixed; z-index: 1; padding-top: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); overflow-y: hidden; } .modal-content { margin: auto; } .close-button { color: #aaa; float: right; font-size: 50px; } .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; } </style> <script> var modal = document.getElementById("myModal"); var btn = document.getElementById("openModalButton"); var span = document.getElementsByClassName("close-button")[0]; btn.onclick = function() { modal.style.display = "block"; }; span.onclick = function() { modal.style.display = "none"; }; window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } } </script>`
+    console.log("btnText ", this.btnText);
+  }
+
+  changeLnkText(){
+    this.code = `<a href="#" style="color:${this.btnAndLinkColor}; text-decoration:none" id="openModalLink">${this.LinkText}</a> <div id="myModal" class="modal"> <div class="modal-content"> <span class="close-button">&times;</span> <iframe src="${this.link}" style="width:100%; height:100vh; border:none;"></iframe> </div> </div> <style> .modal { display: none; position: fixed; z-index: 1; padding-top: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); overflow-y: hidden; } .modal-content { margin: auto; } .close-button { color: #aaa; float: right; font-size: 50px; } .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; } </style> <script> var modal = document.getElementById("myModal"); var link = document.getElementById("openModalLink"); var span = document.getElementsByClassName("close-button")[0]; link.onclick = function(event) { event.preventDefault(); modal.style.display = "block"; }; span.onclick = function() { modal.style.display = "none"; }; window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } } </script>`
+    console.log("LinkText ", this.LinkText);
+  }
+
+  goTo3Views() {
+    this.show3Views = true
+    this.showCode = false
+  }
+
+  copyCode() {
+    navigator.clipboard.writeText(this.code);
+    this.codeCopied = true
+    setTimeout(() => {
+      this.codeCopied = false
+    }, 1500)
+  }
+
+
+  handleBackGroundColorChange($event: any): void {
+    console.log("bg clr $event.color.hex ", $event.color.hex);    
+    this.backGroundcolor = $event.color.hex;
+    console.log('Selected Color:', this.backGroundcolor);
+  }
+
+  toggleBackgroundColorPicker(): void {
+    this.isColorPickerVisibleForBackground = !this.isColorPickerVisibleForBackground;
+    if (this.isColorPickerVisibleForBackground) {
+      this.isColorPickerVisibleFortextColor = false;
+      this.isColorPickerVisibleForbtnAndLinkColor = false;
+    }
+
+  }
+
+  handletextColorChange($event: any): void {
+    console.log("txt clr $event.color.hex ", $event.color.hex);    
+    this.textColor = $event.color.hex;
+    console.log('Selected Color:', this.textColor);
+  }
+
+  toggletextColorPicker(): void {
+    this.isColorPickerVisibleFortextColor = !this.isColorPickerVisibleFortextColor;
+    if (this.isColorPickerVisibleFortextColor) {
+      this.isColorPickerVisibleForBackground = false;
+      this.isColorPickerVisibleForbtnAndLinkColor = false;
+    }
+  }
+
+  handlebtnAndLinkColorChange($event: any): void {
+    console.log("btn And Link Clr ", $event.color.hex);
+    
+    this.btnAndLinkColor = $event.color.hex;
+    console.log('Selected Color:', this.btnAndLinkColor);
+  }
+
+  togglebtnAndLinkColorPicker(): void {
+    this.isColorPickerVisibleForbtnAndLinkColor = !this.isColorPickerVisibleForbtnAndLinkColor;  
+    if (this.isColorPickerVisibleForbtnAndLinkColor) {
+      this.isColorPickerVisibleForBackground = false;
+      this.isColorPickerVisibleFortextColor = false;
+    }
+  }
+
+
+  saveClrChanges(){
+    console.log("bgclr ", this.backGroundcolor);
+    console.log("txtClr ", this.textColor);
+    console.log("btn&LnkClr ", this.btnAndLinkColor); 
+    this.apiService.changeEvntClrs(this.loggedInEmailId, this.evId, this.backGroundcolor, this.textColor, this.btnAndLinkColor)
+   
+  }
 
 }
 

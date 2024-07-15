@@ -12,6 +12,8 @@ export class ListAllEventTypesComponent {
   loggedInEmailId = localStorage.getItem('emailID' || '');
 
   eventsArrayOfLoggedInUser = [];
+  eventLinksArr = []
+  eventLink = ""
 
   usersId = localStorage.getItem('usersUniqueID' || '')
 
@@ -33,6 +35,16 @@ export class ListAllEventTypesComponent {
         this.eventsArrayOfLoggedInUser = eventsArray;
       });
     }, 1000);
+
+    this.getEventLinksArr()
+
+
+  }
+
+  async getEventLinksArr(){
+    console.log("getEventLinksArr called");    
+    this.eventLinksArr = await this.apiService.getParticularUserEventLiksArr(this.loggedInEmailId)
+    console.log("eventLinksArr ", this.eventLinksArr); 
   }
 
   goToCalendar(event) {
@@ -40,16 +52,34 @@ export class ListAllEventTypesComponent {
     localStorage.setItem('evName', event.evName);
     localStorage.setItem('evType', event.evType);
     
+    this.EvLink(event._id)
 
     // localStorage.setItem("evType",event.evName)
     // localStorage.setItem("evDurHrs",event.evDuration.hrs)
     // localStorage.setItem("evDurMins",event.evDuration.minutes)
 
     let avatar = localStorage.getItem('avatar')
-    window.open(
+    // window.open(
       // `http://localhost:3000/calendarLink/sharable?name=${this.loggedInName}&id=${this.loggedInEmailId}&evType=${event.evType}&evName=${event.evName}&evDurHrs=${event.evDuration.hrs}&evDurMins=${event.evDuration.minutes}&image=${avatar}`
-      `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventId=${event._id}`
+      // `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventId=${event._id}`
+      // `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`
+    // );
+    window.location.href = `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`
+  }
 
-    );
+
+  EvLink(selectedEvId){       
+
+    for(let i=0; i<this.eventLinksArr.length; i++){
+      if(this.eventLinksArr[i]["evId"] == selectedEvId){
+        console.log("found ", this.eventLinksArr[i]["evId"], selectedEvId);
+        console.log(this.eventLinksArr[i]["linkEnd"]); 
+        
+        this.eventLink = this.eventLinksArr[i]["linkEnd"]
+        localStorage.setItem('eventLinkEnd', this.eventLink)
+        break;
+      }
+    }
+    console.log("eventLinkEnd ", this.eventLink);
   }
 }

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const questionSchema = mongoose.Schema({
   question: {
     type: String
@@ -168,6 +169,12 @@ const redirection = mongoose.Schema({
   externalUrl : externalUrlSchema
 })
 
+
+const eventLinksSchema = mongoose.Schema({
+  linkEnd : {type : String},
+  evId : {type : String}
+})
+
 const eventSchema = mongoose.Schema({
   evName: {
     type: String,
@@ -196,7 +203,10 @@ const eventSchema = mongoose.Schema({
   startTimIncrements : startTimIncrementsSchema,
   maxInviteesPerEventForGrpEvent : {type: Number},
   displayRemainingSpotsOnBookingPageGrp : {type: Boolean},
-  redirectTo : redirection
+  redirectTo : redirection,
+  bgClr : {type : String},
+  txtClr : {type : String},
+  btnAndLnkClr : {type : String},
 });
 
 const availabilitySchema = mongoose.Schema({
@@ -246,6 +256,7 @@ const userSchema = mongoose.Schema({
   phoneNumber: {
     type: String,
   },
+  eventLinks : [eventLinksSchema],
   events: [eventSchema],
   userAvailability: {
     type: availabilitySchema,

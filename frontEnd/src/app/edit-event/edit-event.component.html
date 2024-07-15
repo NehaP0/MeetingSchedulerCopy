@@ -1,6 +1,183 @@
 <app-navbar [class.makeBlur]="makeBlur"></app-navbar>
 
 <body>
+
+
+    <div *ngIf="sharePopup" class="popUpShare">
+        <!-- <div class="popUpShare"> -->
+
+        <div id="cross">
+            <button (click)="closeSharePopup()">X</button>
+        </div>
+        <div>
+            <div id="topHeadings">
+                <h4>{{eventN}}</h4>
+                <div class="makeItFlex topheadingEvDeets">
+                    <div>
+                        <p><ng-icon name="bootstrapClock"></ng-icon></p>
+                        <p *ngIf="evDurHrs">{{evDurHrs}} hrs &nbsp;</p>
+                        <p *ngIf="evDurMins">{{evDurMins}} mins</p>
+                    </div>
+                    <div>
+                        <p>{{evT}}</p>
+                    </div>
+                    <div>
+                        <p>{{eventLocation}}</p>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div id="sharingPopupContentDiv" *ngIf="show3Views">
+                <p class="makeItBold">Add to website</p>
+                <hr>
+                <div id="sharingPopupContentINsideDIv">
+
+                    <p>How do you want to add Calender to your site?</p>
+
+                    <div (click)="viewSelected('Inline Embed')" class="viewDiv">
+                        <div>
+                            <img src="https://assets.calendly.com/assets/frontend/media/inline-9b9c0837a613c9e22e75.svg"
+                                alt="inlineEmbed">
+                        </div>
+                        <div>
+                            <p class="makeItBoldNew">Inline Embed</p>
+                            <p>Add a scheduling page to your site.</p>
+                        </div>
+                    </div>
+                    <div (click)="viewSelected('Popup Widget')" class="viewDiv">
+                        <div>
+                            <img src="https://assets.calendly.com/assets/frontend/media/popup-widget-f7ff49530981c7b3cc10.svg"
+                                alt="popUpWidget">
+                        </div>
+                        <div>
+                            <p class="makeItBoldNew">Popup Widget</p>
+                            <p>Add a floating button that opens a popup.</p>
+                        </div>
+                    </div>
+                    <div (click)="viewSelected('Popup Text')" class="viewDiv">
+                        <div>
+                            <img src="https://assets.calendly.com/assets/frontend/media/popup-text-8c20b93872dbc9d01fc3.svg"
+                                alt="popUpText">
+                        </div>
+                        <div>
+                            <p class="makeItBoldNew">Popup Text</p>
+                            <p>Add a text link that opens a popup.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sharingPopupFooter" *ngIf="show3Views">
+                <button (click)="closeSharePopup()">Close</button>
+                <button (click)="sharePopUpContinue()">Continue</button>
+            </div>
+
+
+            <div *ngIf="showCode" id="codeContent">
+                <div>
+                    <div class="makeItFlex justifTheSpace">
+                        <h3>{{viewSelectedName}}</h3>
+                        <p (click)="goTo3Views()" id="change">Change</p>
+                    </div>
+                    <hr>
+                    <div>
+                        <p class="makeItBold">Booking Page Settings</p>
+                        <p>Customize the look of your booking page to fit seamlessly into your website.</p>
+
+                        <div *ngIf="viewSelectedName == 'Popup Widget'" class="inputDivForBtnAndLinkTxt">
+                            <p class="makeItBoldNew">Button Text</p>
+                            <input type="text" [(ngModel)]="btnText" (input)="changeBtnText()" />
+                        </div>
+                        <div *ngIf="viewSelectedName == 'Popup Text'" class="inputDivForBtnAndLinkTxt">
+                            <p class="makeItBoldNew">Link Text</p>
+                            <input type="text" [(ngModel)]="LinkText" (input)="changeLnkText()" />
+                        </div>
+                        <div class="makeItFlex justifTheSpace">
+                            <div>
+                                <p>Background Colour</p>
+                            </div>
+                            <div>
+                                <button class="makeItFlex justifTheSpace removeStylingOfBTn"
+                                    (click)="toggleBackgroundColorPicker()">
+                                    <div class="colorDiv" [style.background-color]="backGroundcolor"></div>
+                                    <p class="downArrow">&#x25BC;</p>
+                                </button>
+
+                                <div *ngIf="isColorPickerVisibleForBackground" class="color-picker-container">
+                                    <button (click)="toggleBackgroundColorPicker()" class="crossBTn">X</button>
+                                    <color-sketch [color]="backGroundcolor"
+                                        (onChange)="handleBackGroundColorChange($event)"></color-sketch>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="makeItFlex justifTheSpace">
+                            <div>
+                                <p>Text Colour</p>
+                            </div>
+                            <div>
+                                <button class="makeItFlex justifTheSpace removeStylingOfBTn"
+                                    (click)="toggletextColorPicker()">
+                                    <div class="colorDiv" [style.background-color]="textColor"></div>
+                                    <p class="downArrow">&#x25BC;</p>
+                                </button>
+
+                                <div *ngIf="isColorPickerVisibleFortextColor" class="color-picker-container">
+                                    <button (click)="toggletextColorPicker()" class="crossBTn">X</button>
+                                    <color-sketch [color]="textColor"
+                                        (onChange)="handletextColorChange($event)"></color-sketch>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="makeItFlex justifTheSpace">
+                            <div>
+                                <p>Button & Link Colour</p>
+                            </div>
+                            <div>
+                                <button class="makeItFlex justifTheSpace removeStylingOfBTn"
+                                    (click)="togglebtnAndLinkColorPicker()">
+                                    <div class="colorDiv" [style.background-color]="btnAndLinkColor"></div>
+                                    <p class="downArrow">&#x25BC;</p>
+                                </button>
+
+                                <div *ngIf="isColorPickerVisibleForbtnAndLinkColor" class="color-picker-container">
+                                    <button (click)="togglebtnAndLinkColorPicker()" class="crossBTn">X</button>
+                                    <color-sketch [color]="btnAndLinkColor"
+                                        (onChange)="handlebtnAndLinkColorChange($event)"></color-sketch>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="saveChangesDiv">
+                            <button id="saveChangesBtn" (click)="saveClrChanges()">Save changes</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="verticalLine"></div>
+                <div>
+                    <p class="makeItBoldNew">Embed Code</p>
+                    <p>Place this code in your HTML where you want your Calender widget to appear.</p>
+                    <div id="code">
+                        {{code}}
+                    </div>
+
+                    <div id="codeFooter" class="makeItFlex justifTheSpace">
+                        <div><button id="backBtn" (click)="goTo3Views()">&#60; Back </button></div>
+                        <div>
+                            <button (click)="closeSharePopup()">Close</button>
+                            <button id="copyCode" *ngIf="!codeCopied" (click)="copyCode()">Copy Code</button>
+                            <button *ngIf="codeCopied" id="codeCopied">&#10004; copied</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
     <div *ngIf="popUpToAddNewQuestion" class="popUpToAddNewQuestion">
         <!-- <div class="popUpToAddNewQuestion"> -->
 
@@ -148,8 +325,7 @@
 
                 <hr>
                 <label class="makeItBold">Event link *</label>
-                <input [(ngModel)]="customisedLink" type="text" id="customisedLink" [(ngModel)]="eventLink"
-                    name="eventLink">
+                <input type="text" id="customisedLink" [(ngModel)]="eventLink" name="eventLink">
 
                 <div>
                     <label class="headings">Booking form</label>
@@ -225,8 +401,10 @@
 
                     <div *ngIf="redirectToValue == 'externalSite'">
                         <p class="makeItBold">Redirect URL *</p>
-                        <input type="text" id="urlBox" [(ngModel)]="externalSiteUrl" placeholder="https://www.example.com">
-                        <p *ngIf="showWarningForExternalUrl && !externalSiteUrl" class="warning">This field is required.</p>
+                        <input type="text" id="urlBox" [(ngModel)]="externalSiteUrl"
+                            placeholder="https://www.example.com">
+                        <p *ngIf="showWarningForExternalUrl && !externalSiteUrl" class="warning">This field is required.
+                        </p>
                     </div>
                 </div>
 
@@ -388,12 +566,12 @@
         <div id="aboveHeading">
             <div>
                 <a href="/home">
-                    < Done</a>
+                    &#60; Done</a>
             </div>
             <div class="makeItFlex" id="aboveHeadingRightDiv">
                 <!-- <button class="otherBtns"><ng-icon name="ionSettingsOutline"></ng-icon></button> -->
                 <button ngxClipboard
-                    [cbContent]="'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +evId"
+                    [cbContent]="'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventN=' +eventLink"
                     (click)="makeCopiedTrue()" [hidden]="copied" class="otherBtns">
                     <ng-icon name="octLink"></ng-icon>
                 </button>
@@ -404,7 +582,8 @@
                     </div>
                     <p>Copied</p>
                 </div>
-                <!-- <button id="shareBtn"><ng-icon name="heroArrowUturnRight"></ng-icon>Share</button> -->
+                <button id="shareBtn" (click)="shareBtnClicked()"><ng-icon
+                        name="heroArrowUturnRight"></ng-icon>Share</button>
             </div>
         </div>
 
@@ -414,7 +593,7 @@
 
         <div class="smallDivs" (click)="turnOnShowEventDetailsSlider()">
             <div class="makeItFlex">
-                <div><ng-icon name="radixHamburgerMenu"></ng-icon></div>
+                <div class="iconDiv"><ng-icon name="radixHamburgerMenu"></ng-icon></div>
                 <p class="headings">Event details</p>
             </div>
             <div>
@@ -426,7 +605,7 @@
 
         <div class="smallDivs" (click)="turnOnShowHostsAndInviteesSlider()">
             <div class="makeItFlex">
-                <div><ng-icon name="matPeopleOutline"></ng-icon></div>
+                <div class="iconDiv"><ng-icon name="matPeopleOutline"></ng-icon></div>
                 <p class="headings">Hosts and Invitees</p>
             </div>
             <div>
@@ -438,7 +617,7 @@
 
         <div class="smallDivs" (click)="turnOnSchedulingPageSlider()">
             <div class="makeItFlex">
-                <div><ng-icon name="remixCalendar2Line"></ng-icon></div>
+                <div class="iconDiv"><ng-icon name="remixCalendar2Line"></ng-icon></div>
                 <p class="headings">Scheduling settings</p>
             </div>
             <div *ngIf="statusForDays">
@@ -460,7 +639,7 @@
 
         <div class="smallDivs" (click)="turnOnBookingPageSlider()">
             <div class="makeItFlex">
-                <div><ng-icon name="bootstrapCreditCard"></ng-icon></div>
+                <div class="iconDiv"><ng-icon name="bootstrapCreditCard"></ng-icon></div>
                 <p class="headings">Booking page options</p>
             </div>
             <div>
@@ -505,9 +684,9 @@
                 <div id="timeAndLocation">
                     <div>
                         <ng-icon name="bootstrapClock"></ng-icon>
-                        <span>{{evDurHrs || ""}}</span><span *ngIf="evDurHrs"> hrs </span>
-                        &nbsp; <!--  for space -->
-                        <span>{{evDurMins || ""}} </span><span *ngIf="evDurMins"> mins </span>
+                        <span *ngIf="evDurHrs!=0">{{evDurHrs || ""}}</span><span *ngIf="evDurHrs!=0"> hrs &nbsp; <!--  for space --></span>
+                        
+                        <span  *ngIf="evDurMins!=0">{{evDurMins || ""}} </span><span  *ngIf="evDurMins!=0"> mins </span>
                     </div>
                     <div>
                         <ng-icon name="octLocation"></ng-icon>

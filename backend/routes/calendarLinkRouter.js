@@ -11,6 +11,8 @@ const moment = require("moment-timezone");
 // const { getLoggedInUserEmailFromQuery } = require('./calendarLinkRouter');
 const twilio = require("twilio");
 require("dotenv").config();
+const { ObjectId } = require('mongodb');
+
 
 let loggedInUserEmail;
 
@@ -20,6 +22,7 @@ const TOKEN_PATH = "token.json";
 const calendarLinkRoute = express.Router();
 
 const hbs = require("nodemailer-express-handlebars");
+const cron = require('node-cron');
 const nodemailer = require("nodemailer");
 const path = require("path");
 const { log } = require("console");
@@ -63,18 +66,49 @@ calendarLinkRoute.get("/", async (req, res) => {
 //   }
 // });
 
+calendarLinkRoute.get("/redirectToCancellation", async (req, res) => {
+  const { whoCanceled, whoseCalendar, eventId, meetId } = req.query;
+  console.log("redirectToCancellation am called");
+
+  try {
+    // const user = await User.findOne({ name: name, emailID: id });
+    console.log("whoCanceled, whoseCalendar, eventId, meetId ", whoCanceled, whoseCalendar, eventId, meetId);
+    console.log(`redirecting`);
+
+    let redirectUrl = `http://localhost:4500/cancelMeet?whoCanceled=${whoCanceled}&whoseCalendar=${whoseCalendar}&eventId=${eventId}&meetId=${meetId}`
+
+    res.redirect(redirectUrl);
+
+    // res.send({message : "req is sent to me", name: name, id: id})
+  } catch (error) {
+    console.log("error occured ", error);
+    res.send({ message: error });
+  }
+});
+
 
 calendarLinkRoute.get("/sharable", async (req, res) => {
-  const { userId, eventId } = req.query;
+  const { userId, eventN } = req.query;
   console.log("/sharable called");
   console.log("req.query ", userId);
   try {
-    const user = await User.findOne({ _id : userId });
+    const user = await User.findOne({ _id: userId });
+    let eventLinksArr = user["eventLinks"]
+    let eventId;
+    let linkEnd;
+    for (let i = 0; i < eventLinksArr.length; i++) {
+      if (eventLinksArr[i]['linkEnd'] == eventN) {
+        eventId = eventLinksArr[i]['evId']
+        linkEnd = eventLinksArr[i]['linkEnd']
+        break
+      }
+    }
+
     console.log("found user in server inin voting app")
     loggedInUserEmail = user.emailID;
     console.log("loggedInUserEmail ", loggedInUserEmail);
     res.redirect(
-      `http://localhost:4500/create?userId=${userId}&eventId=${eventId}`
+      `http://localhost:4500/create?uid=${userId}&evL=${linkEnd}`
 
     );
 
@@ -86,7 +120,7 @@ calendarLinkRoute.get("/sharable", async (req, res) => {
 
 
 calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
-  console.log("postMeetFromMeetPage called ");
+
   let meetLink;
 
   // let importedloggedInUserEmail = getLoggedInUserEmail();
@@ -107,6 +141,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     evId,
     userSurname
   } = req.body;
+
   console.log(
     "title ",
     title,
@@ -131,6 +166,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     "userSurname ",
     userSurname
   );
+
 
   // let importedloggedInUserEmail = loggedInUserEmail;
   // console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
@@ -157,6 +193,9 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     end < currentDateTime
   );
 
+  const newMeetId = new ObjectId();
+  console.log("newMeetId ", newMeetId);
+
   if (start < currentDateTime || end < currentDateTime) {
     res.send({
       message: "Meetings cannot be scheduled earlier than the current time",
@@ -168,7 +207,23 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     try {
       let findUser = await User.findOne({ name: user });
       console.log("findUser ", findUser);
-      
+
+      // ===========================================
+
+      let newEnd = new Date(end);
+
+      const minutes = newEnd.getMinutes();
+      const hours = newEnd.getHours();
+      const dayOfMonth = newEnd.getDate();
+      const month = newEnd.getMonth() + 1; // Months are 0-based in JS
+      const cronTime = `${minutes} ${hours} ${dayOfMonth} ${month} *`;
+
+      console.log("cronTime ", cronTime);
+
+
+
+      // ===========================================
+
       let calendarOwnerUser = await User.findOne({
         emailID: emailOfCalendarOwner,
       });
@@ -209,31 +264,33 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
             currentDateTime
           );
           let meeting
-          if(evType=="One-on-One"){
-             meeting = await Meeting.create({
+          if (evType == "One-on-One") {
+            meeting = await Meeting.create({
               start,
               end,
               user: user,
-              userSurname : "",
+              userSurname: "",
               userEmail: [userEmail, ...otherEmails],
               currentDateTime,
-              description : additionalInfo,
+              description: additionalInfo,
               questionsWdAnswers,
-              userSurname
+              userSurname,
+              _id: newMeetId
             });
           }
-          else if(evType=="Group"){
-             meeting = await Meeting.create({
+          else if (evType == "Group") {
+            meeting = await Meeting.create({
               start,
               end,
               user: user,
-              userSurname : "",
+              userSurname: "",
               userEmail: [userEmail, ...otherEmails],
               currentDateTime,
-              description : additionalInfo,
+              description: additionalInfo,
               questionsWdAnswers,
-              bookedForWhichEvId : evId,
-              userSurname
+              bookedForWhichEvId: evId,
+              userSurname,
+              _id : newMeetId
             });
           }
           console.log("meeting of logged in user ", meeting);
@@ -268,6 +325,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
       console.log("emailsOfUsersFoundInDb ", emailsOfUsersFoundInDb);
 
 
+
       if (!findUser) {
         //if who is scheduling meeting is not in db
         console.log("User doesn't exists");
@@ -283,12 +341,14 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         //if who is scheduling meeting is in db
         emailsOfUsersFoundInDb.push(userEmail);
         console.log("User found", findUser);
+
       }
       // -----------------------------------------------------------------------------------
 
       // ppl who are found in db, put the meeting in their meetingsWtOthers array
       try {
         for (let i = 0; i < emailsOfUsersFoundInDb.length; i++) {
+          console.log("creating meetfor emailsOfUsersFoundInDb");
           // const meeting =  await Meeting.create({start, end})
           // hardcoding right now evType evName
           // const meeting =  await Meeting.create({start, end, user, userEmail, currentDateTime, evType:"One-on-One", evName: "Morning Scrum"})
@@ -298,11 +358,12 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
               start,
               end,
               user: calendarOwnerUserName,
-              userSurname : "",
+              userSurname: "",
               userEmail: emailOfCalendarOwner,
               currentDateTime,
               evType,
               evName: title,
+              // _id : newMeetId
             });
             console.log("meeting of one who has filled the form", meeting);
           } else {
@@ -310,11 +371,12 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
               start,
               end,
               user: user,
-              userSurname : "",
+              userSurname: "",
               userEmail: userEmail,
               currentDateTime,
               evType,
               evName: title,
+              // _id : newMeetId
             });
             console.log(
               "meeting of ppl who were in meeting with others in form",
@@ -348,10 +410,19 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
           emailOfCalendarOwner,
           otherEmails,
           additionalInfo,
-          questionsWdAnswers
+          questionsWdAnswers,
+          newMeetId
         );
         // await sendMsg([loggedInUserPhoneNumber, ...phoneNumbersOfUsersFoundInDb]);
         // await sendMsg([...phoneNumbersOfUsersFoundInDb]);
+
+        await cron.schedule(cronTime, () => {
+          sendFollowUpEmail(
+            calendarOwnerUserName,
+            emailOfCalendarOwner,
+            otherEmails
+          );
+        });
 
         return res
           .status(200)
@@ -375,6 +446,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         .json({ message: `Meeting creation failed : ${err}` });
     }
   }
+
 
   //  --------------------
   // meeting link creation
@@ -474,6 +546,104 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     });
   }
 
+
+    // =======================for cron==========================================
+    async function sendFollowUpEmail(
+      calendarOwnerUserName,
+      emailOfCalendarOwner,
+      otherEmails,
+    ) {
+      console.log("sendFollowUpEmail called");
+      // Set up nodemailer transporter and send email
+      let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'nehaphadtare334@gmail.com',
+          pass: 'xtjc dyqr evlk bfcj'
+        }
+      });
+  
+      // point to the template folder
+      const handlebarOptions = {
+        viewEngine: {
+          partialsDir: path.resolve("../views/"),
+          defaultLayout: false,
+        },
+        viewPath: path.resolve("../views/"),
+      };
+  
+      // use a template file with nodemailer
+      transporter.use("compile", hbs(handlebarOptions));
+  
+      await sendFollowUpMailsToEveryOne()
+      async function sendFollowUpMailsToEveryOne(){
+        console.log("I'll send mails");
+        const mailOptions1 = {
+          from: emailOfCalendarOwner, // sender address
+          template: "email6", // the name of the template file, i.e., email.handlebars
+          to: userEmail,
+          subject: `Thank you for your time!`,
+          context: {
+            // inviteeName: user,
+            company: emailOfCalendarOwner,
+            eventName: title,
+            eventStartTime: start
+          },
+        };
+        const mailOptions2 = {
+          from: emailOfCalendarOwner, // sender address
+          template: "email6", // the name of the template file, i.e., email.handlebars
+          to: emailOfCalendarOwner,
+          subject: `Thank you for your time!`,
+          context: {
+            //   name: userFound.name,
+            // inviteeName: calendarOwnerUserName,
+            company: user,
+            eventName: title,
+            eventStartTime: start
+          },
+        };
+        for (let i = 0; i < otherEmails.length; i++) {
+          let mailOptions = {
+            from: emailOfCalendarOwner, // sender address
+            template: "email6", // the name of the template file, i.e., email.handlebars
+            to: otherEmails[i],
+            subject: `Thank you for your time!`,
+            context: {
+              company: calendarOwnerUserName,
+              eventName: title,
+              eventStartTime: start
+            },
+          };
+          try {
+            await transporter.sendMail(mailOptions);
+          } catch (error) {
+            console.log(
+              `Nodemailer error sending email to ${otherEmails[i]}`,
+              error
+            );
+          }
+        }
+        try {
+          await transporter.sendMail(mailOptions1);
+          await transporter.sendMail(mailOptions2);
+          console.log(`Cron Email sent`);
+        } catch (error) {
+          console.log(`Cron Nodemailer error sending email to ${user}`, error);
+        }
+      }
+
+  
+      // transporter.sendMail(mailOptions, (error, info) => {
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log('Follow-up email sent: ' + info.response);
+      //   }
+      // });
+    }
+    // =======================for cron ends=====================================
+
   // ------------------------------
   async function sendMailUser(
     meetingLink,
@@ -481,7 +651,8 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     emailOfCalendarOwner,
     otherEmails,
     additionalInfo,
-    questionsWdAnswers
+    questionsWdAnswers,
+    newMeetId
   ) {
     // -------------------mail sending starts-----------------
     // initialize nodemailer
@@ -523,6 +694,11 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         subject: `Meeting Scheduled`,
         context: {
           //   name: userFound.name,
+          receiversEmail : userEmail,
+          evId : evId,  
+          emailOfCalendarOwner : emailOfCalendarOwner,
+          meetId : newMeetId,
+
           name: user,
           company: emailOfCalendarOwner,
           eventName: title,
@@ -543,7 +719,11 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         // subject: `Hi, ${userFound.name}`,
         subject: `Meeting Scheduled`,
         context: {
-          //   name: userFound.name,
+          receiversEmail : emailOfCalendarOwner,
+          evId : evId,  
+          emailOfCalendarOwner : emailOfCalendarOwner,
+          meetId : newMeetId,
+          
           name: calendarOwnerUserName,
           company: user,
           eventName: title,
@@ -565,6 +745,11 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
           // subject: `Hi, ${userFound.name}`,
           subject: `Meeting Scheduled`,
           context: {
+            receiversEmail : otherEmails[i],
+            evId : evId,  
+            emailOfCalendarOwner : emailOfCalendarOwner,
+            meetId : newMeetId,
+
             //   name: userFound.name,
             // name: user,
             company: calendarOwnerUserName,
@@ -724,7 +909,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
             start,
             end,
             user: user,
-            userSurname : "",
+            userSurname: "",
             userEmail: userEmail,
             currentDateTime,
             questionsWdAnswers
@@ -781,7 +966,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
               start,
               end,
               user: selectedUserName,
-              userSurname : "",
+              userSurname: "",
               userEmail: selectedUserEmail,
               currentDateTime,
               evType,
@@ -793,7 +978,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
               start,
               end,
               user: user,
-              userSurname : "",
+              userSurname: "",
               userEmail: userEmail,
               currentDateTime,
               evType,
@@ -1009,7 +1194,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
           eventEndTime: end,
           meetingLink: meetingLink,
           additionalInfo: additionalInfo,
-          questionsWdAnswers : questionsWdAnswers
+          questionsWdAnswers: questionsWdAnswers
         },
       };
       const mailOptions2 = {
@@ -1030,7 +1215,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
           eventEndTime: end,
           meetingLink: meetingLink,
           additionalInfo: additionalInfo,
-          questionsWdAnswers : questionsWdAnswers
+          questionsWdAnswers: questionsWdAnswers
         },
       };
       for (let i = 0; i < otherEmails.length; i++) {
@@ -1052,7 +1237,7 @@ calendarLinkRoute.post("/postMeetFromAdminSide", async (req, res) => {
             eventEndTime: end,
             meetingLink: meetingLink,
             additionalInfo: additionalInfo,
-            questionsWdAnswers : questionsWdAnswers
+            questionsWdAnswers: questionsWdAnswers
           },
         };
         try {

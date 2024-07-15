@@ -15,6 +15,10 @@ export class HomePageComponent {
   usersId = localStorage.getItem('usersUniqueID' || '')
   firstChar = this.loggedInName[0];
   eventsArrayOfLoggedInUser = [];
+  eventLink = ""
+  evId = ""
+  eventLinksArr = []
+
   logOutValue = false;
   showSetting: boolean = false;
   showSettingFor: string = '';
@@ -60,7 +64,9 @@ export class HomePageComponent {
 
     console.log('calling getEvents ');
 
+    
     this.apiService.getEvents();
+    this.getEventLinksArr()
 
     this.getImage();
 
@@ -80,6 +86,28 @@ export class HomePageComponent {
     }, 2000);
 
     
+  }
+
+  async getEventLinksArr(){
+    console.log("getEventLinksArr called");    
+    this.eventLinksArr = await this.apiService.getParticularUserEventLiksArr(this.loggedInEmailId)
+    localStorage.setItem("eventLinksArr", JSON.stringify(this.eventLinksArr))
+    console.log("eventLinksArr ", this.eventLinksArr); 
+  }
+
+  EvLink(selectedEvId){       
+
+    for(let i=0; i<this.eventLinksArr.length; i++){
+      if(this.eventLinksArr[i]["evId"] == selectedEvId){
+        console.log("found ", this.eventLinksArr[i]["evId"], selectedEvId);
+        console.log(this.eventLinksArr[i]["linkEnd"]); 
+        
+        this.eventLink = this.eventLinksArr[i]["linkEnd"]
+        localStorage.setItem('eventLinkEnd', this.eventLink)
+        break;
+      }
+    }
+    console.log("eventLinkEnd ", this.eventLink);
   }
 
   async getImage() {
@@ -113,16 +141,7 @@ export class HomePageComponent {
     this.router.navigate(['/login']);
   }
 
-  copied(evName) {
-    console.log('clicked');
 
-    this.setCopied = evName;
-
-    setTimeout(() => {
-      this.setCopied = '';
-      console.log('copied 2 ', this.setCopied);
-    }, 2000);
-  }
 
   settingsCalled(id) {
     console.log('settingsCalled ', id);
@@ -131,7 +150,6 @@ export class HomePageComponent {
   }
 
   editEvent(id: string) {
-    window.open('editEvent', '_self');
 
     for (let i = 0; i < this.eventsArrayOfLoggedInUser.length; i++) {
       // event._id
@@ -174,6 +192,7 @@ export class HomePageComponent {
           'evName',
           this.eventsArrayOfLoggedInUser[i].evName
         );
+        this.evId = id
         localStorage.setItem('evId', id);
         localStorage.setItem('allowInviteesToAddGuests', this.eventsArrayOfLoggedInUser[i].allowInviteesToAddGuests)
         localStorage.setItem('surnameReq', this.eventsArrayOfLoggedInUser[i].surnameReq)
@@ -183,8 +202,46 @@ export class HomePageComponent {
         localStorage.setItem('noOfMeetsAllowedPerDay', JSON.stringify(this.eventsArrayOfLoggedInUser[i].noOfMeetsAllowedPerDay))
         localStorage.setItem('startTimIncrements', JSON.stringify(this.eventsArrayOfLoggedInUser[i].startTimIncrements))
         
-      }
-    }
+
+        }
+        }
+      this.EvLink(this.evId)
+
+      setTimeout(()=>{
+        window.open('editEvent', '_self');
+      }, 1500)
+
+  }
+
+  showBookingPage(selectedEvId){
+    console.log("I am called");
+
+    this.EvLink(selectedEvId)
+    
+    console.log("eventLinkEnd ", this.eventLink);
+    // this.router.navigate()
+    
+    // window.location.href = `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`;
+    window.open(`http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`, '_blank');
+    // href="http://localhost:3000/calendarLink/sharable?userId={{usersId}}&eventId={{event._id}}"
+
+  }
+
+  //   navigator.clipboard.writeText(copyText.value);
+  copied(evName, selectedEvId) {
+  // ngxClipboard [cbContent]="'http://localhost:3000/calendarLink/sharable?userId=' +usersId +'&eventId=' +event._id"
+    console.log('clicked');
+    this.EvLink(selectedEvId)
+
+    console.log(`http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`);
+    
+    navigator.clipboard.writeText(`http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`);
+    this.setCopied = evName;
+
+    setTimeout(() => {
+      this.setCopied = '';
+      console.log('copied 2 ', this.setCopied);
+    }, 2000);
   }
 
   deleteEventPopup(id, evName) {
@@ -208,6 +265,8 @@ export class HomePageComponent {
     this.deleteEventName = '';
     this.showPopup = false;
   }
+
+
 
   deleteEvent(id: string) {
     console.log('delete called id to be deleted ', id);

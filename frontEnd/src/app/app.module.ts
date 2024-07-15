@@ -6,6 +6,10 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import {RecurrenceEditorModule, ScheduleModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule'
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { ColorSketchModule } from 'ngx-color/sketch';
+
+
 import { OAuthModule } from 'angular-oauth2-oidc';
 // import { AuthService } from './auth.service';
 
@@ -82,6 +86,7 @@ import { UpcomingMeetingsComponent } from './upcoming-meetings/upcoming-meetings
 // import { NavbarComponent } from './navbar/navbar.component';
 // import { ScheduleMeetComponent } from './schedule-meet/schedule-meet.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -129,6 +134,7 @@ import { UpcomingMeetingsComponent } from './upcoming-meetings/upcoming-meetings
     GroupAdminComponent,
     GroupsListAdminComponent,
     UpcomingMeetingsComponent,
+
     // CallbackComponentComponent,
     // NavbarComponent,
     // ScheduleMeetComponent
@@ -146,6 +152,10 @@ import { UpcomingMeetingsComponent } from './upcoming-meetings/upcoming-meetings
     FullCalendarModule,
     ClipboardModule,
     NgxSearchFilterModule,
+    MatDialogModule,
+    ColorSketchModule,
+    
+
     BsDatepickerModule.forRoot(),
     AccordionModule.forRoot(),
     NgIconsModule.withIcons({ heroUsers, ionSettingsOutline, bootstrapStars, remixUserAddLine, ionSearchOutline, bootstrapCaretDownFill, ionCopyOutline, bootstrapChevronDown,
