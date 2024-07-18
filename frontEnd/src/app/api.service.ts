@@ -1453,10 +1453,10 @@ export class APIService {
   //   alert(response['message'])
   // }
 
-  async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId, redirectTo) {
-    let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo }
+  async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId, redirectTo, passEvDeets) {
+    let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo, passEvDeets }
 
-    console.log("editUserFormForEventFnctn called ",evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo);
+    console.log("editUserFormForEventFnctn called ",evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo, passEvDeets);
     
     console.log("loggedInEmailId ", loggedInEmailId);
     
@@ -1500,6 +1500,23 @@ export class APIService {
     .patch(
       `${this.API_URL}/event/editEventClrs`,
       { loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor },
+    )
+    .subscribe(
+      (response) => {
+        console.log(response);
+        alert(response['message']);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  editfinalsendFollowupEmail(loggedInEmailId, evId, finalsendFollowupEmailObj){
+    return this.httpClient
+    .patch(
+      `${this.API_URL}/event/editEventFollowUp`,
+      {loggedInEmailId, evId, finalsendFollowupEmailObj },
     )
     .subscribe(
       (response) => {

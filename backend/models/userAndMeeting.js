@@ -175,6 +175,12 @@ const eventLinksSchema = mongoose.Schema({
   evId : {type : String}
 })
 
+const followUpEmailSchema = mongoose.Schema({
+  sendFollowUpEmail : {type : Boolean},
+  time : {type : Number},
+  unit : {type : String}
+})
+
 const eventSchema = mongoose.Schema({
   evName: {
     type: String,
@@ -204,6 +210,9 @@ const eventSchema = mongoose.Schema({
   maxInviteesPerEventForGrpEvent : {type: Number},
   displayRemainingSpotsOnBookingPageGrp : {type: Boolean},
   redirectTo : redirection,
+  pasEvntDeetsToRedirectPg : Boolean,
+  // sendFollowupEmail : {type: Boolean},
+  sendFollowupEmail : followUpEmailSchema,
   bgClr : {type : String},
   txtClr : {type : String},
   btnAndLnkClr : {type : String},
@@ -240,6 +249,12 @@ const votingSchema = mongoose.Schema(
   },
 );
 
+const contactsSchema = mongoose.Schema({
+  _id: {type: String},
+  name:{type: String},
+  emailID:{type: String}
+})
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -272,6 +287,9 @@ const userSchema = mongoose.Schema({
   voting: {
     type: [votingSchema]
   },
+  contacts: {
+    type : [contactsSchema]
+  }
 });
 
 

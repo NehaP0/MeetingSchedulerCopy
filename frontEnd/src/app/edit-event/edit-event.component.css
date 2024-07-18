@@ -19,6 +19,15 @@ body {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
+.evDetails {
+    width: 90%;
+    justify-content: space-between;
+}
+
+.evDetails>p {
+    margin-top: 20px;
+}
+
 #leftDiv a,
 .slider a {
     line-height: 80px;
@@ -39,7 +48,8 @@ body {
     font-weight: bold;
     margin-top: 20px;
 }
-.makeItBoldNew{
+
+.makeItBoldNew {
     font-weight: bold;
     margin-bottom: 2px;
 }
@@ -218,7 +228,8 @@ button:hover {
     /* color: red; */
     display: flex;
 }
-.iconDiv{
+
+.iconDiv {
     margin-top: 5px;
 }
 
@@ -232,7 +243,7 @@ button:hover {
     height: 40px;
 }
 
-#shareBtn{
+#shareBtn {
     border-radius: 50px;
     border: 1px solid #0069FF;
     background-color: #0069FF;
@@ -259,7 +270,8 @@ button:hover {
 .eventDetailsSlider,
 .hostsAndInviteesSlider,
 .bookingPageSlider,
-.schedulingPageSlider {
+.schedulingPageSlider,
+.communicationPageSlider {
     display: block;
     position: absolute;
     width: 35%;
@@ -317,8 +329,24 @@ button:hover {
     padding: 20px;
 }
 
+.communicationsDivs {
+    justify-content: space-between;
+    border: 1px solid rgb(189, 188, 188);
+    padding: 10px;
+    padding-bottom: 0px;
+    border-radius: 10px;
+}
+
+.basicNotifications {
+    display: flex;
+    justify-content: space-between;
+    width: 45%;
+    /* border: 1px solid red; */
+}
+
 .iconDiv {
-    width: 10%
+    width: 10%;
+    height: 30px;
 }
 
 .questionDiv {
@@ -373,108 +401,130 @@ button:hover {
     box-shadow: rgba(5, 4, 4, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     border-radius: 10px;
 }
-#sharingPopupContentDiv{
+
+#sharingPopupContentDiv {
     width: 80%;
     margin: auto;
 }
-#sharingPopupContentINsideDIv{
+
+#sharingPopupContentINsideDIv {
     width: 80%;
     margin: auto;
 }
-#sharingPopupFooter{
+
+#sharingPopupFooter {
     display: flex;
     justify-content: flex-end;
 }
-#sharingPopupFooter button{
+
+#sharingPopupFooter button {
     margin: 5px;
     border: none;
     border-radius: 50px;
     padding: 10px;
 }
-.viewDiv{
+
+.viewDiv {
     border: 1px solid rgb(179, 177, 177);
     border-radius: 5px;
     padding: 5px;
     margin-bottom: 30px;
     display: flex;
     justify-content: space-evenly;
-    height: 100px;    
+    height: 100px;
 }
-.viewDiv:hover{
+
+.viewDiv:hover {
     border: 1px solid blue;
     cursor: pointer;
 }
-.viewDiv div{
+
+.viewDiv div {
     width: 40%;
 }
-.viewDiv img{
+
+.viewDiv img {
     height: 100%;
     width: 100%;
 }
 
-#codeContent{
+#codeContent {
     display: flex;
     justify-content: space-evenly;
 
 }
-#codeContent>:nth-child(1){
-    width : 53%;
+
+#codeContent>:nth-child(1) {
+    width: 53%;
     padding: 10px;
 
 }
-#codeContent>:nth-child(3){
-    width : 54%;
+
+#codeContent>:nth-child(3) {
+    width: 54%;
     /* background-color: rgb(246, 246, 248); */
     padding: 10px;
     padding-top: 0px;
 }
-#codeFooter{
+
+#codeFooter {
     margin-top: 40px;
 }
-#codeFooter button{
-    border : none;
+
+#codeFooter button {
+    border: none;
     background-color: white;
     font-size: 15px;
 }
-#codeFooter>:nth-child(2){
+
+#codeFooter>:nth-child(2) {
     width: 50%;
     display: flex;
     justify-content: space-between;
 }
-#backBtn{
+
+#backBtn {
     color: #0069FF;
 }
-#codeFooter #copyCode, #saveChangesBtn {
+
+#codeFooter #copyCode,
+#saveChangesBtn {
     border-radius: 50px;
     border: 1px solid #0069FF;
     background-color: #0069FF;
     color: white;
     font-weight: bold;
 }
-#codeFooter #codeCopied{
+
+#codeFooter #codeCopied {
     border-radius: 50px;
     border: none;
     background-color: rgb(43, 136, 43);
     color: white;
     font-weight: bold;
-    width : 60%
+    width: 60%
 }
-#saveChangesDiv{
+
+#saveChangesDiv {
     margin-top: 50px;
     display: flex;
-    justify-content:flex-end;
+    justify-content: flex-end;
     /* font-weight: normal; */
 }
-.justifTheSpace{
+
+.justifTheSpace {
     justify-content: space-between;
 }
-#change{
-    color:#0060E6
+
+#change {
+    color: #0060E6
 }
-#change:hover{
+
+#change:hover {
     cursor: pointer;
 }
-#code{
+
+#code {
     border: 2px dotted grey;
     background-color: rgb(240, 240, 252);
     padding: 3px;
@@ -483,34 +533,38 @@ button:hover {
     overflow-x: scroll;
     font-size: 15px;
 }
-.colorDiv{
-    width:30px;
-    height:30px;
+
+.colorDiv {
+    width: 30px;
+    height: 30px;
     border: 1px solid grey;
 }
 
-.removeStylingOfBTn{
+.removeStylingOfBTn {
     background-color: white;
     border: 1px solid rgb(199, 197, 197);
     /* width : 100%; */
     border-radius: 5px;
     padding: 3px 10px 3px 10px;
-    height: 40px   
+    height: 40px
 }
-.crossBTn{
+
+.crossBTn {
     background-color: white;
     border: none;
     border-radius: 5px;
     padding: 3px 10px 3px 10px;
-    height: 40px   
+    height: 40px
 }
-.downArrow{
+
+.downArrow {
     font-size: 15px;
     color: grey;
 }
-#verticalLine{
+
+#verticalLine {
     border-left: 1px solid rgb(179, 177, 177);
-  height: 500px;
+    height: 500px;
 }
 
 #cross {
@@ -518,28 +572,33 @@ button:hover {
     justify-content: flex-end;
 }
 
-#cross button{
+#cross button {
     border: none;
     background-color: white;
 }
-.makeItFlex{
+
+.makeItFlex {
     display: flex;
 }
-.topheadingEvDeets ng-icon{
+
+.topheadingEvDeets ng-icon {
     display: inline;
     font-size: 18px;
 }
-.topheadingEvDeets{
+
+.topheadingEvDeets {
     margin-top: 30px;
-    width : 60%;
+    width: 60%;
     justify-content: space-between;
     color: grey;
 }
-.topheadingEvDeets p{
+
+.topheadingEvDeets p {
     display: inline;
     margin: 0px;
 }
-.topheadingEvDeets div{
+
+.topheadingEvDeets div {
     margin: 0px;
 }
 
@@ -613,6 +672,21 @@ button:hover {
     font-weight: 100;
 }
 
+.editEmailFollowUpFooter{
+    float: right;
+    width : 60%;
+    display: flex;
+    justify-content: space-between;
+}
+.editEmailFollowUpFooter button{
+    width : 45%;
+}
+.editEmailFollowUpFooter>:nth-child(2){
+    background-color: white;
+    color: black;
+    border: 1px solid grey;
+}
+
 .makeBlur {
     filter: blur(5px);
     background-color: rgb(247, 243, 243);
@@ -674,6 +748,36 @@ button:hover {
 
 .popOverDivs p {
     display: contents;
+}
+
+.popOverOfEmailCmnctn {
+    width: 100px;
+    border: 1px solid rgb(214, 213, 213);
+    position: absolute;
+    z-index: 10;
+    margin-top: 18px;
+    background-color: white;
+    margin-left: 60%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.popOvpopOverOfEmailCmnctner:hover {
+    cursor: pointer;
+}
+
+.popOverOfEmailCmnctn p {
+    /* display: contents; */
+    margin: 0px;
+    padding: 0px;
+}
+
+.divsInsideEditOptnfEmail {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    height: 50px
 }
 
 .makeSmallPopup {
@@ -764,6 +868,10 @@ button:hover {
 .headingsInSchedulingPage {
     font-size: 20px;
     margin-bottom: 30px;
+}
+
+.labelsCommunicationPage {
+    font-size: 16px;
 }
 
 .subHeadingsInSchedulingPage {
@@ -1028,25 +1136,63 @@ ng-icon {
     justify-content: center;
 }
 
+.timingDiv {
+    width: 80%;
+    justify-content: space-between;
+    /* border : 1px solid red; */
+    height: 50px;
+}
+
+.timingDiv>:nth-child(1) {
+    width: 33%;
+    /* border: 1px solid black */
+}
+
+.timingDiv>:nth-child(1) input {
+    width: 100%;
+    height: 100%;
+}
+
+.timingDiv>:nth-child(2) {
+    width: 33%;
+    /* border: 1px solid black */
+}
+
+.timingDiv>:nth-child(2) select {
+    width: 100%;
+    height: 100%;
+}
+
+.timingDiv>:nth-child(3) {
+    margin-top: 20px;
+}
+
 
 /* -------MontCalendar starts------------- */
-::ng-deep #calendar{
+::ng-deep #calendar {
     border: none;
 }
 
 ::ng-deep #calendar .fc-toolbar-title {
     font-size: 15px;
 }
-::ng-deep .fc .fc-daygrid-day-frame{
+
+::ng-deep .fc .fc-daygrid-day-frame {
     display: flex !important;
     justify-content: center !important;
-  }
-  ::ng-deep #calendar .fc-daygrid-day,::ng-deep #calendar .fc-col-header-cell{
+}
+
+::ng-deep #calendar .fc-daygrid-day,
+::ng-deep #calendar .fc-col-header-cell {
     border: none;
 }
-::ng-deep .fc .fc-scrollgrid-liquid, ::ng-deep .fc .fc-scrollgrid-liquid td, ::ng-deep .fc .fc-scrollgrid-liquid th{
+
+::ng-deep .fc .fc-scrollgrid-liquid,
+::ng-deep .fc .fc-scrollgrid-liquid td,
+::ng-deep .fc .fc-scrollgrid-liquid th {
     border: none;
 }
+
 ::ng-deep #calendar .fc-button {
     background-color: #dddddd;
     color: black;
@@ -1102,19 +1248,22 @@ ng-icon {
     height: 30px;
     margin-right: 5px;
 }
-.inputDivForBtnAndLinkTxt{
+
+.inputDivForBtnAndLinkTxt {
     margin-bottom: 10px;
     /* border: 1px solid red; */
 }
-.inputDivForBtnAndLinkTxt p{
+
+.inputDivForBtnAndLinkTxt p {
     margin-bottom: 0px;
 }
-.inputDivForBtnAndLinkTxt input{
+
+.inputDivForBtnAndLinkTxt input {
     margin-top: 2px;
     padding: 5px;
     border-radius: 5px;
     border: 1px solid grey;
-    width : 100%;
+    width: 100%;
 }
 
 
@@ -1122,15 +1271,16 @@ ng-icon {
 .color-selector {
     display: flex;
     align-items: center;
-  }
-  .color-box {
+}
+
+.color-box {
     width: 24px;
     height: 24px;
     margin-left: 8px;
     border: 1px solid #ccc;
-  }
-  
-  .color-picker-container {
+}
+
+.color-picker-container {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -1140,9 +1290,10 @@ ng-icon {
     padding: 16px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-  }
-  
-  .some-element {
+}
+
+.some-element {
     padding: 16px;
-    color: white; /* Ensure text is readable against the background color */
-  }
+    color: white;
+    /* Ensure text is readable against the background color */
+}

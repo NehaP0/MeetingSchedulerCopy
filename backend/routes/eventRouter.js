@@ -117,7 +117,13 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             link: ""
           }
         },
+        pasEvntDeetsToRedirectPg : false,
         _id: newEventId,
+        sendFollowupEmail : {
+          sendFollowUpEmail : true,
+          time : 1,
+          unit : "hrs"
+        },
         bgClr: "white",
         btnAndLnkClr: "#0060E6",
         txtClr: "black"
@@ -192,7 +198,13 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             link: ""
           }
         },
+        pasEvntDeetsToRedirectPg : false,
         _id: newEventId,
+        sendFollowupEmail : {
+          sendFollowUpEmail : true,
+          time : 1,
+          unit : "hrs"
+        },
         bgClr: "white",
         btnAndLnkClr: "#0060E6",
         txtClr: "black"
@@ -464,6 +476,47 @@ eventRoute.patch("/editEventClrs", async (req, res) => {
   }
 });
 
+
+eventRoute.patch("/editEventFollowUp", async (req, res) => {
+  console.log("editEventFollowUp called");
+  
+  let { loggedInEmailId, evId, finalsendFollowupEmailObj } = req.body;
+  console.log("gotten body data", req.body);
+  console.log("loggedInEmailId ", loggedInEmailId);
+
+  if(!finalsendFollowupEmailObj.sendFollowUpEmail){
+    finalsendFollowupEmailObj.time = 0,
+    finalsendFollowupEmailObj.unit = ""
+  }
+  try {
+    let findLoggedInUser = await User.findOne({
+      emailID: loggedInEmailId,
+    });
+    let loggedInUserName = findLoggedInUser.name;
+
+    console.log("User found", loggedInUserName);
+
+    let eventsArray = await findLoggedInUser.events;
+
+    console.log("eventsArray", eventsArray);
+
+    for (let i = 0; i < eventsArray.length; i++) {
+      if (eventsArray[i]._id == evId) {
+        console.log("found event ", eventsArray[i]);
+        eventsArray[i].sendFollowupEmail = finalsendFollowupEmailObj
+        console.log("saved sendFollowupEmail ");
+        break;
+      }
+    }
+
+    await findLoggedInUser.save();
+
+    return res.send({ message: `Changes saved` });
+  } catch (err) {
+    return res.send({ message: `Failed to edit event: ${err}` });
+  }
+});
+
 // Admin part
 
 eventRoute.get(
@@ -626,7 +679,13 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
           link: ""
         }
       },
+      pasEvntDeetsToRedirectPg : false,
       _id: newEventId,
+      sendFollowupEmail : {
+        sendFollowUpEmail : true,
+        time : 1,
+        unit : "hrs"
+      },
       bgClr: "white",
       btnAndLnkClr: "#0060E6",
       txtClr: "black"
@@ -1064,7 +1123,7 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
   console.log("deleteMeet called");
   let { emailIdOfWhoCancelled, emailIdOfWhoseCalendar, evId, meetId, cancelationReason } = req.body;
 
-  console.log("gotten body data", req.body);
+  console.log("gotten body data ", req.body);
 
   try {
     let userWhoseCalendar = await User.findOne({
@@ -1212,9 +1271,9 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
 
 eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) => {
   let { selectedUsersEmailId } = req.params;
-  let { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo } = req.body
+  let { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo, passEvDeets } = req.body
   console.log("selectedUsersEmailId ", selectedUsersEmailId);
-  console.log("evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked ", evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked);
+  console.log("evId,eventLink,surnameReq,allowInviteesToAddGuests,questionsToBeAsked, passEvDeets ", evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, passEvDeets);
   try {
 
     let findSelectedUser = await User.findOne({ emailID: selectedUsersEmailId });
@@ -1246,6 +1305,7 @@ eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) =
     ans.surnameReq = surnameReq
     ans.allowInviteesToAddGuests = allowInviteesToAddGuests
     ans.redirectTo = redirectTo
+    ans.pasEvntDeetsToRedirectPg = passEvDeets
     await findSelectedUser.save();
 
     return res.send({ message: "Saved" })

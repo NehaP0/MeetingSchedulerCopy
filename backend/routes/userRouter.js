@@ -18,7 +18,7 @@ const moment = require("moment-timezone");
 const { log } = require("console");
 // const { getLoggedInUserEmailFromQuery } = require('./calendarLinkRouter');
 const twilio = require("twilio");
-const {ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 require("dotenv").config();
 
 
@@ -73,7 +73,7 @@ userRoute.post("/postuser", async (req, res) => {
       user: "abc",
       userEmail: "abc@gmail.com",
       currentDateTime: "date",
-      questionsWdAnswers : []     
+      questionsWdAnswers: []
     });
 
     console.log(meeting);
@@ -109,36 +109,42 @@ userRoute.post("/postuser", async (req, res) => {
           status: true
         }
       },
-      minimumNotice : {
+      minimumNotice: {
         status: false,
-        hrs : {
-          status : false
+        hrs: {
+          status: false
         },
-        mins:{
-          status : false
+        mins: {
+          status: false
         },
-        days:{
-          status : false
+        days: {
+          status: false
         }
       },
-      noOfMeetsAllowedPerDay : {
-        status : false
+      noOfMeetsAllowedPerDay: {
+        status: false
       },
-      startTimIncrements : {
-        status : true,
-        mins : 30
+      startTimIncrements: {
+        status: true,
+        mins: 30
       },
-      redirectTo : {
-        confirmationPage : {status : true},
-        externalUrl : {
-          status : false,
-          link : ""
+      redirectTo: {
+        confirmationPage: { status: true },
+        externalUrl: {
+          status: false,
+          link: ""
         }
       },
-      _id : newEventId,
-      bgClr :"white",
-      btnAndLnkClr : "#0060E6",
-      txtClr : "black"
+      pasEvntDeetsToRedirectPg: false,
+      _id: newEventId,
+      sendFollowupEmail : {
+        sendFollowUpEmail : true,
+        time : 1,
+        unit : "hrs"
+      },
+      bgClr: "white",
+      btnAndLnkClr: "#0060E6",
+      txtClr: "black"
 
     });
     // const event =  await Event.create({evName: "30 Minute Meeting", evType:"One-on-One", evDuration:{hrs:0, minutes:30}, evLocation: "zoom"})
@@ -153,11 +159,12 @@ userRoute.post("/postuser", async (req, res) => {
       userAvailability: userAvailability,
       meetingsWtOthers: [meeting],
       profileImage: "",
-      cloduraBranding : true,
-      eventLinks : [{
-        linkEnd : "30-Minute-Meeting",
-        evId : newEventId
-      }]
+      cloduraBranding: true,
+      eventLinks: [{
+        linkEnd: "30-Minute-Meeting",
+        evId: newEventId
+      }],
+      contacts: []
     });
     // const user = await User.create({name , emailID, password:hashedPassword,  events: [event], userAvailability : userAvailability, meetingsWtOthers: []})
     console.log(user);
@@ -182,6 +189,23 @@ userRoute.patch("/patchuser", auth, async (req, res) => {
   } catch (err) {
     console.log("error ", err);
     return res.send({ message: `User availability updation : ${err}` });
+  }
+});
+
+userRoute.patch("/updateContactsArr", async (req, res) => {
+  console.log("updateContactsArr called");
+  const { emailOfCalendarOwner, contactObj } = req.body;
+  console.log("body ", req.body);
+  try {
+    await User.updateOne(
+      { emailID: emailOfCalendarOwner },
+      { $push: {contacts : contactObj}}
+    );
+
+    return res.send({ message: "Contacts Updated" });
+  } catch (err) {
+    console.log("error ", err);
+    return res.send({ message: `Error in contacts updation: ${err}` });
   }
 });
 
@@ -227,7 +251,7 @@ userRoute.post("/login", async (req, res) => {
 
 console.log("loggedInUserEmail export", loggedInUserEmail);
 
-userRoute.get("/getParticularUser", async(req,res)=>{
+userRoute.get("/getParticularUser", async (req, res) => {
   console.log("/getParticularUser called");
   const { userEmailId } = req.query;
   try {
@@ -239,7 +263,7 @@ userRoute.get("/getParticularUser", async(req,res)=>{
   }
 })
 
-userRoute.get("/getParticularUserBuUid", async(req,res)=>{
+userRoute.get("/getParticularUserBuUid", async (req, res) => {
   console.log("/getParticularUserBuUid called");
   const { uid } = req.query;
   try {
@@ -356,7 +380,7 @@ userRoute.patch("/uploadAvatar/:emailId", upload.single("image"),
 userRoute.patch("/deleteAvatar",
   async (req, res) => {
     try {
-      const {userEmail} = req.body
+      const { userEmail } = req.body
 
       console.log("userEmail ", userEmail);
 
@@ -376,13 +400,13 @@ userRoute.patch("/deleteAvatar",
 userRoute.patch("/cloduraBrandingOnOff",
   async (req, res) => {
     try {
-      const {userEmail, cloduraBrandingReq} = req.body
+      const { userEmail, cloduraBrandingReq } = req.body
 
       console.log("userEmail ", userEmail, "cloduraBrandingReq ", cloduraBrandingReq);
 
       await User.findOneAndUpdate(
         { emailID: userEmail },
-        { $set: { cloduraBranding : cloduraBrandingReq } }
+        { $set: { cloduraBranding: cloduraBrandingReq } }
       );
 
       res.json({ success: true, message: "cloduraBranding set" });
@@ -728,7 +752,6 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
 
     let emailsOfUsersFoundInDb = [];
     let emailsOfUsersNotFoundInDb = [];
-
     for (let i = 0; i < otherEmails.length; i++) {
       let findHimInDb = await User.findOne({ emailID: otherEmails[i] });
       console.log("findHimInDb ", findHimInDb);

@@ -33,20 +33,21 @@ export class EditEventComponent {
   usersId = localStorage.getItem('usersUniqueID' || '')
   eventLinksArr = JSON.parse(localStorage.getItem("eventLinksArr"))
 
+  passEvDeets = JSON.parse(localStorage.getItem('passEvDeets'))
   whenCanInviteesSchedule = JSON.parse(localStorage.getItem("whenCanInviteesSchedule"))
   minimumNotice = JSON.parse(localStorage.getItem("minimumNotice"))
   noOfMeetsAllowedPerDay = JSON.parse(localStorage.getItem("noOfMeetsAllowedPerDay"))
   startTimIncrements = JSON.parse(localStorage.getItem("startTimIncrements"))
-  allowInviteesToAddGuestsStr = localStorage.getItem("allowInviteesToAddGuests")
-  allowInviteesToAddGuests: Boolean
-  surnameReqStr = localStorage.getItem("surnameReq")
-  surnameReq: Boolean
+  allowInviteesToAddGuests = JSON.parse(localStorage.getItem("allowInviteesToAddGuests"))
+  surnameReq = JSON.parse(localStorage.getItem("surnameReq"))
   questionsToBeAsked = JSON.parse(localStorage.getItem("questionsToBeAsked"))
+  sendFollowupEmail = JSON.parse(localStorage.getItem("sendFollowupEmail"))
   redirectTo = {}
   redirectToValue = ""
   externalSiteUrl = ""
   showWarningForExternalUrl = false
 
+  finalsendFollowupEmail = this.sendFollowupEmail
   eventLink = localStorage.getItem("eventLinkEnd" || "")
   showWarning = false
   showTimeWarning = false
@@ -63,6 +64,9 @@ export class EditEventComponent {
   showCode = false
   code = ""
   codeCopied = false
+  showEditOptionForEmailCommunications = false
+  openFollowUpEmailPopUp = false
+
 
   link = ""
 
@@ -84,6 +88,7 @@ export class EditEventComponent {
   showHostsAndInviteesSlider = false
   bookingPageSlider = false
   schedulingPageSlider = false
+  communicationPageSlider = false
   allowInviteesCheckedOrNot = true
 
   popUpToAddNewQuestion = false
@@ -212,9 +217,9 @@ export class EditEventComponent {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     headerToolbar: {
-      left: 'prev,next',
+      left: 'prev',
       center: 'title',
-      right: '',
+      right: 'next',
     },
     weekends: true,
     editable: true,
@@ -243,8 +248,20 @@ export class EditEventComponent {
 
   ngOnInit() {
 
+    console.log("this.sendFollowupEmail ", this.sendFollowupEmail);
+    // sendFollowupEmail
+    // Object
+    // sendFollowUpEmail
+    // true
+    // time
+    // 1
+    // unit
+    // "hrs"
+
 
     console.log("days initially ", this.days);
+    console.log("passEvDeets ", typeof (this.passEvDeets));
+    console.log(this.passEvDeets);
 
 
     if (this.emailID == "") {
@@ -288,19 +305,6 @@ export class EditEventComponent {
     }, 2500);
     // =======================================
 
-    if (this.allowInviteesToAddGuestsStr == "true") {//because in localStorage, everything is stored in string format, so we convert it to boolean
-      this.allowInviteesToAddGuests = true
-    }
-    else if (this.allowInviteesToAddGuestsStr == "false") {
-      this.allowInviteesToAddGuests = false
-    }
-
-    if (this.surnameReqStr == "true") {//because in localStorage, everything is stored in string format, so we convert it to boolean
-      this.surnameReq = true
-    }
-    else if (this.surnameReqStr == "false") {
-      this.surnameReq = false
-    }
 
 
     if (this.days.status == false) {
@@ -415,7 +419,7 @@ export class EditEventComponent {
         // this.eventLink = this.eventN
         this.link = `http://localhost:3000/calendarLink/sharable?userId=${this.usersId}&eventN=${this.eventLink}`
 
-        
+
         this.redirectTo = reqEventObj["redirectTo"]
         if (reqEventObj['evType'] == 'Group') {
           this.maxInviteesPerEvent = reqEventObj['maxInviteesPerEventForGrpEvent']
@@ -618,6 +622,7 @@ export class EditEventComponent {
     this.showHostsAndInviteesSlider = false
     this.bookingPageSlider = false
     this.schedulingPageSlider = false
+    this.communicationPageSlider = false
   }
 
   turnOnShowHostsAndInviteesSlider() {
@@ -630,6 +635,10 @@ export class EditEventComponent {
 
   turnOnSchedulingPageSlider() {
     this.schedulingPageSlider = true
+  }
+
+  turnOnCommunicationsPageSlider() {
+    this.communicationPageSlider = true
   }
 
 
@@ -763,6 +772,10 @@ export class EditEventComponent {
     this.showEditOptionForNameEmail = !this.showEditOptionForNameEmail
   }
 
+  editEmailOptions() {
+    this.showEditOptionForEmailCommunications = !this.showEditOptionForEmailCommunications
+  }
+
   openEditNameQuestionPopUp() {
     this.openNameQuestionPopUp = true
     this.showEditOptionForNameEmail = false
@@ -772,6 +785,23 @@ export class EditEventComponent {
 
   closeEditNameQuestionPopUp() {
     this.openNameQuestionPopUp = false
+    this.makeBlur = false
+  }
+
+  openEditEmailFollowUp() {
+    this.showEditOptionForEmailCommunications = false
+    this.openFollowUpEmailPopUp = true
+    this.makeBlur = true
+  }
+
+  closeEditEmailFollowUp() {
+    this.openFollowUpEmailPopUp = false
+    this.makeBlur = false
+  }
+
+  saveEditEmailFollowUp(){
+    this.finalsendFollowupEmail = this.sendFollowupEmail
+    this.openFollowUpEmailPopUp = false
     this.makeBlur = false
   }
 
@@ -789,6 +819,14 @@ export class EditEventComponent {
 
   allowInviteesChanged() {
     this.allowInviteesToAddGuests = !this.allowInviteesToAddGuests
+  }
+
+  changeSendFollowupEmail() {
+    console.log("this.sendFollowupEmail.sendFollowupEmail ", this.sendFollowupEmail.sendFollowUpEmail);
+    
+    this.sendFollowupEmail.sendFollowUpEmail = !this.sendFollowupEmail.sendFollowUpEmail
+    console.log('this.sendFollowupEmail.sendFollowUpEmail ', this.sendFollowupEmail.sendFollowUpEmail);
+    
   }
 
 
@@ -838,6 +876,8 @@ export class EditEventComponent {
     console.log("allow invitees to add guests ", this.allowInviteesToAddGuests);
     console.log("questionsArr ", this.questionsToBeAsked);
     console.log("redirectToValue ", this.redirectToValue);
+    console.log("passEvDeets ", this.passEvDeets);
+
 
     let goAhead = true
 
@@ -885,7 +925,7 @@ export class EditEventComponent {
     }
 
     if (goAhead == true) {
-      this.apiService.editUserFormForEventFnctn(this.evId, this.eventLink, this.surnameReq, this.allowInviteesToAddGuests, this.questionsToBeAsked, this.loggedInEmailId, this.redirectTo)
+      this.apiService.editUserFormForEventFnctn(this.evId, this.eventLink, this.surnameReq, this.allowInviteesToAddGuests, this.questionsToBeAsked, this.loggedInEmailId, this.redirectTo, this.passEvDeets)
       setTimeout(() => {
         this.bookingPageSlider = false
         this.getAllEventEditings()
@@ -1180,6 +1220,21 @@ export class EditEventComponent {
 
   // =======================================================
 
+
+  continueEmailFollowUpFunctn(){
+
+      console.log("finalsendFollowupEmail ",this.loggedInEmailId, this.evId, this.finalsendFollowupEmail);    
+
+      this.apiService.editfinalsendFollowupEmail(this.loggedInEmailId ,this.evId ,this.finalsendFollowupEmail) 
+
+
+      setTimeout(() => {
+        this.communicationPageSlider = false
+        this.getAllEventEditings()
+      }, 1000)
+  }
+
+  // =======================================================
   onDateClick(res: any) {
 
     console.log('Clicked on date : ' + res.dateStr); //2024-02-13
@@ -1852,12 +1907,12 @@ export class EditEventComponent {
     }
   }
 
-  changeBtnText(){
+  changeBtnText() {
     this.code = `<button id="openModalButton" style="background-color: ${this.btnAndLinkColor}; padding:15px; border:none; color:white; border-radius: 20px;">${this.btnText}</button> <div id="myModal" class="modal"> <div class="modal-content"> <span class="close-button">&times;</span> <iframe src="${this.link}" style="width:100%; height:100vh; border:none;"></iframe> </div> </div> <style> .modal { display: none; position: fixed; z-index: 1; padding-top: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); overflow-y: hidden; } .modal-content { margin: auto; } .close-button { color: #aaa; float: right; font-size: 50px; } .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; } </style> <script> var modal = document.getElementById("myModal"); var btn = document.getElementById("openModalButton"); var span = document.getElementsByClassName("close-button")[0]; btn.onclick = function() { modal.style.display = "block"; }; span.onclick = function() { modal.style.display = "none"; }; window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } } </script>`
     console.log("btnText ", this.btnText);
   }
 
-  changeLnkText(){
+  changeLnkText() {
     this.code = `<a href="#" style="color:${this.btnAndLinkColor}; text-decoration:none" id="openModalLink">${this.LinkText}</a> <div id="myModal" class="modal"> <div class="modal-content"> <span class="close-button">&times;</span> <iframe src="${this.link}" style="width:100%; height:100vh; border:none;"></iframe> </div> </div> <style> .modal { display: none; position: fixed; z-index: 1; padding-top: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); overflow-y: hidden; } .modal-content { margin: auto; } .close-button { color: #aaa; float: right; font-size: 50px; } .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; } </style> <script> var modal = document.getElementById("myModal"); var link = document.getElementById("openModalLink"); var span = document.getElementsByClassName("close-button")[0]; link.onclick = function(event) { event.preventDefault(); modal.style.display = "block"; }; span.onclick = function() { modal.style.display = "none"; }; window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } } </script>`
     console.log("LinkText ", this.LinkText);
   }
@@ -1877,7 +1932,7 @@ export class EditEventComponent {
 
 
   handleBackGroundColorChange($event: any): void {
-    console.log("bg clr $event.color.hex ", $event.color.hex);    
+    console.log("bg clr $event.color.hex ", $event.color.hex);
     this.backGroundcolor = $event.color.hex;
     console.log('Selected Color:', this.backGroundcolor);
   }
@@ -1892,7 +1947,7 @@ export class EditEventComponent {
   }
 
   handletextColorChange($event: any): void {
-    console.log("txt clr $event.color.hex ", $event.color.hex);    
+    console.log("txt clr $event.color.hex ", $event.color.hex);
     this.textColor = $event.color.hex;
     console.log('Selected Color:', this.textColor);
   }
@@ -1907,13 +1962,13 @@ export class EditEventComponent {
 
   handlebtnAndLinkColorChange($event: any): void {
     console.log("btn And Link Clr ", $event.color.hex);
-    
+
     this.btnAndLinkColor = $event.color.hex;
     console.log('Selected Color:', this.btnAndLinkColor);
   }
 
   togglebtnAndLinkColorPicker(): void {
-    this.isColorPickerVisibleForbtnAndLinkColor = !this.isColorPickerVisibleForbtnAndLinkColor;  
+    this.isColorPickerVisibleForbtnAndLinkColor = !this.isColorPickerVisibleForbtnAndLinkColor;
     if (this.isColorPickerVisibleForbtnAndLinkColor) {
       this.isColorPickerVisibleForBackground = false;
       this.isColorPickerVisibleFortextColor = false;
@@ -1921,13 +1976,17 @@ export class EditEventComponent {
   }
 
 
-  saveClrChanges(){
+  saveClrChanges() {
     console.log("bgclr ", this.backGroundcolor);
     console.log("txtClr ", this.textColor);
-    console.log("btn&LnkClr ", this.btnAndLinkColor); 
+    console.log("btn&LnkClr ", this.btnAndLinkColor);
     this.apiService.changeEvntClrs(this.loggedInEmailId, this.evId, this.backGroundcolor, this.textColor, this.btnAndLinkColor)
-   
   }
+
+  editEmailFollowUp() {
+    this.openFollowUpEmailPopUp = true
+  }
+
 
 }
 

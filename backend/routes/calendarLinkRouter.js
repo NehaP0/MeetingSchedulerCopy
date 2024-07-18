@@ -86,6 +86,26 @@ calendarLinkRoute.get("/redirectToCancellation", async (req, res) => {
   }
 });
 
+calendarLinkRoute.get("/redirectToRescheduling", async (req, res) => {
+  const { whoRescheduled, whoseCalendar, eventId, meetId } = req.query;
+  console.log("redirectToRescheduling am called");
+
+  try {
+    // const user = await User.findOne({ name: name, emailID: id });
+    console.log("whoRescheduled, whoseCalendar, eventId, meetId ", whoRescheduled, whoseCalendar, eventId, meetId);
+    console.log(`redirecting`);
+
+    let redirectUrl = `http://localhost:4500/rescheduling?whoRescheduled=${whoRescheduled}&whoseCalendar=${whoseCalendar}&eventId=${eventId}&meetId=${meetId}`
+
+    res.redirect(redirectUrl);
+
+    // res.send({message : "req is sent to me", name: name, id: id})
+  } catch (error) {
+    console.log("error occured ", error);
+    res.send({ message: error });
+  }
+});
+
 
 calendarLinkRoute.get("/sharable", async (req, res) => {
   const { userId, eventN } = req.query;
@@ -210,15 +230,17 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
 
       // ===========================================
 
-      let newEnd = new Date(end);
+      // let newEnd = new Date(end);
 
-      const minutes = newEnd.getMinutes();
-      const hours = newEnd.getHours();
-      const dayOfMonth = newEnd.getDate();
-      const month = newEnd.getMonth() + 1; // Months are 0-based in JS
-      const cronTime = `${minutes} ${hours} ${dayOfMonth} ${month} *`;
+      // const minutes = newEnd.getMinutes();
+      // const hours = newEnd.getHours();
+      // const dayOfMonth = newEnd.getDate();
+      // const month = newEnd.getMonth() + 1; // Months are 0-based in JS
+      // const cronTime = `${minutes} ${hours} ${dayOfMonth} ${month} *`;
 
-      console.log("cronTime ", cronTime);
+      // console.log("cronTime ", cronTime);
+      let cronTime;
+      let isFollowUpEmailNeeded = false
 
 
 
@@ -241,17 +263,75 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
 
       console.log("findUser ", findUser);
 
+
       // whosoevers calendar it is find that event for him and put meeting in that event and send him mail.
 
       let eventsArrOfCalendarOwner = await calendarOwnerUser.events;
       console.log("eventsArrOfCalendarOwner ", eventsArrOfCalendarOwner);
+
+
+      function checkIfMinHrDayMonthPushIsNeeded(minutes, hours, dayOfMonth, month, year) {
+        if (minutes >= 60) {
+          console.log("minutes >= 60");
+          addTohrs = Math.floor(minutes / 60)
+          minutes = minutes % 60
+          hours = hours + addTohrs
+        }
+        if (hours > 12) {
+          console.log("hrs > 12");
+          addToDays = Math.floor(hours / 60)
+          hours = hours % 60
+          dayOfMonth = dayOfMonth + addToDays
+        }
+        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+          if (dayOfMonth > 31) {
+            console.log("dayOfMonth > 31");
+            addToMonth = Math.floor(dayOfMonth / 31)
+            dayOfMonth = dayOfMonth % 31
+            month = month + addToMonth
+          }
+        }
+        if (month == 4 || month == 6 || month == 9 || month == 11) {
+          if (dayOfMonth > 30) {
+            console.log("dayOfMonth > 30");
+            addToMonth = Math.floor(dayOfMonth / 30)
+            dayOfMonth = dayOfMonth % 30
+            month = month + addToMonth
+          }
+        }
+        if (month == 2) {//if month is feb
+          //if year is leap 
+          if ((year % 400 == 0) || ((year % 100 != 0) && (year % 4 == 0))) {
+            if (dayOfMonth > 29) {
+              console.log("dayOfMonth > 29");
+              addToMonth = Math.floor(dayOfMonth / 29)
+              dayOfMonth = dayOfMonth % 29
+              month = month + addToMonth
+            }
+          }
+          // if year is not leap
+          else {
+            if (dayOfMonth > 28) {
+              console.log("dayOfMonth > 28");
+              addToMonth = Math.floor(dayOfMonth / 28)
+              dayOfMonth = dayOfMonth % 28
+              month = month + addToMonth
+            }
+          }
+        }
+
+        return {minutes, hours, dayOfMonth, month, year}
+      }
+
+
+
 
       for (let i = 0; i < eventsArrOfCalendarOwner.length; i++) {
         let oneEvent = eventsArrOfCalendarOwner[i];
         console.log("oneEvent ", oneEvent);
         console.log(oneEvent.evName, title);
         if (oneEvent.evName == title) {
-          console.log("oneEvent name found same", oneEvent, title);
+          console.log("oneEvent name found same ", oneEvent, title);
           let foundEvent = oneEvent;
           console.log("foundEvent ", foundEvent);
           // const meeting =  await Meeting.create({start, end})
@@ -290,9 +370,85 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
               questionsWdAnswers,
               bookedForWhichEvId: evId,
               userSurname,
-              _id : newMeetId
+              _id: newMeetId
             });
           }
+
+          // sendFollowupEmail{
+          // sendFollowUpEmail : true
+          // time : 1
+          // unit : "hrs"
+          // }
+
+
+          if (oneEvent.sendFollowupEmail.sendFollowUpEmail) {
+            isFollowUpEmailNeeded = true
+            let newEnd = new Date(end);
+
+            if (oneEvent.sendFollowupEmail.unit == 'hrs') {
+              let minutes = newEnd.getMinutes();
+              let hours = newEnd.getHours() + oneEvent.sendFollowupEmail.time;
+              let dayOfMonth = newEnd.getDate();
+              let month = newEnd.getMonth() + 1;
+              let year = newEnd.getFullYear();
+
+              console.log(minutes, hours, dayOfMonth, month, year);
+              let functnResp = checkIfMinHrDayMonthPushIsNeeded(minutes, hours, dayOfMonth, month, year) 
+              minutes = functnResp.minutes
+              hours = functnResp.hours
+              dayOfMonth = functnResp.dayOfMonth
+              month = functnResp.month
+              year = functnResp.year
+              console.log(minutes, hours, dayOfMonth, month, year);
+
+              cronTime = `${minutes} ${hours} ${dayOfMonth} ${month} *`;
+              console.log("cronTime ", cronTime);
+            }
+            else if (oneEvent.sendFollowupEmail.unit == 'mins') {
+              let minutes = newEnd.getMinutes() + oneEvent.sendFollowupEmail.time;
+              let hours = newEnd.getHours();
+              let dayOfMonth = newEnd.getDate();
+              let month = newEnd.getMonth() + 1;
+              let year = newEnd.getFullYear();
+
+              console.log(minutes, hours, dayOfMonth, month, year);
+              let functnResp = checkIfMinHrDayMonthPushIsNeeded(minutes, hours, dayOfMonth, month, year) 
+              minutes = functnResp.minutes
+              hours = functnResp.hours
+              dayOfMonth = functnResp.dayOfMonth
+              month = functnResp.month
+              year = functnResp.year
+              console.log(minutes, hours, dayOfMonth, month, year);
+
+              cronTime = `${minutes} ${hours} ${dayOfMonth} ${month} *`;
+              console.log("cronTime ", cronTime);
+            }
+            else if (oneEvent.sendFollowupEmail.unit == 'days') {
+              let minutes = newEnd.getMinutes();
+              let hours = newEnd.getHours();
+              let dayOfMonth = newEnd.getDate() + oneEvent.sendFollowupEmail.time;
+              let month = newEnd.getMonth() + 1;
+              let year = newEnd.getFullYear();
+
+              console.log(minutes, hours, dayOfMonth, month, year);
+              let functnResp = checkIfMinHrDayMonthPushIsNeeded(minutes, hours, dayOfMonth, month, year) 
+              minutes = functnResp.minutes
+              hours = functnResp.hours
+              dayOfMonth = functnResp.dayOfMonth
+              month = functnResp.month
+              year = functnResp.year              
+              console.log(minutes, hours, dayOfMonth, month, year);
+
+              cronTime = `${minutes} ${hours} ${dayOfMonth} ${month} *`;
+              console.log("cronTime ", cronTime);
+            }
+
+          }
+
+
+
+
+
           console.log("meeting of logged in user ", meeting);
           console.log("foundEvent.meetings ", foundEvent.meetings);
           foundEvent.meetings.push(meeting);
@@ -302,6 +458,37 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
           console.log(calendarOwnerUser);
           break;
         }
+      }
+
+
+      // putting the invitee in contacts array
+
+      let contactssArr = calendarOwnerUser["contacts"]
+
+      let found = false
+      for (let i = 0; i < contactssArr.length; i++) {
+        if (contactssArr[i].emailID == userEmail) {
+          found = true
+          break;
+        }
+      }
+
+      if (found == false) {
+        let usersName = ""
+        if (userSurname) {
+          usersName = `${user} ${userSurname}`
+        }
+        else {
+          usersName = user
+        }
+        let contactObj = {
+          name: usersName,
+          emailID: userEmail
+        }
+        contactssArr.push(contactObj)
+
+        calendarOwnerUser.contacts = contactssArr
+        await calendarOwnerUser.save();
       }
 
       // ppl who are in db are put in emailsOfUsersFoundInDb array and ppl who are not in db are put in emailsOfUsersNotFoundInDb array
@@ -389,6 +576,12 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
             { $push: { meetingsWtOthers: meeting } }
           );
           console.log("updated meeting for ", emailsOfUsersFoundInDb[i]);
+          res
+            .status(200)
+            .json({
+              message:
+                "Meeting scheduled successfully. A calendar invitation will be mailed to the attendees.",
+            });
         }
       } catch (err) {
         console.log("meeting of emailsOfUsersFoundInDb not updated.", err);
@@ -397,6 +590,7 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
       // --------new code--------
 
       try {
+        console.log("here to create meeting link ");
         meetLink = await createMeetingLink();
         console.log("Meeting link created:", meetLink);
 
@@ -416,20 +610,17 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         // await sendMsg([loggedInUserPhoneNumber, ...phoneNumbersOfUsersFoundInDb]);
         // await sendMsg([...phoneNumbersOfUsersFoundInDb]);
 
-        await cron.schedule(cronTime, () => {
-          sendFollowUpEmail(
-            calendarOwnerUserName,
-            emailOfCalendarOwner,
-            otherEmails
-          );
-        });
-
-        return res
-          .status(200)
-          .json({
-            message:
-              "Meeting scheduled successfully. A calendar invitation has been mailed to the attendees.",
+        if (isFollowUpEmailNeeded) {
+          cron.schedule(cronTime, () => {
+            sendFollowUpEmail(
+              calendarOwnerUserName,
+              emailOfCalendarOwner,
+              otherEmails
+            );
           });
+        }
+
+
       } catch (err) {
         console.log("Error creating meeting link:", err);
         return res
@@ -547,102 +738,102 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
   }
 
 
-    // =======================for cron==========================================
-    async function sendFollowUpEmail(
-      calendarOwnerUserName,
-      emailOfCalendarOwner,
-      otherEmails,
-    ) {
-      console.log("sendFollowUpEmail called");
-      // Set up nodemailer transporter and send email
-      let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'nehaphadtare334@gmail.com',
-          pass: 'xtjc dyqr evlk bfcj'
-        }
-      });
-  
-      // point to the template folder
-      const handlebarOptions = {
-        viewEngine: {
-          partialsDir: path.resolve("../views/"),
-          defaultLayout: false,
+  // =======================for cron==========================================
+  async function sendFollowUpEmail(
+    calendarOwnerUserName,
+    emailOfCalendarOwner,
+    otherEmails,
+  ) {
+    console.log("sendFollowUpEmail called");
+    // Set up nodemailer transporter and send email
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'nehaphadtare334@gmail.com',
+        pass: 'xtjc dyqr evlk bfcj'
+      }
+    });
+
+    // point to the template folder
+    const handlebarOptions = {
+      viewEngine: {
+        partialsDir: path.resolve("../views/"),
+        defaultLayout: false,
+      },
+      viewPath: path.resolve("../views/"),
+    };
+
+    // use a template file with nodemailer
+    transporter.use("compile", hbs(handlebarOptions));
+
+    await sendFollowUpMailsToEveryOne()
+    async function sendFollowUpMailsToEveryOne() {
+      console.log("I'll send mails");
+      const mailOptions1 = {
+        from: emailOfCalendarOwner, // sender address
+        template: "email6", // the name of the template file, i.e., email.handlebars
+        to: userEmail,
+        subject: `Thank you for your time!`,
+        context: {
+          // inviteeName: user,
+          company: emailOfCalendarOwner,
+          eventName: title,
+          eventStartTime: start
         },
-        viewPath: path.resolve("../views/"),
       };
-  
-      // use a template file with nodemailer
-      transporter.use("compile", hbs(handlebarOptions));
-  
-      await sendFollowUpMailsToEveryOne()
-      async function sendFollowUpMailsToEveryOne(){
-        console.log("I'll send mails");
-        const mailOptions1 = {
+      const mailOptions2 = {
+        from: emailOfCalendarOwner, // sender address
+        template: "email6", // the name of the template file, i.e., email.handlebars
+        to: emailOfCalendarOwner,
+        subject: `Thank you for your time!`,
+        context: {
+          //   name: userFound.name,
+          // inviteeName: calendarOwnerUserName,
+          company: user,
+          eventName: title,
+          eventStartTime: start
+        },
+      };
+      for (let i = 0; i < otherEmails.length; i++) {
+        let mailOptions = {
           from: emailOfCalendarOwner, // sender address
           template: "email6", // the name of the template file, i.e., email.handlebars
-          to: userEmail,
+          to: otherEmails[i],
           subject: `Thank you for your time!`,
           context: {
-            // inviteeName: user,
-            company: emailOfCalendarOwner,
+            company: calendarOwnerUserName,
             eventName: title,
             eventStartTime: start
           },
         };
-        const mailOptions2 = {
-          from: emailOfCalendarOwner, // sender address
-          template: "email6", // the name of the template file, i.e., email.handlebars
-          to: emailOfCalendarOwner,
-          subject: `Thank you for your time!`,
-          context: {
-            //   name: userFound.name,
-            // inviteeName: calendarOwnerUserName,
-            company: user,
-            eventName: title,
-            eventStartTime: start
-          },
-        };
-        for (let i = 0; i < otherEmails.length; i++) {
-          let mailOptions = {
-            from: emailOfCalendarOwner, // sender address
-            template: "email6", // the name of the template file, i.e., email.handlebars
-            to: otherEmails[i],
-            subject: `Thank you for your time!`,
-            context: {
-              company: calendarOwnerUserName,
-              eventName: title,
-              eventStartTime: start
-            },
-          };
-          try {
-            await transporter.sendMail(mailOptions);
-          } catch (error) {
-            console.log(
-              `Nodemailer error sending email to ${otherEmails[i]}`,
-              error
-            );
-          }
-        }
         try {
-          await transporter.sendMail(mailOptions1);
-          await transporter.sendMail(mailOptions2);
-          console.log(`Cron Email sent`);
+          await transporter.sendMail(mailOptions);
         } catch (error) {
-          console.log(`Cron Nodemailer error sending email to ${user}`, error);
+          console.log(
+            `Nodemailer error sending email to ${otherEmails[i]}`,
+            error
+          );
         }
       }
-
-  
-      // transporter.sendMail(mailOptions, (error, info) => {
-      //   if (error) {
-      //     console.log(error);
-      //   } else {
-      //     console.log('Follow-up email sent: ' + info.response);
-      //   }
-      // });
+      try {
+        await transporter.sendMail(mailOptions1);
+        await transporter.sendMail(mailOptions2);
+        console.log(`Cron Email sent`);
+      } catch (error) {
+        console.log(`Cron Nodemailer error sending email to ${user}`, error);
+      }
     }
-    // =======================for cron ends=====================================
+
+
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log('Follow-up email sent: ' + info.response);
+    //   }
+    // });
+  }
+  // =======================for cron ends=====================================
 
   // ------------------------------
   async function sendMailUser(
@@ -694,10 +885,10 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         subject: `Meeting Scheduled`,
         context: {
           //   name: userFound.name,
-          receiversEmail : userEmail,
-          evId : evId,  
-          emailOfCalendarOwner : emailOfCalendarOwner,
-          meetId : newMeetId,
+          receiversEmail: userEmail,
+          evId: evId,
+          emailOfCalendarOwner: emailOfCalendarOwner,
+          meetId: newMeetId,
 
           name: user,
           company: emailOfCalendarOwner,
@@ -719,11 +910,11 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
         // subject: `Hi, ${userFound.name}`,
         subject: `Meeting Scheduled`,
         context: {
-          receiversEmail : emailOfCalendarOwner,
-          evId : evId,  
-          emailOfCalendarOwner : emailOfCalendarOwner,
-          meetId : newMeetId,
-          
+          receiversEmail: emailOfCalendarOwner,
+          evId: evId,
+          emailOfCalendarOwner: emailOfCalendarOwner,
+          meetId: newMeetId,
+
           name: calendarOwnerUserName,
           company: user,
           eventName: title,
@@ -745,10 +936,10 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
           // subject: `Hi, ${userFound.name}`,
           subject: `Meeting Scheduled`,
           context: {
-            receiversEmail : otherEmails[i],
-            evId : evId,  
-            emailOfCalendarOwner : emailOfCalendarOwner,
-            meetId : newMeetId,
+            receiversEmail: otherEmails[i],
+            evId: evId,
+            emailOfCalendarOwner: emailOfCalendarOwner,
+            meetId: newMeetId,
 
             //   name: userFound.name,
             // name: user,
