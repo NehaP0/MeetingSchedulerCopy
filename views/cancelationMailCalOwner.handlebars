@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  {{!-- <div style="border:1px solid rgb(189, 187, 187);border-radius:10px; padding:10px"> --}}
+    <div style="width:60%; margin:auto; font-size: 15px;">
+
+      <p>Hi {{calendarOwnerName}},</p>
+
+      <p>The event below has been canceled.</p>
+
+
+      <div>
+        <span style="font-weight:bold">Invitee:&#32;</span>
+        <span>{{userWhoHadScheduled}}</span>
+      </div>
+
+      <div>
+        <span style="font-weight:bold">Invitee Email:&#32;</span>
+        <span>{{userWhoHadScheduledEmail}}</span>
+      </div>
+
+
+      <div>
+        <span style="font-weight:bold">Event Date/Time:&#32;</span>
+        <span>{{startTime}} - {{dayOfWeekString}}, {{dayOfMonth}} {{monthString}} {{year}} (India Standard Time)</span>
+      </div>
+
+
+      <div style="color:red">
+        <p style="font-weight:bold; margin-bottom:1px">Cancellation Reason:</p>
+        <p style="margin-top:1px">{{cancelationReason}}</p>
+      </div>
+
+      <div>
+        <p style="font-weight:bold; margin-bottom:1px">Canceled by:</p>
+        <p style="margin-top:1px">{{whoCanceled}}</p>
+      </div>
+
+    </div>
+
+
+</body>
+
+</html>

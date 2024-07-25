@@ -1,4 +1,77 @@
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Scheduled email.</title>
+</head>
+
+<body>
+
+  <div style="display: flex; border:1px solid rgb(189, 187, 187); font-size:15px">
+    <div style="border-right:1px solid rgb(189, 187, 187); background-color: #f6f6f5; width : 20%">
+      <div style="width:40%;height:fit-content; margin: auto; border-radius: 5px; border:1px solid rgb(189, 187, 187); text-align:center; margin-top:5%">
+        <p style="margin: 0px; padding: 2px; background-color: #468afb; color: white; font-weight:bold">{{monthString}}</p>
+        <p style="margin: 0px; padding: 2px; font-size: 20px; font-weight: bold;">{{dayOfMonth}}</p>
+        <p style="margin: 0px; padding: 2px; font-weight: bold; border-top:1px solid rgb(189, 187, 187)">{{dayOfWeekString}}</p>
+      </div>
+    </div>
+    <div style="padding-left: 10px;">
+      <div>
+        <p style="font-weight: bold;">{{name}} and {{calendarOwnerUserName}}</p>
+      </div>
+      <div>
+        <p>
+          <span style="color: grey;">When &#32;</span><span>{{dayOfWeekString}} {{monthString}} {{dayOfMonth}}, {{year}}
+            {{startTime}} - {{endTime}}</span>
+        </p>
+        <p>
+          <span style="color: grey">Who &#32;</span><span style="color: grey;">{{emailOfCalendarOwner}}</span><span>,
+            {{calendarOwnerUserName}}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="border:1px solid rgb(189, 187, 187); padding:10px; border-radius: 10px; margin-top: 30px; font-size:15px">
+    <p>Event Name: {{eventName}}</p>
+    <a href={{meetingLink}}>Meeting link</a>
+    <div>
+      {{#each questionsWdAnswers}}
+      {{#if this.answer}}
+      <p>
+        <span>{{this.question}}</span> :
+        <span>{{this.answer}}</span>
+      </p>
+      {{/if}}
+      {{/each}}
+    </div>
+
+    <p>Need to make changes to this event?</p>
+    {{!-- <span>Cancel: &#32;</span><a href=`http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}</a> --}}
+    <span>Cancel: &#32;</span><a href="http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&amp;whoseCalendar={{emailOfCalendarOwner}}&amp;eventId={{evId}}&amp;meetId={{meetId}}">Cancel</a>
+ 
+    <p>Powered by Clodura.ai</p>
+
+    <p style="font-weight: bold">When</p>
+    <p>{{dayOfWeekString}} {{monthString}} {{dayOfMonth}}, {{year}} {{startTime}}-{{endTime}}</p>
+
+    <p style="font-weight: bold;">Guests</p>
+    <p>{{calendarOwnerUserName}} - organizer</p>
+    {{#each otherEmails}}
+    <p>{{this}}</p>
+    {{/each}}
+  </div>
+</body>
+
+</html>
+
+
+
+
+{{!--
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -14,8 +87,6 @@
   <p>Details:</p>
   <ul>
     <li>Event Name: {{eventName}}</li>
-    {{!-- <li>Event Description: {{eventDecription}}</li> --}}
-    {{!-- <li>Event Date: {{eventDate}}</li> --}}
     <li>Event Start Time: {{eventStartTime}}</li>
     <li>Event End Time: {{eventEndTime}}</li>
     <li>Meeting Link: {{meetingLink}}</li>
@@ -27,25 +98,26 @@
     {{/if}}
     <div>
       {{#each questionsWdAnswers}}
-        {{#if this.answer}}
-        <li>
-          <span>{{this.question}}</span> :
-          <span>{{this.answer}}</span>
-        </li>
-        {{/if}}
+      {{#if this.answer}}
+      <li>
+        <span>{{this.question}}</span> :
+        <span>{{this.answer}}</span>
+      </li>
+      {{/if}}
       {{/each}}
     </div>
 
-      {{!--
-    </div> --}}
 
   </ul>
 
-  <a href=`http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Cancel</a>
-  
-  {{!-- <a>Reschedule</a> --}}
-  {{!-- <a href=`http://localhost:3000/calendarLink/redirectToRescheduling?whoRescheduled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Reschedule</a> --}}
+  <a
+    href=`http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Cancel</a>
+
 
 </body>
 
-</html>
+</html> --}}
+{{!-- <a>Reschedule</a> --}}
+{{!-- <a
+  href=`http://localhost:3000/calendarLink/redirectToRescheduling?whoRescheduled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Reschedule</a>
+--}}

@@ -150,6 +150,7 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             questionsWdAnswers: []
           },
         ],
+        allowInviteesToAddGuests: true,
         questionsToBeAsked: [
           {
             question: "Please share anything that will help prepare for our meeting.",
@@ -1130,6 +1131,21 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
       emailID: emailIdOfWhoseCalendar,
     });
 
+    let calendarOwnerName = userWhoseCalendar['name']
+
+    let whocanceledUser = await User.findOne({
+      emailID : emailIdOfWhoCancelled
+    })
+
+    let whoCanceled
+
+    if(whocanceledUser){
+      whoCanceled = whocanceledUser['name']
+    }
+    else{
+      whoCanceled = emailIdOfWhoCancelled
+    }
+
     console.log("User found", userWhoseCalendar);
     let eventsArray = await userWhoseCalendar.events;
 
@@ -1139,15 +1155,30 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
     let start
     let end
 
+    let evName
+    let questsWdAnswers
+    let userWhoHadScheduled = ""
+    let userWhoHadScheduledEmail 
+
     for (let i = 0; i < eventsArray.length; i++) {
       console.log(eventsArray[i]._id == evId);
       if (eventsArray[i]._id == evId) {
+        evName = eventsArray[i].evName
         let meetsArr = eventsArray[i].meetings
         console.log("meetsArr ", meetsArr);
         let meetsArrWOThatMeet = meetsArr.filter((oneMeet) => {
-          start = oneMeet.start
-          end = oneMeet.end
-          otherEmailsArr = oneMeet.userEmail
+          if(oneMeet._id == meetId){
+            start = oneMeet.start
+            end = oneMeet.end
+            console.log('userEmail ', oneMeet.userEmail);
+            otherEmailsArr = oneMeet.userEmail
+            questsWdAnswers = oneMeet.questionsWdAnswers
+            userWhoHadScheduledEmail = oneMeet.userEmail[0]
+            userWhoHadScheduled = oneMeet.user
+            if(oneMeet.userSurname){
+              userWhoHadScheduled = userWhoHadScheduled + ` ${oneMeet.userSurname}`
+            }
+          }
           return oneMeet._id != meetId
         })
 
@@ -1157,6 +1188,34 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
 
       }
     }
+
+      //to get month, date, date, year separately starts
+  const stdate = new Date(start);
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayOfWeek = stdate.getDay(); // like 0,1,2,3,4 etc
+  const dayOfWeekString = weekDays[dayOfWeek]; //sun, mon etc
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = stdate.getMonth(); // 0,1,2,3,4
+  const monthString = months[month]; // Jan,Feb,Mar  
+  console.log(monthString);
+
+  const dayOfMonth = stdate.getDate(); // 10, 22 etc
+
+  const year = stdate.getFullYear(); //2024
+  console.log(year);
+
+  const starthours = String(stdate.getHours()).padStart(2, '0');
+  const startminutes = String(stdate.getMinutes()).padStart(2, '0');
+  const startTime=`${starthours}:${startminutes}`
+
+  const enddate = new Date(end);
+  const endhours = String(enddate.getHours()).padStart(2, '0');
+  const endminutes = String(enddate.getMinutes()).padStart(2, '0');
+  const endTime=`${endhours}:${endminutes}`
+
+
+  //to get month, date, date, year separately ends
 
     await userWhoseCalendar.save();
     console.log("user saved");
@@ -1175,15 +1234,34 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
           return oneMeet.start != start && oneMeet.end != end
         })
         foundUserInDb.meetingsWtOthers = meetWdOthersArrWOThatMeet
+
+        await foundUserInDb.save();
+        console.log("other user saved");
       }
 
-      await foundUserInDb.save();
-      console.log("other user saved");
 
     }
 
-    sendCancellationMails(emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end)
-
+    // sendCancellationMails(emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end)
+    // emailIdOfWhoCancelled, emailIdOfWhoseCalendar, evId, meetId, cancelationReason
+    
+    sendCancellationMails(
+      evName,
+      calendarOwnerName,
+      emailIdOfWhoseCalendar,
+      otherEmailsArr,
+      questsWdAnswers,
+      cancelationReason,
+      userWhoHadScheduled,
+      userWhoHadScheduledEmail,
+      dayOfWeekString,        
+      monthString,
+      dayOfMonth,
+      year,
+      startTime, 
+      endTime,
+      whoCanceled
+    )
     return res.send({ message: `Deleted` });
 
     // return res.status(200).json({message : `Event created`})
@@ -1457,10 +1535,26 @@ async function sendMail(
 
 
 async function sendCancellationMails(
-  emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end
+      evName,
+      calendarOwnerName,
+      emailIdOfWhoseCalendar,
+      otherEmailsArr,
+      questsWdAnswers,
+      cancelationReason,
+      userWhoHadScheduled,
+      userWhoHadScheduledEmail,
+      dayOfWeekString,        
+      monthString,
+      dayOfMonth,
+      year,
+      startTime, 
+      endTime,
+      whoCanceled
+  // emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end
 ) {
-  let allMailIds = [emailIdOfWhoseCalendar, ...otherEmailsArr]
-  console.log("allMailIds ", allMailIds);
+  // let otherMailIds = [emailIdOfWhoseCalendar, ...otherEmailsArr]
+
+  console.log("otherEmailsArr ", otherEmailsArr);
   // -------------------mail sending starts-----------------
   // initialize nodemailer
   console.log("nodemailer working");
@@ -1485,29 +1579,74 @@ async function sendCancellationMails(
   transporter.use("compile", hbs(handlebarOptions));
 
   //   for (const user of users) {
-  for (let i = 0; i < allMailIds.length; i++) {
-    let mailOptions = {
+  for (let i = 0; i < otherEmailsArr.length; i++) {
+    let mailOptions1 = {
       from: '"My Company"', // sender address
-      template: "cancelationMail", // the name of the template file, i.e., email.handlebars
+      template: "cancelationMailInvitee", // the name of the template file, i.e., email.handlebars
       // to: userFound.emailID,
-      to: allMailIds[i],
+      to: otherEmailsArr[i],
       // subject: `Hi, ${userFound.name}`,
-      subject: `Meeting Canceled`,
+      subject: `Updated invitation from ${calendarOwnerName}: Canceled:  ${userWhoHadScheduled} and ${calendarOwnerName}  @ ${dayOfWeekString} ${monthString} ${dayOfMonth}, ${year} ${startTime} - ${endTime} (${otherEmailsArr[i]})`,
       context: {
-        emailIdOfWhoCancelled,
+        evName,
+        calendarOwnerName,
+        emailIdOfWhoseCalendar,
+        otherEmailsArr,
+        questsWdAnswers,
         cancelationReason,
-        start,
-        end
+        userWhoHadScheduled,
+        userWhoHadScheduledEmail,
+        dayOfWeekString,        
+        monthString,
+        dayOfMonth,
+        year,
+        startTime, 
+        endTime,
+        whoCanceled
       },
     };
     try {
-      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions1);
     } catch (error) {
       console.log(
-        `Nodemailer error sending email to ${allMailIds[i]}`,
+        `Nodemailer error sending email to ${otherEmailsArr[i]}`,
         error
       );
     }
+  }
+
+  let mailOptions2 = {
+    from: '"My Company"', // sender address
+    template: "cancelationMailCalOwner", // the name of the template file, i.e., email.handlebars
+    // to: userFound.emailID,
+    to: emailIdOfWhoseCalendar,
+    // subject: `Hi, ${userFound.name}`,
+    subject: `Canceled: ${evName} with  ${userWhoHadScheduled} on ${dayOfMonth} ${monthString} ${year}`,
+    context: {
+      evName,
+      calendarOwnerName,
+      emailIdOfWhoseCalendar,
+      otherEmailsArr,
+      questsWdAnswers,
+      cancelationReason,
+      userWhoHadScheduled,
+      userWhoHadScheduledEmail,
+      dayOfWeekString,        
+      monthString,
+      dayOfMonth,
+      year,
+      startTime, 
+      endTime,
+      whoCanceled
+    },
+  };
+  try {
+    await transporter.sendMail(mailOptions2);
+  } catch (error) {
+    console.log(
+      `Nodemailer error sending email to ${calendarOwnerName}`,
+      error
+    );
   }
 }
 

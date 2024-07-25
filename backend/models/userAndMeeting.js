@@ -19,11 +19,16 @@ const questionSchema = mongoose.Schema({
 const meetingSchema = mongoose.Schema({
   start: {
     type: String,
+    required: true,
   },
   end: {
     type: String,
     required: true,
   },
+  // timezone: {
+  //   type: String,
+  //   required: true,
+  // },
   user: {
     type: String
   },
@@ -53,8 +58,14 @@ const meetingSchema = mongoose.Schema({
   bookedForWhichEvId : {
     type : String
   }
-
 });
+
+// meetingSchema.methods.toJSON = function () {
+//   const obj = this.toObject();
+//   obj.start = moment.tz(obj.start, obj.timezone).format();
+//   obj.end = moment.tz(obj.end, obj.timezone).format();
+//   return obj;
+// };
 
 const daysSchema = mongoose.Schema({
   status: {

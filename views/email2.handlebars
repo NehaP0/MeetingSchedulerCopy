@@ -1,3 +1,4 @@
+{{!--
 <!DOCTYPE html>
 <html>
 
@@ -9,26 +10,13 @@
 
 <body>
   <h2>Hello, </h2>
-  {{!-- <p>Your meeting has been scheduled with {{company}}.</p> --}}
 
   <p>Details:</p>
   <ul>
     <li>Event Name: {{eventName}}</li>
-    {{!-- <li>Event Description: {{eventDecription}}</li> --}}
-    {{!-- <li>Event Date: {{eventDate}}</li> --}}
     <li>Event Start Time: {{eventStartTime}}</li>
     <li>Event End Time: {{eventEndTime}}</li>
     <li>Meeting Link: {{meetingLink}}</li>
-    {{!-- <div *ngIf="questionsWdAnswers.length">
-      <div *ngFor="let question of questionsWdAnswers; let i=index">
-        <ul>
-          <li *ngIf="question.answer">
-            <p>{{question}}</p>
-            <p>{{question.answer}}</p>
-          </li>
-        </ul>
-      </div>
-    </div> --}}
     {{#if additionalInfo}}
     <div>
       <span>Note : </span>
@@ -37,20 +25,101 @@
     {{/if}}
     <div>
       {{#each questionsWdAnswers}}
-        {{#if this.answer}}
-        <li>
-          <span>{{this.question}}</span> :
-          <span>{{this.answer}}</span>
-        </li>
-        {{/if}}
+      {{#if this.answer}}
+      <li>
+        <span>{{this.question}}</span> :
+        <span>{{this.answer}}</span>
+      </li>
+      {{/if}}
       {{/each}}
     </div>
   </ul>
 
-  <a href=`http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Cancel</a>
+  <a
+    href=`http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Cancel</a>
 
-  {{!-- <a>Reschedule</a> --}}
-  {{!-- <a href=`http://localhost:3000/calendarLink/redirectToRescheduling?whoRescheduled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>Reschedule</a> --}}
+
+</body>
+
+</html> --}}
+
+{{!-- to cal owner --}}
+
+
+{{!-- Calendly logo i.e clodura logo --}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  {{!-- <div style="border:1px solid rgb(189, 187, 187);border-radius:10px; padding:10px"> --}}
+  <div style="width:60%; margin:auto; font-size: 15px;">
+
+  <p>Hi {{calendarOwnerUserName}},</p>
+
+  <p>A new event has been scheduled.</p>
+
+  <div>
+    <span style="font-weight:bold">Event Type:&#32;</span>
+    <span>{{eventName}}</span>
+  </div>
+
+  <div>
+    <span style="font-weight:bold">Invitee:&#32;</span>
+    <span>{{name}}</span>
+  </div>
+
+  <div>
+    <span style="font-weight:bold">Invitee Email:&#32;</span>
+    <span>{{userWhoScheduledEmail}}</span>
+  </div>
+
+
+  <p style="font-weight:bold">Additional Guests:</p>
+  {{#each otherEmails}}
+  {{!-- {{#if this!=userWhoScheduledEmail}}
+  <p>{{this}}</p>
+  {{/if}} --}}
+  {{!-- {{#unless this userWhoScheduledEmail}} --}}
+  <p>{{this}}</p>
+  {{!-- {{/unless}} --}}
+  {{/each}}
+
+  <div>
+    <span style="font-weight:bold">Event Date/Time:&#32;</span>
+    <span>{{startTime}} - {{dayOfWeekString}}, {{dayOfMonth}} {{monthString}} {{year}} (India Standard Time)</span>
+  </div>
+
+<div>
+
+  <span style="font-weight:bold">Invitee Time Zone:</span>
+  <span>India Standard Time</span>
+</div>
+
+    <div>
+      {{!-- {{#if questionsWdAnswers.length}} --}}
+      {{!-- <p>Questions:</p> --}}
+      {{#each questionsWdAnswers}}
+      {{#if this.answer}}
+      <p>
+        <span>{{this.question}}</span> :
+        <span>{{this.answer}}</span>
+      </p>
+      {{/if}}
+      {{/each}}
+      {{!-- {{/if}} --}}
+    </div>
+
+  <a href={{meetingLink}}>Meeting link</a>
+  </div>
+
 
 </body>
 

@@ -1,0 +1,90 @@
+{{!-- <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Meeting Canceled</title>
+</head>
+
+<body>
+  <h2>Hello, </h2>
+  <p>Please be informed that the meeting scheduled on {{start}} to {{end}}  has been canceled.</p>
+  <p>Canceled by : {{emailIdOfWhoCancelled}}</p>
+  <p>Reason for cancelation : {{cancelationReason}}</p>
+
+
+</body>
+
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Canceled email.</title>
+</head>
+
+<body>
+
+  <div style="display: flex; border:1px solid rgb(189, 187, 187); font-size:15px; margin-bottom:10px">
+    <div style="border-right:1px solid rgb(189, 187, 187); background-color: #f6f6f5; width : 20%">
+      <div style="width:40%;height:fit-content; margin: auto; border-radius: 5px; border:1px solid rgb(189, 187, 187); text-align:center; margin-top:5%; margin-bottom:5%">
+        <p style="margin: 0px; padding: 2px; background-color: #468afb; color: white; font-weight:bold">{{monthString}}</p>
+        <p style="margin: 0px; padding: 2px; font-size: 20px; font-weight: bold;">{{dayOfMonth}}</p>
+        <p style="margin: 0px; padding: 2px; font-weight: bold; border-top:1px solid rgb(189, 187, 187)">{{dayOfWeekString}}</p>
+      </div>
+    </div>
+    <div style="padding-left: 10px;">
+      <div>
+        <p style="font-weight: bold;">Canceled: {{userWhoHadScheduled}} and {{calendarOwnerName}}</p>
+      </div>
+      <div>
+        <p>
+          <span style="color: grey;">When &#32;</span><span>{{dayOfWeekString}} {{monthString}} {{dayOfMonth}}, {{year}}
+            {{startTime}} - {{endTime}}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background-color: #e7f4eb; padding:5px; border-radius:10px; color:#1a3d23; ">
+    <p style="font-weight:bold">This event has been updated</p>
+    <p><span style="font-weight:bold">Changed:&#32;</span> title, description</p>
+  </div>
+
+  <div style="border:1px solid rgb(189, 187, 187); padding:10px; border-radius: 10px; margin-top: 30px; font-size:15px">
+    
+    <p style="font-weight: bold;"><span>Description&#32;</span><span style="background-color:#39893f; color:white; border-radius:5px; font-weight:bold; font-size:12px; padding:3px">CHANGED</span></p>
+
+    <p>Event Name: {{evName}}</p>
+    
+    <div>
+      {{#each questsWdAnswers}}
+      {{#if this.answer}}
+      <p>
+        <span>{{this.question}}</span> :
+        <span>{{this.answer}}</span>
+      </p>
+      {{/if}}
+      {{/each}}
+    </div>
+
+    <p><span>Cancellation Reason:&#32;</span><span>{{cancelationReason}}</span></p>
+ 
+    <p>Powered by Clodura.ai</p>
+
+    <p style="font-weight: bold">When</p>
+    <p>{{dayOfWeekString}} {{monthString}} {{dayOfMonth}}, {{year}} {{startTime}}-{{endTime}}</p>
+
+    <p style="font-weight: bold;">Guests</p>
+    <p>{{calendarOwnerName}} - organizer</p>
+    {{#each otherEmailsArr}}
+    <p>{{this}}</p>
+    {{/each}}
+  </div>
+</body>
+
+</html>
