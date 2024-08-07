@@ -11,11 +11,16 @@ export class PollLinkPopUpComponent {
 
   votingLink : string = ""
   buttonText = 'Copy Link';
-
+  token = localStorage.getItem('token')
 
   constructor(private route:ActivatedRoute,private router:Router,private apiService: APIService){}
 
   ngOnInit(){
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     this.apiService.votingLink$.subscribe((link)=>{
       console.log("loink ", link);      
       this.votingLink = link

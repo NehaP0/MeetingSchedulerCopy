@@ -5,7 +5,6 @@
 
 #parentDiv {
     height: 150vh;
-
 }
 
 /* .container{
@@ -16,6 +15,34 @@
 full-calendar {
     /* margin: auto; */
     /* border: 1px solid blue; */
+}
+
+::ng-deep #calendar .fc-toolbar-title {
+    font-size: 15px;
+}
+
+::ng-deep #calendar .fc-button {
+    background-color: #dddddd;
+    color: black;
+    padding: 0px;
+    border: none;
+    font-size: 10px;
+}
+
+::ng-deep #calendar a.fc-daygrid-day-number {
+    font-weight: 500;
+    font-size: 14px;
+    color: #0060E6;
+}
+
+
+::ng-deep a {
+    color: rgb(12, 12, 12);
+    text-decoration: none;
+    /* font-weight:300;
+    font-size: 14px; */
+    font-size: 13px;
+    font-weight: 400;
 }
 
 /* .fc-daygrid-day-top{
@@ -205,12 +232,7 @@ ng-icon {
     color: #1A1A1A;
 }
 
-#calendar {
-    /* border: 1px solid red; */
-    font-size: 15px;
-    width: 60%;
-    height: 100%;
-}
+
 
 
 #divForCalendarAndTime{
@@ -220,7 +242,61 @@ ng-icon {
 
 
 /* -------MontCalendar starts------------- */
+#calendar {
+    /* border: 1px solid red; */
+    font-size: 15px;
+    width: 60%;
+    height: 100%;
+}
 
+::ng-deep #calendar {
+    border: none;
+}
+
+::ng-deep #calendar .fc-col-header-cell-cushion {
+    padding-bottom: 10px;
+}
+
+::ng-deep .fc .fc-daygrid-day-frame {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+::ng-deep #calendar .fc-daygrid-day,
+::ng-deep #calendar .fc-col-header-cell {
+    border: none;
+}
+
+::ng-deep #calendar .fc-day-past a.fc-daygrid-day-number {
+    /* background-color: red; */
+    color: grey !important;
+    /* border: 1px solid red; */
+}
+
+
+
+::ng-deep #calendar a.fc-daygrid-day-number {
+    font-size: 15px !important;
+    /* font-weight: bold !important; */
+    font-family: sans-serif;
+    /* font-family: cursive; */
+    /* background-color: rgb(244, 250, 253); */
+    /* margin: 2px; */
+    /* border-radius: 50px;*/
+    /* border: 1px solid red; */
+
+}
+
+/* .fc .fc-scrollgrid-liquid */
+::ng-deep .fc .fc-scrollgrid-liquid,
+::ng-deep .fc .fc-scrollgrid-liquid td,
+::ng-deep .fc .fc-scrollgrid-liquid th {
+    border: none;
+}
+
+::ng-deep #calendar a.fc-daygrid-day-number:hover {
+    cursor: pointer;
+}
 
 ::ng-deep #calendar .fc-toolbar-title{
     font-size: 15px;

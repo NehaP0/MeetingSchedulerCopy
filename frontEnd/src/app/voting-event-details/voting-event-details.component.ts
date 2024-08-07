@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { APIService } from '../api.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -9,6 +10,7 @@ import { APIService } from '../api.service';
   styleUrl: './voting-event-details.component.css',
 })
 export class VotingEventDetailsComponent {
+  token = localStorage.getItem('token')
   loggedInName = localStorage.getItem('userLoggedInName');
   selectedDuration = localStorage.getItem('selectedDuration');
   meetingName = 'Meeting';
@@ -18,7 +20,15 @@ export class VotingEventDetailsComponent {
 
   constructor(
     private apiService: APIService,
+    private router: Router
   ) {}
+
+  ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+  }
 
   changeReserveCheckBox() {
     this.reserveTimes = !this.reserveTimes;
@@ -34,8 +44,10 @@ export class VotingEventDetailsComponent {
     console.log("meetingName ", this.meetingName);
     console.log("reserveTimes ", this.reserveTimes);
     console.log("votesCheckBox ", this.votesCheckBox);
+    console.log("selectedDuration ", this.selectedDuration);
+    
         
-    this.apiService.updatePollDetails(this.meetingName, this.reserveTimes, this.votesCheckBox)
+    this.apiService.updatePollDetails(this.meetingName, this.reserveTimes, this.votesCheckBox, this.selectedDuration)
     
   }
 }

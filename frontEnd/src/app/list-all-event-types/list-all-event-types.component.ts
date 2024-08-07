@@ -10,6 +10,7 @@ import { APIService } from '../api.service';
 export class ListAllEventTypesComponent {
   loggedInName = localStorage.getItem('userLoggedInName' || '');
   loggedInEmailId = localStorage.getItem('emailID' || '');
+  token = localStorage.getItem('token')
 
   eventsArrayOfLoggedInUser = [];
   eventLinksArr = []
@@ -25,6 +26,11 @@ export class ListAllEventTypesComponent {
   ) {}
 
   ngOnInit() {
+    
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     console.log('calling getEvents ');
 
     this.apiService.getEvents();

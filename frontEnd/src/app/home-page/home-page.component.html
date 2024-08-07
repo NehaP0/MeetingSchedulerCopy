@@ -119,7 +119,7 @@
       </div>
     </div>
  
-    <div><h4 id="pleaseWait" *ngIf="!eventsArrayOfLoggedInUser.length && !tryingToFilter">Please Wait...</h4></div>
+    <div><h4 id="pleaseWait" *ngIf="!eventsArrayOfLoggedInUser.length && !tryingToFilter && !token">Please Wait...</h4></div>
     <div  id="cannotFind" *ngIf="!filteredArr.length && tryingToFilter">
       <p>Sorry, it looks like nothing matches that search criteria.</p>
       <p>You can search by name, type of event, or duration,.</p>

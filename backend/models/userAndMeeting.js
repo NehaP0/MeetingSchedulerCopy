@@ -189,7 +189,9 @@ const eventLinksSchema = mongoose.Schema({
 const followUpEmailSchema = mongoose.Schema({
   sendFollowUpEmail : {type : Boolean},
   time : {type : Number},
-  unit : {type : String}
+  unit : {type : String},
+  // emailSubject : {type : String},
+  // emailBody : {type : String}
 })
 
 const eventSchema = mongoose.Schema({
@@ -221,12 +223,13 @@ const eventSchema = mongoose.Schema({
   maxInviteesPerEventForGrpEvent : {type: Number},
   displayRemainingSpotsOnBookingPageGrp : {type: Boolean},
   redirectTo : redirection,
-  pasEvntDeetsToRedirectPg : Boolean,
-  // sendFollowupEmail : {type: Boolean},
+  pasEvntDeetsToRedirectPg : {type : Boolean},
   sendFollowupEmail : followUpEmailSchema,
+  timeFormat : {type: String},
   bgClr : {type : String},
   txtClr : {type : String},
   btnAndLnkClr : {type : String},
+   
 });
 
 const availabilitySchema = mongoose.Schema({
@@ -257,6 +260,8 @@ const votingSchema = mongoose.Schema(
         noOfVotes: { type: Number },
       },
     ],
+    duration : {type : String},
+    pollCreationDate : {type : Object}
   },
 );
 

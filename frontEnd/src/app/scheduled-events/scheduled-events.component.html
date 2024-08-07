@@ -6,7 +6,10 @@
         <app-nav-for-scheduled-events></app-nav-for-scheduled-events>
         <div id="events">
             <div *ngIf="showMeets" [hidden]="!showMeets" id="meetDetails">
-                <h4>Meeting details: </h4>
+                <!-- <div  id="meetDetails"> -->
+
+                <div id="crossDiv" (click)="closePopUp()">X</div>
+                    <h4>Meeting details: </h4>
                         <div><span class="title" *ngIf="newObj.name">Meeting with : </span><span>{{newObj.name}}</span></div>
                         <!-- <div><span class="title" *ngIf="!newObj.name">Meeting created with poll </span></div> -->
 
@@ -15,13 +18,16 @@
                         <div><span class="title">Time : </span><span>{{newObj.startTime}} to {{newObj.endTime}}</span></div>
                         <div><span class="title" *ngIf="newObj.emailId && newObj.name">Email Ids of participants : </span>
                             <span *ngFor="let email of newObj.emailId; let i = index">
-                                <p>{{email}}</p>
+                                <p class="emailIdP">{{email}}</p>
                             </span>
                         </div>
                         <hr>
 
-                <button (click)="closePopUp()" class="closeBtn">Close</button>
-                <button (click)="editMeetingPopUp()">Edit</button>
+                <!-- <button (click)="closePopUp()" class="closeBtn">Cancel</button>
+                <button (click)="editMeetingPopUp()">Edit</button> -->
+
+                <button  class="closeBtn" (click)="cancelMeet()">Cancel <ng-icon name="remixDeleteBin6Line"></ng-icon></button>
+                <!-- <button (click)="editMeetingPopUp()">Reschedule</button> -->
             </div>
 
 

@@ -11,6 +11,7 @@ import { APIService } from '../api.service';
 })
 export class CreateNewEventTypeComponent {
   loggedInName = localStorage.getItem("userLoggedInName" || "")
+  token = localStorage.getItem('token')
   eventType = localStorage.getItem("evType")
   showWarning = false
   inputText = ''
@@ -24,14 +25,21 @@ export class CreateNewEventTypeComponent {
 
   constructor(private route: ActivatedRoute, private router: Router, private apiService: APIService) { }
 
+  ngOnInit() {
+
+    if (!this.token) {
+      this.router.navigate(['/login']);
+    }
+  }
+
   continueFunctn() {
     console.log("continueFunctn called ", this.inputText, this.hours, this.minutes);
 
-    if(!this.hours){
+    if (!this.hours) {
       this.hours = 0
     }
-    if(!this.minutes){
-      this.minutes=0
+    if (!this.minutes) {
+      this.minutes = 0
     }
     if (!this.inputText) {
       this.showWarning = true

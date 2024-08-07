@@ -14,7 +14,7 @@ export class UpcomingMeetingsComponent {
   emailId = localStorage.getItem("emailID")
   upcomingMeets: object[] = []
   futureMeets: object[] = []
-
+  token = localStorage.getItem('token')
 
   constructor(private route: ActivatedRoute, private router: Router, private apiService: APIService) { }
 
@@ -23,6 +23,11 @@ export class UpcomingMeetingsComponent {
 
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     //for calendar view 
     this.getMeetings()
 

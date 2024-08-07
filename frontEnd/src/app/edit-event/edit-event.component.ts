@@ -17,9 +17,13 @@ import { DatePipe, JsonPipe } from '@angular/common';
 })
 export class EditEventComponent {
 
+  @ViewChild('subjectTextArea') subjectTextArea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('bodyTextArea') bodyTextArea!: ElementRef<HTMLTextAreaElement>;
+
   emailID = localStorage.getItem("emailID")
   loggedInName = localStorage.getItem("userLoggedInName" || "")
   evId = localStorage.getItem("evId")
+  token = localStorage.getItem('token')
   usersUniqueID = localStorage.getItem("usersUniqueID")
 
   // eventN = localStorage.getItem("eventName")
@@ -65,7 +69,7 @@ export class EditEventComponent {
   code = ""
   codeCopied = false
   showEditOptionForEmailCommunications = false
-  openFollowUpEmailPopUp = false
+  openFollowUpEmailEdit = false
 
 
   link = ""
@@ -81,6 +85,7 @@ export class EditEventComponent {
 
 
   loggedInEmailId = localStorage.getItem("emailID" || "")
+  timeFormatVal = localStorage.getItem("timeFormat")
   // eventLinksArr = JSON.parse(localStorage.getItem("eventLinksArr"))
   descriptionText = ""
 
@@ -106,7 +111,7 @@ export class EditEventComponent {
   showMinNotice = false
   showDailyLimit = false
   showStartTimeIncrements = false
-  // openCustom = false
+  showTimeFormats = false
 
 
   // ==========days====================================
@@ -242,23 +247,34 @@ export class EditEventComponent {
 
   // ========================================================
 
+  variablesForEmailBody = [
+    { label: 'My Name', value: '{{my_name}}' }, //0
+    { label: 'Invitee Full Name', value: '{{invitee_full_name}}' }, //1
+    { label: 'Invitee First Name', value: '{{invitee_first_name}}' }, //2
+    { label: 'Invitee Last Name', value: '{{invitee_last_name}}' }, //3
+    { label: 'Invitee Email', value: '{{invitee_email}}' }, //4
+    { label: 'Event Name', value: '{{event_name}}' }, //5
+    { label: 'Event Date', value: '{{event_date}}' }, //6
+    { label: 'Event Time', value: '{{event_time}}' } //7
+  ];
+
+  followupEmailSubject: string = this.sendFollowupEmail.emailSubject
+
+  followupEmailTemplate: string = this.sendFollowupEmail.emailBody
+
+  // ========================================================
+
   constructor(private route: ActivatedRoute, private router: Router, private apiService: APIService, private datePipe: DatePipe) { }
 
   private subscription: Subscription;
 
   ngOnInit() {
 
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     console.log("this.sendFollowupEmail ", this.sendFollowupEmail);
-    // sendFollowupEmail
-    // Object
-    // sendFollowUpEmail
-    // true
-    // time
-    // 1
-    // unit
-    // "hrs"
-
-
     console.log("days initially ", this.days);
     console.log("passEvDeets ", typeof (this.passEvDeets));
     console.log(this.passEvDeets);
@@ -790,18 +806,18 @@ export class EditEventComponent {
 
   openEditEmailFollowUp() {
     this.showEditOptionForEmailCommunications = false
-    this.openFollowUpEmailPopUp = true
-    this.makeBlur = true
+    this.openFollowUpEmailEdit = true
+    // this.makeBlur = true
   }
 
   closeEditEmailFollowUp() {
-    this.openFollowUpEmailPopUp = false
-    this.makeBlur = false
+    this.openFollowUpEmailEdit = false
+    // this.makeBlur = false
   }
 
-  saveEditEmailFollowUp(){
+  saveEditEmailFollowUp() {
     this.finalsendFollowupEmail = this.sendFollowupEmail
-    this.openFollowUpEmailPopUp = false
+    this.openFollowUpEmailEdit = false
     this.makeBlur = false
   }
 
@@ -823,10 +839,10 @@ export class EditEventComponent {
 
   changeSendFollowupEmail() {
     console.log("this.sendFollowupEmail.sendFollowupEmail ", this.sendFollowupEmail.sendFollowUpEmail);
-    
+
     this.sendFollowupEmail.sendFollowUpEmail = !this.sendFollowupEmail.sendFollowUpEmail
     console.log('this.sendFollowupEmail.sendFollowUpEmail ', this.sendFollowupEmail.sendFollowUpEmail);
-    
+
   }
 
 
@@ -1062,8 +1078,6 @@ export class EditEventComponent {
 
   }
 
-
-
   continueSchedulingFunctn() {
 
     let goAhead = true
@@ -1166,20 +1180,7 @@ export class EditEventComponent {
         }
 
         console.log("this.minimumNotice obj ", this.minimumNotice);
-        //   {
-        //     "hrs": {
-        //         "status": false
-        //     },
-        //     "mins": {
-        //         "status": true,
-        //         "noOfMins": 5
-        //     },
-        //     "days": {
-        //         "status": false
-        //     },
-        //     "status": true,
-        //     "_id": "66793e367d68d29c14f6d1e3"
-        // }
+
       }
 
 
@@ -1198,6 +1199,10 @@ export class EditEventComponent {
       }
 
 
+      console.log('this.timeFormatVal ', this.timeFormatVal);
+      localStorage.setItem('timeFormat', this.timeFormatVal)
+
+
     }
 
     console.log("whenCanInviteesSchedule ", this.whenCanInviteesSchedule);
@@ -1208,7 +1213,7 @@ export class EditEventComponent {
 
     console.log("this.loggedInEmailId ", this.loggedInEmailId);
 
-    this.apiService.editEventCalendar(this.evId, this.whenCanInviteesSchedule, this.minimumNotice, this.noOfMeetsAllowedPerDay, this.startTimIncrements, this.loggedInEmailId)
+    this.apiService.editEventCalendar(this.evId, this.whenCanInviteesSchedule, this.minimumNotice, this.noOfMeetsAllowedPerDay, this.startTimIncrements, this.loggedInEmailId, this.timeFormatVal)
 
     setTimeout(() => {
       this.schedulingPageSlider = false
@@ -1221,17 +1226,22 @@ export class EditEventComponent {
   // =======================================================
 
 
-  continueEmailFollowUpFunctn(){
+  continueEmailFollowUpFunctn() {
+    
+    // this.finalsendFollowupEmail['emailSubject'] = this.followupEmailSubject
+    // this.finalsendFollowupEmail['emailBody'] = this.followupEmailTemplate
+    // console.log("followupEmailSubject", this.followupEmailSubject);
+    // console.log("followupEmailTemplate", this.followupEmailTemplate);
 
-      console.log("finalsendFollowupEmail ",this.loggedInEmailId, this.evId, this.finalsendFollowupEmail);    
+    console.log("finalsendFollowupEmail ", this.loggedInEmailId, this.evId, this.finalsendFollowupEmail);
 
-      this.apiService.editfinalsendFollowupEmail(this.loggedInEmailId ,this.evId ,this.finalsendFollowupEmail) 
+    this.apiService.editfinalsendFollowupEmail(this.loggedInEmailId, this.evId, this.finalsendFollowupEmail)
 
 
-      setTimeout(() => {
-        this.communicationPageSlider = false
-        this.getAllEventEditings()
-      }, 1000)
+    setTimeout(() => {
+      this.communicationPageSlider = false
+      this.getAllEventEditings()
+    }, 1000)
   }
 
   // =======================================================
@@ -1869,6 +1879,50 @@ export class EditEventComponent {
   }
   // ===========setTimesAsPerMinNotice ends=======================
 
+  insertVariableInFollowUpEmailSubject(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const variableValue = selectElement.value;
+    if (!variableValue) return;
+
+    const textArea = this.subjectTextArea.nativeElement;
+    const start = textArea.selectionStart;
+    const end = textArea.selectionEnd;
+    const before = this.followupEmailSubject.substring(0, start);
+    const after = this.followupEmailSubject.substring(end);
+    this.followupEmailSubject = before + variableValue + after;
+    setTimeout(() => {
+      textArea.selectionStart = textArea.selectionEnd = start + variableValue.length;
+      textArea.focus();
+    }, 0);
+
+    // Clear selection
+    selectElement.selectedIndex = 0;
+  }
+
+  insertVariableInFollowUpEmailBody(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const variableValue = selectElement.value;
+    if (!variableValue) return;
+
+    const textArea = this.bodyTextArea.nativeElement;
+    const start = textArea.selectionStart;
+    const end = textArea.selectionEnd;
+    const before = this.followupEmailTemplate.substring(0, start);
+    const after = this.followupEmailTemplate.substring(end);
+    this.followupEmailTemplate = before + variableValue + after;
+    setTimeout(() => {
+      textArea.selectionStart = textArea.selectionEnd = start + variableValue.length;
+      textArea.focus();
+    }, 0);
+
+    // Clear selection
+    selectElement.selectedIndex = 0;
+  }
+
+  saveTemplate() {
+    // Call your backend API to save the emailTemplate
+    console.log('Template saved:', this.followupEmailTemplate);
+  }
 
   shareBtnClicked() {
     this.sharePopup = true
@@ -1984,7 +2038,7 @@ export class EditEventComponent {
   }
 
   editEmailFollowUp() {
-    this.openFollowUpEmailPopUp = true
+    this.openFollowUpEmailEdit = true
   }
 
 

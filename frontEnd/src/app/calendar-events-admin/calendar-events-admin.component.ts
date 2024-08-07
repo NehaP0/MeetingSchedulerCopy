@@ -18,6 +18,8 @@ export class CalendarEventsAdminComponent {
   selectedUserEmail = localStorage.getItem("selectedUserEmail" || "")
   selectedUserId = localStorage.getItem("selectedUserId" || "")
 
+  token = localStorage.getItem('token')
+
   formattedMeetingsHide: object[] = [];
   MeetingsWOColor: any[] = [];
   Meetings: any[] = [];
@@ -73,6 +75,11 @@ export class CalendarEventsAdminComponent {
 
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     //for calendar view 
     this.callCalendar()
   }

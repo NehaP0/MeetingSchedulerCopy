@@ -78,6 +78,8 @@ calendarLinkRoute.get("/redirectToCancellation", async (req, res) => {
     let redirectUrl = `http://localhost:4500/cancelMeet?whoCanceled=${whoCanceled}&whoseCalendar=${whoseCalendar}&eventId=${eventId}&meetId=${meetId}`
 
     res.redirect(redirectUrl);
+    // return res.status(302).redirect(redirectUrl);
+
 
     // res.send({message : "req is sent to me", name: name, id: id})
   } catch (error) {
@@ -187,8 +189,6 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
     userSurname
   );
 
-  start = `${start}:00`
-  end = `${end}:00`
 
 
   // let importedloggedInUserEmail = loggedInUserEmail;
@@ -274,7 +274,8 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
       // console.log("cronTime ", cronTime);
       let cronTime;
       let isFollowUpEmailNeeded = false
-
+      let followUpEmailSubject = ""
+      let followUpEmailBody = ""
 
 
       // ===========================================

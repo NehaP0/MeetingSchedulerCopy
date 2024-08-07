@@ -10,14 +10,14 @@ import multimonthPlugin from '@fullcalendar/multimonth'
 
 
 
-import { DatePipe} from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // "@fullcalendar/list": "^6.1.11",
 // "@fullcalendar/multimonth": "^6.1.11",
 
 interface EditObj {
-  evType : string;
+  evType: string;
   date: string;
   startTime: string;
   endTime: string;
@@ -41,6 +41,7 @@ interface NewEditObj {
   styleUrl: './scheduled-events.component.css'
 })
 export class ScheduledEventsComponent implements OnInit {
+  token = localStorage.getItem('token')
   formattedMeetingsHide: Array<any> = [];
   pastMeetings: Array<any> = []
   futureMeetings: Array<any> = []
@@ -52,6 +53,7 @@ export class ScheduledEventsComponent implements OnInit {
   idSelected = ""
   nameWhoseCalendar = ""
   selectedUserAvObj = {}
+  selectedEvId = ""
 
   displayTimeDiv = false;
   dateSelected = ""
@@ -65,24 +67,24 @@ export class ScheduledEventsComponent implements OnInit {
   meetId = ""
   selectedUserEmailId = ""
   eventObj = {}
-  newObj : EditObj ={
-    'evType':"",
-    'date':"",
-    'startTime':"",
-    'endTime':"",
-    'name' : "",
-    'emailId' : []
+  newObj: EditObj = {
+    'evType': "",
+    'date': "",
+    'startTime': "",
+    'endTime': "",
+    'name': "",
+    'emailId': []
   }
 
 
 
-  newEditObj: NewEditObj ={
+  newEditObj: NewEditObj = {
     // 'evType':"",
     'date': "",
     'startTime': "",
     'endTime': "",
-    'name' : "",
-    'emailId' : [],
+    'name': "",
+    'emailId': [],
     // 'meetId' : ""
   }
 
@@ -121,52 +123,52 @@ export class ScheduledEventsComponent implements OnInit {
   nonWorkingDays = [0, 6]
 
   editMeet = false
-  attendees:  string[] = [""];
+  attendees: string[] = [""];
 
   removedAttendee: string[] = [];
   removedAttendeeUndo: boolean = false;
   removedAttendeeEmail = ""
 
   calendarOptionsMonth: CalendarOptions = {
-    initialView: 'dayGridMonth', 
-    
+    initialView: 'dayGridMonth',
+
     plugins: [dayGridPlugin],
 
     headerToolbar: {
-      left: 'prev,next',
+      left: 'prev',
       center: 'title',
-      right: '',
+      right: 'next',
 
     },
-  
-    
+
+
 
     views: {
       dayGridMonth: {
-        
+
       },
-     
+
     },
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-   
+
   };
 
 
 
   calendarOptionsWeek: CalendarOptions = {
 
-    initialView: 'timeGridWeek',  
+    initialView: 'timeGridWeek',
     plugins: [timeGridPlugin],
-    dayHeaderFormat:{ weekday: 'short',  day: 'numeric' },
+    dayHeaderFormat: { weekday: 'short', day: 'numeric' },
 
     headerToolbar: {
-      left: 'prev,next',
+      left: 'prev',
       center: 'title',
-      right: '',
+      right: 'next',
 
     },
     views: {
@@ -182,22 +184,22 @@ export class ScheduledEventsComponent implements OnInit {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-   
+
   };
 
 
   calendarOptionsDay: CalendarOptions = {
     // initialView: 'dayGridMonth', 
     // initialView : 'timeline',
-    initialView: 'timeGrid',  
+    initialView: 'timeGrid',
     // plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, multimonthPlugin],
     plugins: [timeGridPlugin],
 
     headerToolbar: {
-      left: 'prev,next',
+      left: 'prev',
       center: 'title',
       // right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek, multiMonth',
-      right: '',
+      right: 'next',
 
     },
     views: {
@@ -243,13 +245,19 @@ export class ScheduledEventsComponent implements OnInit {
   };
 
 
-  
+
 
   constructor(private apiService: APIService, private route: ActivatedRoute, private router: Router, private datePipe: DatePipe) { }
 
   private subscription: Subscription;
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
+
 
     this.apiService.getMeetingsforUserToSee(this.id);
 
@@ -402,33 +410,33 @@ export class ScheduledEventsComponent implements OnInit {
 
         // eventMouseEnter: function(mouseEnterInfo){
         //   console.log("mouseEnterInfo ", mouseEnterInfo);
-          
+
         // },
-        
-        dayMaxEvents : 100,
-        eventOrder : 'start',
-        displayEventTime : false, //hides time
-        eventDisplay : 'block', // shows strip
+
+        dayMaxEvents: 100,
+        eventOrder: 'start',
+        displayEventTime: false, //hides time
+        eventDisplay: 'block', // shows strip
         dayCellContent: this.theDayCellContent.bind(this),
         eventClick: this.onEventClick.bind(this)
         // eventDisplay : 'auto', // shows dots
 
-        
 
-        
+
+
         // dayMaxEventRows : true,
-        
+
         // eventDisplay : 'list-item',
         // eventBackgroundColor : 'red',
 
-        
+
 
       }
       this.calendarOptionsWeek = {
         initialView: 'timeGridWeek',
         events: this.Events, //commented so that events are not shown on calendar
-        
-        
+
+
         // events: [
         //   {
         //     start: '2024-03-04T10:00:00',
@@ -455,7 +463,7 @@ export class ScheduledEventsComponent implements OnInit {
       }
       this.calendarOptionsDay = {
         initialView: 'timeGrid',
-        events: this.Events, 
+        events: this.Events,
         // dateClick: this.onDateClick.bind(this),
         dayCellContent: this.theDayCellContent.bind(this),
         eventClick: this.onEventClick.bind(this)
@@ -466,20 +474,19 @@ export class ScheduledEventsComponent implements OnInit {
   }
 
 
-  // ---------------------------
-
   // ----------theDayCellContent starts----------
   theDayCellContent(info: any) {
     const dayOfWeek = info.date.getDay();
     const date = info.date.getDate();
     // console.log(dayOfWeek);
-    for (let i = 0; i < this.nonWorkingDays.length; i++) {
-      if (dayOfWeek === this.nonWorkingDays[i]) {
-        return { html: '<div style="color: grey">' + date + '</div>' };
-      }
-    }
-    
-    
+
+    // for (let i = 0; i < this.nonWorkingDays.length; i++) {
+    //   if (dayOfWeek === this.nonWorkingDays[i]) {
+    //     return { html: '<div style="color: grey">' + date + '</div>' };
+    //   }
+    // }
+
+
     return { html: '<div>' + date + '</div>' };
   }
   // ----------theDayCellContent ends------------
@@ -489,7 +496,7 @@ export class ScheduledEventsComponent implements OnInit {
 
     console.log('Clicked on event : ' + res);
     alert(res)
-    
+
     this.selectedDateMeets = []
 
     console.log('Clicked on date : ' + res.dateStr); //2024-02-13
@@ -500,19 +507,19 @@ export class ScheduledEventsComponent implements OnInit {
     console.log("events after date click", this.Events);
 
     this.showMeets = true
-    for (let i = 0; i < this.Events.length; i++) {    
+    for (let i = 0; i < this.Events.length; i++) {
 
 
 
       if (res.dateStr == this.Events[i].start.split('T')[0]) {
-        console.log("start date",this.Events[i].start.split('T')[0]);
+        console.log("start date", this.Events[i].start.split('T')[0]);
         console.log("meet ", this.Events[i]);
         let date = this.Events[i].start.split('T')[0]
         let startTime = this.Events[i].start.split('T')[1]
         let endTime = this.Events[i].end.split('T')[1]
 
         // console.log("endTime ", endTime);
-        
+
 
 
         // this.Events[i]['date'] = this.Events[i].start.split['T'][0]
@@ -555,32 +562,33 @@ export class ScheduledEventsComponent implements OnInit {
     this.newObj['evType'] = event.extendedProps.evType
     this.newEditObj['evType'] = event.extendedProps.evType
     console.log("this.newObj['evType'] ", this.newObj['evType']);
-     
+
     this.newObj['date'] = event.start.split('T')[0]
     this.newEditObj['date'] = event.start.split('T')[0]
     console.log("this.newObj['date'] ", this.newObj['date']);
-    
+
     this.newObj['startTime'] = event.start.split('T')[1].split('+')[0]
     this.newEditObj['startTime'] = event.start.split('T')[1].split('+')[0]
     console.log("this.newObj['startTime'] ", this.newObj['startTime']);
-    
+
     console.log("end ", event.end);
-    
+
     this.newObj['endTime'] = event.end.split('T')[1].split('+')[0]
     this.newEditObj['endTime'] = event.end.split('T')[1].split('+')[0]
     console.log("this.newObj['endTime'] ", this.newObj['endTime']);
-    
+
     this.newObj['name'] = event.extendedProps.name
     this.newEditObj['name'] = event.extendedProps.name
     console.log("this.newObj['name'] ", this.newObj['name']);
-    
+
     this.newObj['emailId'] = event.extendedProps.emailId
     this.newEditObj['emailId'] = event.extendedProps.emailId
     console.log("this.newObj['emailId'] ", this.newObj['emailId']);
-    
+
+    this.selectedEvId = event.extendedProps.eventId
 
 
-    console.log('newObj ', this.newObj);  
+    console.log('newObj ', this.newObj);
   }
 
   // -------------------
@@ -599,21 +607,46 @@ export class ScheduledEventsComponent implements OnInit {
     this.showDeetsFor = ""
   }
 
-  closePopUp(){
+  closePopUp() {
     this.showMeets = false
     this.editMeet = false
-    console.log(this.showMeets);    
+    console.log(this.showMeets);
   }
- 
-  editMeetingPopUp(){
+
+  editMeetingPopUp() {
     this.showMeets = false
     this.editMeet = true
   }
 
+  // ============
+  cancelMeet() {
+   
+    let whoCanceled = this.id
+    let whoseCalendar = this.id
+    let eventId = this.selectedEvId
+    let meetId = this.meetId
+
+    console.log('whoCanceled ', whoCanceled);
+    console.log('whoseCalendar ', whoseCalendar);
+    console.log('eventId ', eventId);
+    console.log('meetId ', meetId);
+
+    let redirectUrl = `http://localhost:4500/cancelMeet?whoCanceled=${whoCanceled}&whoseCalendar=${whoseCalendar}&eventId=${eventId}&meetId=${meetId}`
+
+    window.open(redirectUrl, '_blank');
+
+    setTimeout(()=>{
+      window.location.reload();
+    },10000)
+  }
+
+  // ============
+
+  
   addAttendee() {
     this.attendees.push('');
     console.log(this.attendees);
-    
+
   }
 
   removeAttendee(index: number) {
@@ -629,42 +662,42 @@ export class ScheduledEventsComponent implements OnInit {
     this.removedAttendeeUndo = true;
     this.removedAttendeeEmail = email
     console.log(this.newEditObj);
-    
-}
 
-// undoRemoveExistingAttendee() {
-//     if (this.removedAttendee) {
-//         this.newEditObj.emailId.push(this.removedAttendeeEmail)
-//         this.newEditObj.name = this.removedAttendee.name;
-//         this.removedAttendee = null;
-//         this.removedAttendeeUndo = false;
-//     }
-//     console.log(this.newEditObj);
+  }
 
-// }
+  // undoRemoveExistingAttendee() {
+  //     if (this.removedAttendee) {
+  //         this.newEditObj.emailId.push(this.removedAttendeeEmail)
+  //         this.newEditObj.name = this.removedAttendee.name;
+  //         this.removedAttendee = null;
+  //         this.removedAttendeeUndo = false;
+  //     }
+  //     console.log(this.newEditObj);
+
+  // }
 
 
-  editMeetingfromUserSide(){      
+  editMeetingfromUserSide() {
     this.selectedUserEmailId = localStorage.getItem("emailID")
     console.log(this.selectedUserEmailId, this.meetId);
-    console.log("meetId ", this.meetId);      
-    console.log("newEditObj ",this.newEditObj);
-    console.log(this.newObj.date, this.newEditObj.date, this.newObj.startTime, `${this.newEditObj.startTime}:00`, this.newObj.endTime, `${this.newEditObj.endTime}:00`, this.newObj.date==this.newEditObj.date , this.newObj.startTime==`${this.newEditObj.startTime}:00` , this.newObj.endTime==`${this.newEditObj.endTime}:00`);
-    
+    console.log("meetId ", this.meetId);
+    console.log("newEditObj ", this.newEditObj);
+    console.log(this.newObj.date, this.newEditObj.date, this.newObj.startTime, `${this.newEditObj.startTime}:00`, this.newObj.endTime, `${this.newEditObj.endTime}:00`, this.newObj.date == this.newEditObj.date, this.newObj.startTime == `${this.newEditObj.startTime}:00`, this.newObj.endTime == `${this.newEditObj.endTime}:00`);
+
     this.newEditObj.emailId = [...this.newEditObj.emailId, ...this.attendees]
- 
+
 
     console.log("attendees ", this.attendees);
     console.log("newEditObj ", this.newEditObj);
 
-    
-    
+
+
     this.editMeet = false
     // if(this.newObj.date==this.newEditObj.date && this.newObj.startTime==`${this.newEditObj.startTime}:00` && this.newObj.endTime==`${this.newEditObj.endTime}:00` || this.newObj.date==this.newEditObj.date && this.newObj.startTime==this.newEditObj.startTime && this.newObj.endTime==this.newEditObj.endTime){
     //   alert('Date and time are same as previous.')
     // }
     // else{
-      this.apiService.editMeetingfromUserSide(this.selectedUserEmailId, this.meetId, this.newEditObj.date, this.newEditObj.startTime, this.newEditObj.endTime, this.newEditObj.name, this.newEditObj.emailId)  
+    this.apiService.editMeetingfromUserSide(this.selectedUserEmailId, this.meetId, this.newEditObj.date, this.newEditObj.startTime, this.newEditObj.endTime, this.newEditObj.name, this.newEditObj.emailId)
     // }    
   }
 

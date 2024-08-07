@@ -34,7 +34,7 @@ export class CalendarByLinkComponent implements OnInit {
   userName: string = '';
   emailId : string = '';
   loggedInName = localStorage.getItem("userLoggedInName" || "")
-
+  token = localStorage.getItem('token')
   evName = localStorage.getItem("evName")
   evDurHrs = Number(localStorage.getItem("evDurHrs"))
   evDurMins = Number(localStorage.getItem("evDurMins"))
@@ -144,6 +144,9 @@ export class CalendarByLinkComponent implements OnInit {
 
 ngOnInit(){
 
+  if(!this.token){
+    this.router.navigate(['/login']);
+  }
 
 
   // -----taking name and email id from query paramaters----
@@ -229,7 +232,7 @@ ngOnInit(){
 // ----------theDayCellContent ends------------
 
 
-// ---------------onDateClick starts---------------
+// --------------THIS-onDateClick starts---------------
 
   onDateClick(res: any) {
 
@@ -394,7 +397,11 @@ ngOnInit(){
 
       let allTimesArray = []
 
-      let timeStr = workingHrStart //09:00:00
+      // let timeStr = workingHrStart //09:00:00
+      let timeStr = workingHrStart[0]+workingHrStart[1]+workingHrStart[2]+workingHrStart[3]+workingHrStart[4]//09:00
+
+      console.log("pushing workinghrstrt ", timeStr);
+      
       
       allTimesArray.push(timeStr)
 
@@ -443,18 +450,18 @@ ngOnInit(){
         //buulding timestring properly because it is a string
         if(workingStartHours < 10){
           if(workingStartMinutes < 10){
-            timeStr = `0${workingStartHours}:0${workingStartMinutes}:00`
+            timeStr = `0${workingStartHours}:0${workingStartMinutes}`
           }
           else{
-            timeStr = `0${workingStartHours}:${workingStartMinutes}:00`
+            timeStr = `0${workingStartHours}:${workingStartMinutes}`
           }
         }
         else{
           if(workingStartMinutes < 10){
-            timeStr = `${workingStartHours}:0${workingStartMinutes}:00`
+            timeStr = `${workingStartHours}:0${workingStartMinutes}`
           }
           else{
-            timeStr = `${workingStartHours}:${workingStartMinutes}:00`
+            timeStr = `${workingStartHours}:${workingStartMinutes}`
           }
         }
 
@@ -510,6 +517,8 @@ ngOnInit(){
         }
   
         if(found == false){
+          console.log("alltimes of i ", allTimesArray[i]);
+          
           usersAvailaibleTimes.push(allTimesArray[i])
         }
       }

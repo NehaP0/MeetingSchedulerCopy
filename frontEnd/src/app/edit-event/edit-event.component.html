@@ -228,79 +228,46 @@
     </div>
 
 
-    <div *ngIf="openFollowUpEmailPopUp" class="popUpToAddNewQuestion makeSmallPopup">
-        <div class="popUpForNewQuestionHeading eventNameHeading">
-            <p class="label">Edit Email follow-up</p>
-            <p id="closePopUpToAddNewQuestion" (click)="closeEditEmailFollowUp()">X</p>
-        </div>
-
-        <div>
-            <p class="label">Timing</p>
-            <div class="makeItFlex timingDiv">
-                <div>
-                    <input type="number"  min="0" [(ngModel)]="sendFollowupEmail.time">
-                </div>
-                <div>
-                    <select name="" id="" [(ngModel)]="sendFollowupEmail.unit">
-                        <option value="days">day(s)</option>
-                        <option value="hrs">hour(s)</option>
-                        <option value="mins">minute(s)</option>
-                    </select>
-                </div>
-                <div>
-                    <p>after event</p>
-                </div>
-            </div>
-
-            <div class="editEmailFollowUpFooter">
-                <button (click)="saveEditEmailFollowUp()">Save</button>
-                <button (click)="closeEditEmailFollowUp()">Cancel</button>
-            </div>
-        </div>
-
-    </div>
-
-
     <div class="slider" [class.eventDetailsSlider]="showEventDetailsSlider">
         <button (click)="goBack()" class="goBackBtn">
             &#60; Event Type Summary</button>
 
-                <h4>Edit Event Type</h4>
+        <h4>Edit Event Type</h4>
 
-                <hr>
-                <label class="makeItBold">Event name</label>
-                <input [(ngModel)]="eventN" type="text" id="eventName" placeholder="Name your event" name="eventName"
-                    #eventName>
-                <label class="redWarning" *ngIf="showWarning">Please provide an event name.</label>
+        <hr>
+        <label class="makeItBold">Event name</label>
+        <input [(ngModel)]="eventN" type="text" id="eventName" placeholder="Name your event" name="eventName"
+            #eventName>
+        <label class="redWarning" *ngIf="showWarning">Please provide an event name.</label>
 
-                <label class="makeItBold">Duration</label>
-                <div>
-                    <label for="hrs">Hours</label>
-                    <input [(ngModel)]="evDurHrs" type="number" name="hrs" placeholder="0" #hrs min="0">
+        <label class="makeItBold">Duration</label>
+        <div>
+            <label for="hrs">Hours</label>
+            <input [(ngModel)]="evDurHrs" type="number" name="hrs" placeholder="0" #hrs min="0">
 
-                    <label for="min">Minutes</label>
-                    <input [(ngModel)]="evDurMins" type="number" name="min" placeholder="30" #min min="0">
-                    <label class="redWarning" *ngIf="showTimeWarning">Please provide an event duration.</label>
-                </div>
+            <label for="min">Minutes</label>
+            <input [(ngModel)]="evDurMins" type="number" name="min" placeholder="30" #min min="0">
+            <label class="redWarning" *ngIf="showTimeWarning">Please provide an event duration.</label>
+        </div>
 
-                <label class="makeItBold">Location</label>
-                <div id="zoom">
-                    <ng-icon id="zoomIcon" name="heroVideoCamera"></ng-icon>
-                    <p id="zoomP">Google Meet</p>
-                </div>
+        <label class="makeItBold">Location</label>
+        <div id="zoom">
+            <ng-icon id="zoomIcon" name="heroVideoCamera"></ng-icon>
+            <p id="zoomP">Google Meet</p>
+        </div>
 
-                <label class="makeItBold">Description/Instructions</label>
-                <div id="description">
-                    <textarea [(ngModel)]="descriptionText"
-                        placeholder="Write a summary and any details your invitee should know about the event."></textarea>
-                </div>
+        <label class="makeItBold">Description/Instructions</label>
+        <div id="description">
+            <textarea [(ngModel)]="descriptionText"
+                placeholder="Write a summary and any details your invitee should know about the event."></textarea>
+        </div>
 
-                <div class="bottomDiv">
-                    <div>
-                        <button (click)="goBack()">Cancel</button>
-                        <button (click)="continueEditFunctn()">Continue</button>
-                    </div>
-                </div>
+        <div class="bottomDiv">
+            <div>
+                <button (click)="goBack()">Cancel</button>
+                <button (click)="continueEditFunctn()">Continue</button>
+            </div>
+        </div>
     </div>
 
 
@@ -554,7 +521,7 @@
             <label class="makeItBold headingsInSchedulingPage">Additional options</label>
 
             <div>
-                <div (click)="showStartTimeIncrements =! showStartTimeIncrements">
+                <div (click)="showStartTimeIncrements = !showStartTimeIncrements">
                     <p class="subHeadingsInSchedulingPage">Start time increments</p>
                 </div>
                 <div *ngIf="showStartTimeIncrements">
@@ -581,6 +548,26 @@
 
                 </div>
                 <p class="makeGrey">Set the frequency of available time slots for invitees.</p>
+            </div>
+
+            <div>
+
+                <div (click)="showTimeFormats = !showTimeFormats">
+                    <p class="subHeadingsInSchedulingPage">Time format</p>
+                </div>
+                <div *ngIf="showTimeFormats">
+                    <select class="styleSelectTag" [(ngModel)]="timeFormatVal">
+                        <option disabled *ngIf="timeFormatVal == '24hr'">24 hour view</option>
+                        <option disabled *ngIf="timeFormatVal == '12hr'">12 hour view</option>
+
+                        <option value="24hr">24 hour view</option>
+                        <option value="12hr">12 hour view</option>
+                    </select>
+                </div>
+
+                <p class="makeGrey">Set the time format of available time slots for invitees.</p>
+
+
             </div>
 
         </div>
@@ -620,12 +607,12 @@
                 <div class="iconDiv"><ng-icon name="bootstrapThreeDotsVertical" (click)="editEmailOptions()"></ng-icon>
                 </div>
                 <div *ngIf="showEditOptionForEmailCommunications" class="popOverOfEmailCmnctn">
-                    
-                    <div class="divsInsideEditOptnfEmail" (click)="openEditEmailFollowUp()">
+
+                    <!-- <div class="divsInsideEditOptnfEmail" (click)="openEditEmailFollowUp()">
                         <ng-icon name="bootstrapPencil"></ng-icon>
                         <p>Edit</p>
                     </div>
-                    <hr>
+                    <hr> -->
                     <div class="divsInsideEditOptnfEmail">
                         <input type="checkbox" name="" id="" [checked]="sendFollowupEmail.sendFollowUpEmail"
                             (change)="changeSendFollowupEmail()">
@@ -634,6 +621,78 @@
                     </div>
                 </div>
             </div>
+
+             <div class="email-template-editor">
+
+<!-- 
+                <div>
+                    <label for="subject-textarea" class="makeItBold">Email Subject</label>
+                    <div class="emailTemplate">
+                        <div>
+                            <select (change)="insertVariableInFollowUpEmailSubject($event)">
+                                <option value="" selected disabled>+Variable</option>
+                                <option *ngFor="let variable of variablesForEmailBody" [value]="variable.value">
+                                    {{ variable.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <textarea [(ngModel)]="followupEmailSubject" rows="1" cols="35" #subjectTextArea
+                            class="custom-textarea"></textarea>
+                    </div>
+
+                    <label for="body-textarea" class="makeItBold">Email Body</label>
+                    <div class="emailTemplate">
+                        <div>
+                            <select (change)="insertVariableInFollowUpEmailBody($event)">
+                                <option value="" selected disabled>+Variable</option>
+                                <option *ngFor="let variable of variablesForEmailBody" [value]="variable.value">
+                                    {{ variable.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <textarea [(ngModel)]="followupEmailTemplate" rows="5" cols="35" #bodyTextArea
+                            class="custom-textarea"></textarea>
+                    </div>
+                </div> -->
+
+
+                <div>
+                    
+                    <div>
+                        <p class="label">Timing</p>
+                        <div class="makeItFlex timingDiv">
+                            <div>
+                                <input type="number" min="0" [(ngModel)]="sendFollowupEmail.time">
+                            </div>
+                            <div>
+                                <select name="" id="" [(ngModel)]="sendFollowupEmail.unit">
+                                    <option value="days">day(s)</option>
+                                    <option value="hrs">hour(s)</option>
+                                    <option value="mins">minute(s)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <p>after event</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div> 
+            
+            <!-- <div *ngIf="openFollowUpEmailPopUp" class="popUpToAddNewQuestion makeSmallPopup"> -->
+            <!-- <div class="popUpForNewQuestionHeading eventNameHeading">
+                    <p class="label">Edit Email follow-up</p>
+                    <p id="closePopUpToAddNewQuestion" (click)="closeEditEmailFollowUp()">X</p>
+                </div> -->
+            
+            <!-- <div class="editEmailFollowUpFooter">
+                <button (click)="saveEditEmailFollowUp()">Save</button>
+                    <button (click)="closeEditEmailFollowUp()">Cancel</button>
+                </div> -->
+
+
         </div>
 
         <div class="bottomDiv">
@@ -736,7 +795,7 @@
                 <span *ngIf="questionsToBeAsked.length">,+{{questionsToBeAsked.length}} questions</span>
             </div>
             <div class="putMarginTop">
-                <p>Clodura.ai confirmation page</p>
+                <p>Clodura.AI confirmation page</p>
             </div>
         </div>
         <hr>
@@ -773,7 +832,8 @@
                         <span *ngIf="evDurHrs!=0">{{evDurHrs || ""}}</span><span *ngIf="evDurHrs!=0"> hrs &nbsp;
                             <!--  for space --></span>
 
-                        <span *ngIf="evDurMins!=0">{{evDurMins || ""}} </span><span *ngIf="evDurMins!=0"> mins </span>
+                        <span *ngIf="evDurMins!=0">{{evDurMins || ""}} </span><span *ngIf="evDurMins!=0"> mins
+                        </span>
                     </div>
                     <div>
                         <ng-icon name="octLocation"></ng-icon>

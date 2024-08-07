@@ -1,6 +1,8 @@
 import { Component, ElementRef, ViewChild} from '@angular/core';
 import { APIService } from '../api.service';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 
 @Component({
@@ -16,6 +18,9 @@ export class CustomiseComponent{
   durationMins = 30
   loggedInName = localStorage.getItem("userLoggedInName" || "")
   loggedInEmailId = localStorage.getItem("emailID" || "")
+  
+  token = localStorage.getItem('token')
+
   firstChar = this.loggedInName[0]
   duration : { hrs: number, minutes: number }= {
     "hrs" : 0,
@@ -24,7 +29,7 @@ export class CustomiseComponent{
   workingHrs = {}
 
   
-  constructor(private apiService: APIService){
+  constructor(private apiService: APIService, private router: Router){
     this.subscription = this.apiService.userLoggedInEmailId$.subscribe((userLoggedInEmailId) => {
       this.loggedInEmailId = userLoggedInEmailId;
       console.log("logged in user email is ",this.loggedInEmailId)
@@ -33,6 +38,13 @@ export class CustomiseComponent{
       this.loggedInName = userLoggedInName;
       console.log("logged in user name is ",this.loggedInName)
     });
+  }
+
+  ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
   }
 
   private subscription: Subscription;

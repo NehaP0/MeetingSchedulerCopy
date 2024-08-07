@@ -117,13 +117,18 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             link: ""
           }
         },
-        pasEvntDeetsToRedirectPg : false,
+        pasEvntDeetsToRedirectPg: false,
         _id: newEventId,
-        sendFollowupEmail : {
-          sendFollowUpEmail : true,
-          time : 1,
-          unit : "hrs"
+        sendFollowupEmail: {
+          sendFollowUpEmail: true,
+          time: 1,
+          unit: "mins",
+//           emailSubject : "Thank you for your time!",
+//           emailBody : `Hi {{invitee_email}},
+// Thank you for attending {{event_name}} at {{event_time}} on {{event_date}}.
+// Please respond to this email with any feedback or additional requests.`
         },
+        timeFormat : "24hr",
         bgClr: "white",
         btnAndLnkClr: "#0060E6",
         txtClr: "black"
@@ -199,13 +204,18 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
             link: ""
           }
         },
-        pasEvntDeetsToRedirectPg : false,
+        pasEvntDeetsToRedirectPg: false,
         _id: newEventId,
-        sendFollowupEmail : {
-          sendFollowUpEmail : true,
-          time : 1,
-          unit : "hrs"
+        sendFollowupEmail: {
+          sendFollowUpEmail: true,
+          time: 1,
+          unit: "mins",
+//           emailSubject : "Thank you for your time!",
+//           emailBody : `Hi {{invitee_email}},
+// Thank you for attending {{event_name}} at {{event_time}} on {{event_date}}.
+// Please respond to this email with any feedback or additional requests.`
         },
+        timeFormat : "24hr",
         bgClr: "white",
         btnAndLnkClr: "#0060E6",
         txtClr: "black"
@@ -480,14 +490,14 @@ eventRoute.patch("/editEventClrs", async (req, res) => {
 
 eventRoute.patch("/editEventFollowUp", async (req, res) => {
   console.log("editEventFollowUp called");
-  
-  let { loggedInEmailId, evId, finalsendFollowupEmailObj } = req.body;
+
+  let { loggedInEmailId, evId, finalsendFollowupEmailObj, followupEmailSubject, followupEmailTemplate } = req.body;
   console.log("gotten body data", req.body);
   console.log("loggedInEmailId ", loggedInEmailId);
 
-  if(!finalsendFollowupEmailObj.sendFollowUpEmail){
+  if (!finalsendFollowupEmailObj.sendFollowUpEmail) {
     finalsendFollowupEmailObj.time = 0,
-    finalsendFollowupEmailObj.unit = ""
+      finalsendFollowupEmailObj.unit = ""
   }
   try {
     let findLoggedInUser = await User.findOne({
@@ -680,13 +690,18 @@ eventRoute.post("/createEventAdmin", async (req, res) => {
           link: ""
         }
       },
-      pasEvntDeetsToRedirectPg : false,
+      pasEvntDeetsToRedirectPg: false,
       _id: newEventId,
-      sendFollowupEmail : {
-        sendFollowUpEmail : true,
-        time : 1,
-        unit : "hrs"
+      sendFollowupEmail: {
+        sendFollowUpEmail: true,
+        time: 1,
+        unit: "mins",
+//         emailSubject : "Thank you for your time!",
+//         emailBody : `Hi {{invitee_email}},
+// Thank you for attending {{event_name}} at {{event_time}} on {{event_date}}.
+// Please respond to this email with any feedback or additional requests.`
       },
+      timeFormat : "24hr",
       bgClr: "white",
       btnAndLnkClr: "#0060E6",
       txtClr: "black"
@@ -1125,6 +1140,13 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
   let { emailIdOfWhoCancelled, emailIdOfWhoseCalendar, evId, meetId, cancelationReason } = req.body;
 
   console.log("gotten body data ", req.body);
+  // gotten body data  {
+  //   emailIdOfWhoCancelled: 'trial@gmail.com',
+  //   emailIdOfWhoseCalendar: 'trial@gmail.com',
+  //   evId: 'undefined',
+  //   meetId: '66a20efa6c9f9256c43dab87',
+  //   cancelationReason: 'not req'
+  // }
 
   try {
     let userWhoseCalendar = await User.findOne({
@@ -1134,22 +1156,19 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
     let calendarOwnerName = userWhoseCalendar['name']
 
     let whocanceledUser = await User.findOne({
-      emailID : emailIdOfWhoCancelled
+      emailID: emailIdOfWhoCancelled
     })
 
     let whoCanceled
 
-    if(whocanceledUser){
+    if (whocanceledUser) {
       whoCanceled = whocanceledUser['name']
     }
-    else{
+    else {
       whoCanceled = emailIdOfWhoCancelled
     }
 
     console.log("User found", userWhoseCalendar);
-    let eventsArray = await userWhoseCalendar.events;
-
-    console.log("eventsArray", eventsArray);
 
     let otherEmailsArr
     let start
@@ -1158,67 +1177,99 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
     let evName
     let questsWdAnswers
     let userWhoHadScheduled = ""
-    let userWhoHadScheduledEmail 
+    let userWhoHadScheduledEmail
 
-    for (let i = 0; i < eventsArray.length; i++) {
-      console.log(eventsArray[i]._id == evId);
-      if (eventsArray[i]._id == evId) {
-        evName = eventsArray[i].evName
-        let meetsArr = eventsArray[i].meetings
-        console.log("meetsArr ", meetsArr);
-        let meetsArrWOThatMeet = meetsArr.filter((oneMeet) => {
-          if(oneMeet._id == meetId){
-            start = oneMeet.start
-            end = oneMeet.end
-            console.log('userEmail ', oneMeet.userEmail);
-            otherEmailsArr = oneMeet.userEmail
-            questsWdAnswers = oneMeet.questionsWdAnswers
-            userWhoHadScheduledEmail = oneMeet.userEmail[0]
-            userWhoHadScheduled = oneMeet.user
-            if(oneMeet.userSurname){
-              userWhoHadScheduled = userWhoHadScheduled + ` ${oneMeet.userSurname}`
+    if (evId != 'undefined') {
+      console.log('evid exists');
+      let eventsArray = userWhoseCalendar.events;
+
+      console.log("eventsArray", eventsArray);
+      for (let i = 0; i < eventsArray.length; i++) {
+        console.log(eventsArray[i]._id == evId);
+        if (eventsArray[i]._id == evId) {
+          evName = eventsArray[i].evName
+          let meetsArr = eventsArray[i].meetings
+          console.log("meetsArr ", meetsArr);
+          let meetsArrWOThatMeet = meetsArr.filter((oneMeet) => {
+            if (oneMeet._id == meetId) {
+              start = oneMeet.start
+              end = oneMeet.end
+              console.log('userEmail ', oneMeet.userEmail);
+              otherEmailsArr = oneMeet.userEmail
+              questsWdAnswers = oneMeet.questionsWdAnswers
+              userWhoHadScheduledEmail = oneMeet.userEmail[0]
+              userWhoHadScheduled = oneMeet.user
+              if (oneMeet.userSurname) {
+                userWhoHadScheduled = userWhoHadScheduled + ` ${oneMeet.userSurname}`
+              }
             }
-          }
-          return oneMeet._id != meetId
-        })
+            return oneMeet._id != meetId
+          })
 
-        console.log("meetsArrWOThatMeet ", meetsArrWOThatMeet);
-        eventsArray[i].meetings = meetsArrWOThatMeet
-        break;
+          console.log("meetsArrWOThatMeet ", meetsArrWOThatMeet);
+          eventsArray[i].meetings = meetsArrWOThatMeet
+          break;
 
+        }
       }
     }
+    else {
+      console.log('evid does not exist');
 
-      //to get month, date, date, year separately starts
-  const stdate = new Date(start);
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const dayOfWeek = stdate.getDay(); // like 0,1,2,3,4 etc
-  const dayOfWeekString = weekDays[dayOfWeek]; //sun, mon etc
+      let meetingWtOthers = userWhoseCalendar.meetingsWtOthers;
+      console.log('meetingWtOthers ', meetingWtOthers);
+      let meetsArrWOThatMeet = meetingWtOthers.filter((oneMeet) => {
+        if (oneMeet._id == meetId) {
+          console.log('found meet ', oneMeet._id, meetId);
 
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = stdate.getMonth(); // 0,1,2,3,4
-  const monthString = months[month]; // Jan,Feb,Mar  
-  console.log(monthString);
-
-  const dayOfMonth = stdate.getDate(); // 10, 22 etc
-
-  const year = stdate.getFullYear(); //2024
-  console.log(year);
-
-  const starthours = String(stdate.getHours()).padStart(2, '0');
-  const startminutes = String(stdate.getMinutes()).padStart(2, '0');
-  const startTime=`${starthours}:${startminutes}`
-
-  const enddate = new Date(end);
-  const endhours = String(enddate.getHours()).padStart(2, '0');
-  const endminutes = String(enddate.getMinutes()).padStart(2, '0');
-  const endTime=`${endhours}:${endminutes}`
-
-
-  //to get month, date, date, year separately ends
+          start = oneMeet.start
+          end = oneMeet.end
+          otherEmailsArr = oneMeet.userEmail
+          questsWdAnswers = oneMeet.questionsWdAnswers
+          userWhoHadScheduledEmail = oneMeet.userEmail[0]
+          userWhoHadScheduled = oneMeet.user
+          if (oneMeet.userSurname) {
+            userWhoHadScheduled = userWhoHadScheduled + ` ${oneMeet.userSurname}`
+          }
+        }
+        return oneMeet._id != meetId
+      })
+      console.log("meetsArrWOThatMeet ", meetsArrWOThatMeet);
+      userWhoseCalendar.meetingsWtOthers = meetsArrWOThatMeet
+    }
 
     await userWhoseCalendar.save();
     console.log("user saved");
+
+    //to get month, date, date, year separately starts
+    const stdate = new Date(start);
+    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayOfWeek = stdate.getDay(); // like 0,1,2,3,4 etc
+    const dayOfWeekString = weekDays[dayOfWeek]; //sun, mon etc
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = stdate.getMonth(); // 0,1,2,3,4
+    const monthString = months[month]; // Jan,Feb,Mar  
+    console.log(monthString);
+
+    const dayOfMonth = stdate.getDate(); // 10, 22 etc
+
+    const year = stdate.getFullYear(); //2024
+    console.log(year);
+
+    const starthours = String(stdate.getHours()).padStart(2, '0');
+    const startminutes = String(stdate.getMinutes()).padStart(2, '0');
+    const startTime = `${starthours}:${startminutes}`
+
+    const enddate = new Date(end);
+    const endhours = String(enddate.getHours()).padStart(2, '0');
+    const endminutes = String(enddate.getMinutes()).padStart(2, '0');
+    const endTime = `${endhours}:${endminutes}`
+
+
+    //to get month, date, date, year separately ends
+
+
 
     console.log("otherEmailsArr ", otherEmailsArr);
 
@@ -1244,7 +1295,7 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
 
     // sendCancellationMails(emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end)
     // emailIdOfWhoCancelled, emailIdOfWhoseCalendar, evId, meetId, cancelationReason
-    
+
     sendCancellationMails(
       evName,
       calendarOwnerName,
@@ -1254,11 +1305,11 @@ eventRoute.patch("/deleteMeet", async (req, res) => {
       cancelationReason,
       userWhoHadScheduled,
       userWhoHadScheduledEmail,
-      dayOfWeekString,        
+      dayOfWeekString,
       monthString,
       dayOfMonth,
       year,
-      startTime, 
+      startTime,
       endTime,
       whoCanceled
     )
@@ -1398,9 +1449,9 @@ eventRoute.patch("/addQuestionForForm/:selectedUsersEmailId", async (req, res) =
 eventRoute.patch("/editEvCalendar/:selectedUsersEmailId", async (req, res) => {
   console.log("editEvCalendar called ");
   let { selectedUsersEmailId } = req.params;
-  let { evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements } = req.body
+  let { evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, timeFormatVal } = req.body
   console.log("selectedUsersEmailId ", selectedUsersEmailId);
-  console.log("evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements ", evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements);
+  console.log("evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, timeFormatVal ", evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, timeFormatVal);
   try {
 
     let findSelectedUser = await User.findOne({ emailID: selectedUsersEmailId });
@@ -1422,6 +1473,7 @@ eventRoute.patch("/editEvCalendar/:selectedUsersEmailId", async (req, res) => {
     ans.minimumNotice = minimumNotice
     ans.noOfMeetsAllowedPerDay = noOfMeetsAllowedPerDay
     ans.startTimIncrements = startTimIncrements
+    ans.timeFormat = timeFormatVal
 
     await findSelectedUser.save();
 
@@ -1535,21 +1587,21 @@ async function sendMail(
 
 
 async function sendCancellationMails(
-      evName,
-      calendarOwnerName,
-      emailIdOfWhoseCalendar,
-      otherEmailsArr,
-      questsWdAnswers,
-      cancelationReason,
-      userWhoHadScheduled,
-      userWhoHadScheduledEmail,
-      dayOfWeekString,        
-      monthString,
-      dayOfMonth,
-      year,
-      startTime, 
-      endTime,
-      whoCanceled
+  evName,
+  calendarOwnerName,
+  emailIdOfWhoseCalendar,
+  otherEmailsArr,
+  questsWdAnswers,
+  cancelationReason,
+  userWhoHadScheduled,
+  userWhoHadScheduledEmail,
+  dayOfWeekString,
+  monthString,
+  dayOfMonth,
+  year,
+  startTime,
+  endTime,
+  whoCanceled
   // emailIdOfWhoCancelled, emailIdOfWhoseCalendar, otherEmailsArr, cancelationReason, start, end
 ) {
   // let otherMailIds = [emailIdOfWhoseCalendar, ...otherEmailsArr]
@@ -1596,11 +1648,11 @@ async function sendCancellationMails(
         cancelationReason,
         userWhoHadScheduled,
         userWhoHadScheduledEmail,
-        dayOfWeekString,        
+        dayOfWeekString,
         monthString,
         dayOfMonth,
         year,
-        startTime, 
+        startTime,
         endTime,
         whoCanceled
       },
@@ -1631,11 +1683,11 @@ async function sendCancellationMails(
       cancelationReason,
       userWhoHadScheduled,
       userWhoHadScheduledEmail,
-      dayOfWeekString,        
+      dayOfWeekString,
       monthString,
       dayOfMonth,
       year,
-      startTime, 
+      startTime,
       endTime,
       whoCanceled
     },

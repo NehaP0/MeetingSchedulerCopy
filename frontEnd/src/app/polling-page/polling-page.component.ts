@@ -13,11 +13,17 @@ export class PollingPageComponent implements OnInit {
   meetings = [];
   selectedMeetingIndex: number | null = null;
   selectedDetailIndex: number | null = null;
+  token = localStorage.getItem('token')
 
   constructor(private apiService: APIService, private route: ActivatedRoute, private router: Router) { }
   private subscription: Subscription;
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     this.apiService.getVotingArrOfloggedInUser();
 
     this.subscription = this.apiService.votingArr$.subscribe((votingArr) => {

@@ -20,11 +20,16 @@ export class BrandingComponent {
   profileImage = ""
   profileImageEntirePath = ""
   cloduraBrandingReq 
+  token = localStorage.getItem('token')
+
 
   constructor(private http: HttpClient, private apiService: APIService,    private route: ActivatedRoute,
     private router: Router) {}
 
   ngOnInit(){
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
     this.getTheUser()       
   }
 

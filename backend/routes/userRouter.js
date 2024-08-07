@@ -137,11 +137,16 @@ userRoute.post("/postuser", async (req, res) => {
       },
       pasEvntDeetsToRedirectPg: false,
       _id: newEventId,
-      sendFollowupEmail : {
-        sendFollowUpEmail : true,
-        time : 1,
-        unit : "hrs"
+      sendFollowupEmail: {
+        sendFollowUpEmail: true,
+        time: 1,
+        unit: "mins",
+        //         emailSubject : "Thank you for your time!",
+        //         emailBody : `Hi {{invitee_email}},
+        // Thank you for attending {{event_name}} at {{event_time}} on {{event_date}}.
+        // Please respond to this email with any feedback or additional requests.`
       },
+      timeFormat: "24hr",
       bgClr: "white",
       btnAndLnkClr: "#0060E6",
       txtClr: "black"
@@ -199,7 +204,7 @@ userRoute.patch("/updateContactsArr", async (req, res) => {
   try {
     await User.updateOne(
       { emailID: emailOfCalendarOwner },
-      { $push: {contacts : contactObj}}
+      { $push: { contacts: contactObj } }
     );
 
     return res.send({ message: "Contacts Updated" });
@@ -455,6 +460,8 @@ userRoute.patch("/updatePoll/:emailId", async (req, res) => {
   try {
     const userEmailId = req.params.emailId;
     let deets = req.body;
+    const today = new Date();
+    deets['pollCreationDate'] = today
     deets["link"] = `http://localhost:3000/user/vs?shortId=${shortId}`;
     deets["uniqueId"] = shortId;
 
@@ -516,16 +523,20 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
   try {
     let user = await User.findOne({ emailID: loggedInUserEmail });
     console.log("user ", user);
+    let nameOfCalOwner = user.name
+    console.log('nameOfCalOwner ', nameOfCalOwner);
     let votingArr = user.voting;
     console.log("votingArr ", votingArr);
 
     //variables req for mail sending start
     //loggedInUserEmail
+    let duration = ''
     let whoHasVotedNow = "";
     let totalNumberOfPeopleWhoHaveVotedTillNow = 0;
     let noOfVotesForTopTimes = 0;
     let topTimes = "";
     let meetingName = "";
+    let pollcreationDate = ""
     // let whoAllVotedForTopTimes = []
     // let duration = ''
     // let pollCreationDate = ''
@@ -535,10 +546,24 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
       console.log("obj.uniqueId, req.body.shortIdVal", obj.uniqueId, req.body.shortIdVal);
       console.log("obj.uniqueId == req.body.shortIdVal", obj.uniqueId == req.body.shortIdVal);
 
+
+
       if (obj.uniqueId == req.body.shortIdVal) {
         console.log("uniqueId found ", req.body.shortIdVal);
         console.log("details ", obj.details);
         console.log("selectedTimes ", req.body.selectedTimes);
+        console.log('pollCreationDate ', obj.pollCreationDate);
+
+        const date = new Date(obj.pollCreationDate);
+
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'long' }); // 'long' for full month name
+        const year = date.getFullYear();
+
+        pollcreationDate = `${day} ${month} ${year}`;
+        console.log(pollcreationDate);
+
+        duration = obj.duration
 
         for (let i = 0; i < req.body.selectedTimes.length; i++) {
           let found = false;
@@ -562,7 +587,6 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
 
               whoHasVotedNow = req.body.whoVotedName;
               console.log("who has voted now ", whoHasVotedNow);
-              totalNumberOfPeopleWhoHaveVotedTillNow += obj.details[j]["whoVoted"].length;
               noOfVotesForTopTimes = Math.max(noOfVotesForTopTimes, obj.details[j]["whoVoted"].length);
 
               // whoAllVotedForTopTimes
@@ -578,28 +602,66 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
               }
               topTimes = nameOfMaxVotedTime;
             }
+
+
           }
+        }
+
+        for (let i = 0; i < obj.details.length; i++) {
+          totalNumberOfPeopleWhoHaveVotedTillNow += obj.details[i]["whoVoted"].length;
         }
 
         user.save();
       }
     });
 
-    console.log("loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, topTimes, meetingName",
+    // topTimes
+    const topTimedate = new Date(topTimes);
+
+    const day = topTimedate.getDate();
+    const month = topTimedate.toLocaleString('default', { month: 'long' }); // 'long' for full month name
+    const year = topTimedate.getFullYear();
+    dateOfTopTime = `${day} ${month} ${year}`;
+
+    let hours = String(topTimedate.getHours()).padStart(2, '0');
+    let minutes = String(topTimedate.getMinutes()).padStart(2, '0')
+
+
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // The hour '0' should be '12'
+    const formattedHours = String(hours).padStart(2, '0');
+
+    const topTime = `${formattedHours}:${minutes} ${ampm}`;
+
+    // const topTime = `${hours}:${minutes}`;
+
+
+    console.log("loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, topTimes, meetingName, duration",
       loggedInUserEmail,
       whoHasVotedNow,
       totalNumberOfPeopleWhoHaveVotedTillNow,
       noOfVotesForTopTimes,
-      topTimes,
-      meetingName
+      // topTimes,
+      dateOfTopTime,
+      topTime,
+      meetingName,
+      duration,
+      pollcreationDate
     );
+    // nameOfCalendarOwner, whoHasVoted, howManyInviteesHaveVoted, topTimes, whoAllVotedForTopTimes, meetingName, duration, pollCreationDate
     sendMailForVoteSelection(
       loggedInUserEmail,
+      nameOfCalOwner,
       whoHasVotedNow,
       totalNumberOfPeopleWhoHaveVotedTillNow,
       noOfVotesForTopTimes,
-      topTimes,
-      meetingName
+      // topTimes,
+      dateOfTopTime,
+      topTime,
+      meetingName,
+      duration,
+      pollcreationDate
     );
 
     res.send({ msg: "received request" });
@@ -1039,17 +1101,23 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
 });
 
 // ------------------------------
-async function sendMailForVoteSelection(loggedInUserEmail,
+async function sendMailForVoteSelection(
+  loggedInUserEmail,
+  nameOfCalOwner,
   whoHasVotedNow,
   totalNumberOfPeopleWhoHaveVotedTillNow,
   noOfVotesForTopTimes,
-  topTimes,
-  meetingName
+  // topTimes,
+  dateOfTopTime,
+  topTime,
+  meetingName,
+  duration,
+  pollcreationDate
 ) {
   // -------------------mail sending starts-----------------
   // initialize nodemailer
   console.log("sendMailForVoteSelection called ");
-  console.log("in sendMailForVoteSelection loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,topTimes,meetingName ", loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, topTimes, meetingName);
+  console.log("in sendMailForVoteSelection loggedInUserEmail,whoHasVotedNow,totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes,meetingName ", loggedInUserEmail, whoHasVotedNow, totalNumberOfPeopleWhoHaveVotedTillNow, noOfVotesForTopTimes, meetingName);
   console.log("nodemailer working");
   var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -1077,16 +1145,21 @@ async function sendMailForVoteSelection(loggedInUserEmail,
     console.log("I'll send mail to ", loggedInUserEmail);
     const mailOptions = {
       from: '"My Company"', // sender address
-      template: "email3", // the name of the template file, i.e., email.handlebars
+      template: "voted", // the name of the template file, i.e., email.handlebars
       to: loggedInUserEmail,
       // subject: `Hi, ${userFound.name}`,
       subject: `${whoHasVotedNow} has voted in poll for Meeting`,
       context: {
+        nameOfCalOwner: nameOfCalOwner,
         whoHasVotedNow: whoHasVotedNow,
         totalNumOfPeopleVoted: totalNumberOfPeopleWhoHaveVotedTillNow,
-        topTimes: topTimes,
+        // topTimes,
+        dateOfTopTime,
+        topTime,
         noOfVotesForTopTimes: noOfVotesForTopTimes,
         evName: meetingName,
+        duration,
+        pollcreationDate
       },
     };
 

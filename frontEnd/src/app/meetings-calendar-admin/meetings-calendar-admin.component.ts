@@ -19,6 +19,7 @@ export class MeetingsCalendarAdminComponent {
   currentDate: Date;
   currentformattedDate: string;
 
+  token = localStorage.getItem('token')
 
   userName: string = '';
   emailId: string = '';
@@ -157,7 +158,7 @@ export class MeetingsCalendarAdminComponent {
     });
     this.subscription = this.apiService.emailId$.subscribe((emailId) => {
       this.emailId = emailId;
-      console.log("email ",emailId)
+      console.log("email ", emailId)
     });
   }
 
@@ -167,6 +168,10 @@ export class MeetingsCalendarAdminComponent {
 
 
   ngOnInit() {
+
+    if (!this.token) {
+      this.router.navigate(['/login']);
+    }
 
     this.apiService.getMeetingsOfParticularEventAdmin(this.selectedUserId, this.selectedEventId);
     this.apiService.getSelectedUsersAvailaibilityObjAdmin(this.selectedUserId)
@@ -192,7 +197,7 @@ export class MeetingsCalendarAdminComponent {
 
       // ===========================================
       console.log("got it ", this.selectedEventId, this.selectedUserEmailId);
-      
+
       this.apiService.getSelectedEvent(this.selectedEventId, this.selectedUserEmailId)
       this.subscription = this.apiService.reqEvent$.subscribe((reqEventObj) => {
         this.reqEventObj = reqEventObj
@@ -292,7 +297,7 @@ export class MeetingsCalendarAdminComponent {
 
     setTimeout(() => {
       console.log("got reqEventObj so i can schedule ", this.reqEventObj);
-      
+
       this.allowInviteesToScheduleOn = this.reqEventObj["whenCanInviteesSchedule"] //making allowInviteesToScheduleOn object
       console.log("allowInviteesToScheduleOn ", this.allowInviteesToScheduleOn);
       //   {

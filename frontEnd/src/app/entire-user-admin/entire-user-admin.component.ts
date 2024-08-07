@@ -14,7 +14,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 })
 export class EntireUserAdminComponent {
 
-  
+  token = localStorage.getItem('token')
   eventsArrayOfSelectedUser = []
   selectedUserName = localStorage.getItem("selectedUserName" || "")
   selectedUserEmail = localStorage.getItem("selectedUserEmail" || "")
@@ -93,6 +93,11 @@ export class EntireUserAdminComponent {
 
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     //for table view
     this.callTable()
 

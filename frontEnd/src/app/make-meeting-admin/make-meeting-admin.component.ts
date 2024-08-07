@@ -12,7 +12,7 @@ export class MakeMeetingAdminComponent implements OnInit {
 
   constructor(private apiService: APIService, private router: Router) { }
 
-
+  token = localStorage.getItem('token')
   nameWhoseCalendar = localStorage.getItem("selectedUserName")
   selectedUserEmail = localStorage.getItem("selectedUserEmail")
   evName = localStorage.getItem("selectedEventName")
@@ -44,6 +44,11 @@ export class MakeMeetingAdminComponent implements OnInit {
 
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     if (this.evType == 'One-on-One') {
       this.oneOnOne = true;
     }

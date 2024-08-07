@@ -30,6 +30,13 @@ interface NewEditObj {
   styleUrl: './poll-calendar.component.css',
 })
 export class PollCalendarComponent {
+
+  token = localStorage.getItem('token')
+
+  makeDurationDisabled = false
+
+  calendarApi: any
+
   formattedMeetingsHide: Array<any> = [];
   pastMeetings: Array<any> = [];
   futureMeetings: Array<any> = [];
@@ -153,9 +160,14 @@ export class PollCalendarComponent {
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit() {
+
+    if (!this.token) {
+      this.router.navigate(['/login']);
+    }
+
     localStorage.setItem('selectedDuration', this.selectedTime);
 
     this.apiService.getMeetingsforUserToSee(this.id);
@@ -426,6 +438,34 @@ export class PollCalendarComponent {
     );
   }
 
+
+
+  resetDuration() {
+    this.makeDurationDisabled = false;
+  
+    if (this.calendarApi) {
+      this.calendarApi.unselect(); // Clear any previous selections
+  
+      // Iterate over each calendar event
+      this.calendarApi.getEvents().forEach((calevent) => {
+        // Iterate over each newly selected event
+        this.newlySelectedEvents.forEach((event) => {
+          // Compare the start and end times of calevent and event
+          if (calevent.start.getTime() === new Date(event.start).getTime() &&
+              calevent.end.getTime() === new Date(event.end).getTime()) {
+            // Remove the calendar event if the start and end times match
+            calevent.remove();
+          }
+        });
+      });
+  
+      // Clear the newly created events array
+      this.newlySelectedEvents = [];
+      this.numberOfEventsSelected = 0
+    }
+  }
+  
+
   handleDateSelect(selectInfo) {
     console.log('handle date select called ');
 
@@ -445,14 +485,17 @@ export class PollCalendarComponent {
       alert('Event count reached');
       return;
     } else {
-      let calendarApi = selectInfo.view.calendar;
 
-      calendarApi.unselect(); // Clear any previous selections
+      this.makeDurationDisabled = true
+
+      this.calendarApi = selectInfo.view.calendar;
+
+      this.calendarApi.unselect(); // Clear any previous selections
 
       let endDate = new Date(selectInfo.start);
       endDate.setMinutes(endDate.getMinutes() + parseInt(this.selectedTime));
 
-      console.log('calendarApi ', calendarApi);
+      console.log('calendarApi ', this.calendarApi);
 
       let newEvent = {
         Id: Math.floor(Math.random() * 10000000000000001),
@@ -460,7 +503,7 @@ export class PollCalendarComponent {
         end: endDate.toISOString(),
       };
 
-      calendarApi.addEvent(newEvent);
+      this.calendarApi.addEvent(newEvent);
 
       this.numberOfEventsSelected = this.numberOfEventsSelected + 1;
 

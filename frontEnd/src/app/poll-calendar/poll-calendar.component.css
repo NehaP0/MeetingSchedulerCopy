@@ -29,6 +29,19 @@ select {
   border-radius: 5px;
   width: 150px;
 }
+
+#resetBtn{
+  background-color: white;
+  /* border: 1px solid black; */
+  padding : 1px;
+  margin-top: 5px;
+  font-size: 15px;
+  display: block;
+  color: #1271fb;
+}
+#resetBtn:hover{
+  color: black;
+}
 /* -------weekCalendar starts-------- */
 
 #weekCalendar {

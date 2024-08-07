@@ -67,6 +67,9 @@ td{
     display: flex;
     /* justify-content: space-between; */
 }
+.emailIdP{
+    margin-bottom: 2px;
+}
 
 #meetDetails, #meetEditDetails{    
     position: absolute;
@@ -76,9 +79,11 @@ td{
     margin-top: 10%;
     margin-left: 35%;
     padding: 30px;
+    padding-top: 20px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     font-size: 15px;
 }
+
 #meetEditDetails{
     /* margin-left: 25%; */
     margin-top: 1%;
@@ -91,17 +96,25 @@ td{
 button{
     width:100px;
     height:30px;
-    border-radius: 5px;
+    border-radius: 20px;
     margin-right: 5px;
-    border: none;
-    background-color: rgb(40, 107, 40);
+    /* background-color: rgb(40, 107, 40); */
+    border: 1px solid #0069FF;
+    color: #0069FF;
+    background-color: white;
 }
 .closeBtn{
-    background-color: rgb(211, 36, 36)
+    /* background-color: rgb(211, 36, 36) */
+}
+ng-icon{
+    display: inline;
+    margin-left: 10px;
 }
 button:hover{
     cursor: pointer;
     color: white;
+    background-color: #0069FF;
+
 }
 .removeBtn, .addBtn{
     width:30px;
@@ -148,6 +161,13 @@ input{
     width: 20%;
     height: 500px;
 } */
+ #crossDiv{
+    display: flex;
+    justify-content: flex-end;
+ }
+ #crossDiv:hover{
+    cursor: pointer;
+ }
 
 #calendars{
     display: flex;
@@ -163,6 +183,7 @@ input{
     /* background-color: rgb(240, 243, 245); */
     background-color: #dddddd;
     height: 100vh;
+    padding-top: 5px;
 }
 #calendars>:nth-child(2){
     width: 55%;

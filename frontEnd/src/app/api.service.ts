@@ -108,7 +108,7 @@ export class APIService {
     });
   }
 
-  async getParticularUser(emailId){
+  async getParticularUser(emailId) {
     const response = await this.httpClient.get(`${this.API_URL}/user/getParticularUser?userEmailId=${emailId}`, {
       headers: {
         // Authorization: `Bearer ${token}`
@@ -118,10 +118,10 @@ export class APIService {
 
     console.log("got user ", response['user']);
     return response['user']
-    
+
   }
 
-  async getParticularUserEventLiksArr(emailId){
+  async getParticularUserEventLiksArr(emailId) {
     const response = await this.httpClient.get(`${this.API_URL}/user/getParticularUser?userEmailId=${emailId}`, {
       headers: {
         // Authorization: `Bearer ${token}`
@@ -133,7 +133,7 @@ export class APIService {
     let user = response['user']
     let eventLinksArr = user["eventLinks"]
     return eventLinksArr
-  } 
+  }
 
   registerUser(user) {
     // console.log(user);
@@ -445,6 +445,7 @@ export class APIService {
       );
       let event = user.events[i];
       let meetingsArr = user.events[i].meetings;
+      let eventId = user.events[i]._id
 
       // let meetInOneEvent = []
       for (let j = 0; j < meetingsArr.length; j++) {
@@ -457,6 +458,7 @@ export class APIService {
           // currentDate: meetingsArr[j].currentDate,
           start: meetingsArr[j].start,
           end: meetingsArr[j].end,
+          eventId
         };
         // meetInOneEvent.push(oneMeetObj)
         // allMeetings.push(user.events[i])
@@ -799,6 +801,7 @@ export class APIService {
 
       // console.log(`http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`);
 
+      this.router.navigate(['/home'])
       window.open(
         `http://localhost:3000/calendarLink?name=${loggedInName}&id=${loggedInEmailId}`
       );
@@ -1310,23 +1313,23 @@ export class APIService {
     );
   }
 
-  async deleteAvatar(userEmail){
-    let response =  await this.httpClient.patch<any>(
+  async deleteAvatar(userEmail) {
+    let response = await this.httpClient.patch<any>(
       `${this.API_URL}/user/deleteAvatar`,
-      {userEmail}
+      { userEmail }
     ).toPromise();
     console.log("response ", response);
-    if(response['message'] == "Image deleted"){
+    if (response['message'] == "Image deleted") {
       alert("Image deleted")
     }
   }
 
-  async cloduraBrandingOnOff(userEmail, cloduraBrandingReq){
-    let response =  await this.httpClient.patch<any>(
-      `${this.API_URL}/user/cloduraBrandingOnOff`, {userEmail, cloduraBrandingReq}
+  async cloduraBrandingOnOff(userEmail, cloduraBrandingReq) {
+    let response = await this.httpClient.patch<any>(
+      `${this.API_URL}/user/cloduraBrandingOnOff`, { userEmail, cloduraBrandingReq }
     ).toPromise();
     console.log("response ", response);
-    if(response['message'] == "cloduraBranding set"){
+    if (response['message'] == "cloduraBranding set") {
       alert("Changes Saved")
     }
   }
@@ -1391,7 +1394,7 @@ export class APIService {
     }
   }
 
-  async updatePollDetails(meetingName, reserveTimes, votesCheckBox) {
+  async updatePollDetails(meetingName, reserveTimes, votesCheckBox, selectedDuration) {
     console.log('updatePollDetails called ');
 
     let deets = {
@@ -1401,6 +1404,7 @@ export class APIService {
       link: '',
       location: 'Google Meet',
       details: this.timesForVotingSubject.value,
+      duration : selectedDuration
     };
     console.log('deets ', deets);
 
@@ -1456,17 +1460,17 @@ export class APIService {
   async editUserFormForEventFnctn(evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, loggedInEmailId, redirectTo, passEvDeets) {
     let body = { evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo, passEvDeets }
 
-    console.log("editUserFormForEventFnctn called ",evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo, passEvDeets);
-    
+    console.log("editUserFormForEventFnctn called ", evId, eventLink, surnameReq, allowInviteesToAddGuests, questionsToBeAsked, redirectTo, passEvDeets);
+
     console.log("loggedInEmailId ", loggedInEmailId);
-    
+
     const response = await this.httpClient.patch(`${this.API_URL}/event/addQuestionForForm/${loggedInEmailId}`, body).toPromise();
     alert(response['message'])
     return response['message']
   }
 
-  async editEventCalendar(evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, loggedInEmailId) {
-    let body = { evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements }
+  async editEventCalendar(evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, loggedInEmailId, timeFormatVal) {
+    let body = { evId, whenCanInviteesSchedule, minimumNotice, noOfMeetsAllowedPerDay, startTimIncrements, timeFormatVal }
 
 
     const response = await this.httpClient.patch(`${this.API_URL}/event/editEvCalendar/${loggedInEmailId}`, body).toPromise();
@@ -1495,37 +1499,37 @@ export class APIService {
     }
   }
 
-  async changeEvntClrs(loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor){
+  async changeEvntClrs(loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor) {
     return this.httpClient
-    .patch(
-      `${this.API_URL}/event/editEventClrs`,
-      { loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor },
-    )
-    .subscribe(
-      (response) => {
-        console.log(response);
-        alert(response['message']);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      .patch(
+        `${this.API_URL}/event/editEventClrs`,
+        { loggedInEmailId, evId, backGroundcolor, textColor, btnAndLinkColor },
+      )
+      .subscribe(
+        (response) => {
+          console.log(response);
+          alert(response['message']);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
   }
 
-  editfinalsendFollowupEmail(loggedInEmailId, evId, finalsendFollowupEmailObj){
+  editfinalsendFollowupEmail(loggedInEmailId, evId, finalsendFollowupEmailObj) {
     return this.httpClient
-    .patch(
-      `${this.API_URL}/event/editEventFollowUp`,
-      {loggedInEmailId, evId, finalsendFollowupEmailObj },
-    )
-    .subscribe(
-      (response) => {
-        console.log(response);
-        alert(response['message']);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      .patch(
+        `${this.API_URL}/event/editEventFollowUp`,
+        { loggedInEmailId, evId, finalsendFollowupEmailObj},
+      )
+      .subscribe(
+        (response) => {
+          console.log(response);
+          alert(response['message']);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
   }
 }

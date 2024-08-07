@@ -28,7 +28,7 @@ export class CreateMeetingComponent implements OnInit {
 
   currentDate: Date;
   currentformattedDate: string;
-
+  token = localStorage.getItem('token')
 
   userName: string = '';
   emailId: string = '';
@@ -151,7 +151,9 @@ export class CreateMeetingComponent implements OnInit {
 
   ngOnInit() {
 
-
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
 
     // -----taking name and email id from query paramaters----
     this.route.queryParams.subscribe(params => {

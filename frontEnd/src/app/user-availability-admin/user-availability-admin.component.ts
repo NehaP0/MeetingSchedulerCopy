@@ -1,6 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { APIService } from '../api.service';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-user-availability-admin',
@@ -9,6 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class UserAvailabilityAdminComponent {
 
+  token = localStorage.getItem('token')
   userUnAvailabilityArray = []
   userAvailabilityArray = []
   durationHrs = 0
@@ -24,7 +27,8 @@ export class UserAvailabilityAdminComponent {
   workingHrs = {}
 
 
-  constructor(private apiService: APIService) {
+  constructor(private apiService: APIService,private router: Router,
+  ) {
     // this.subscription = this.apiService.userLoggedInEmailId$.subscribe((userLoggedInEmailId) => {
     //   this.selectedUserEmail = userLoggedInEmailId;
     //   console.log("logged in user email is ",this.selectedUserEmail)
@@ -38,6 +42,11 @@ export class UserAvailabilityAdminComponent {
   private subscription: Subscription;
 
   ngOnInit(){
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }    
+
     this.apiService.initiallyUserUnavailbeOn(this.selectedUserId)
   }
 

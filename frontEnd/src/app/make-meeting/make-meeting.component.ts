@@ -9,9 +9,17 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './make-meeting.component.css',
 })
 export class MakeMeetingComponent implements OnInit {
+  
+  token = localStorage.getItem('token')
+
   constructor(private apiService: APIService, private router: Router) {}
 
   ngOnInit() {
+
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     if (this.evType == 'One-on-One') {
       this.oneOnOne = true;
     }

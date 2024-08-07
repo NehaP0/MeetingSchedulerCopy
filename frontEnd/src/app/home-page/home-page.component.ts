@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
+  token = localStorage.getItem('token')  
   loggedInName = localStorage.getItem('userLoggedInName' || '');
   loggedInEmailId = localStorage.getItem('emailID' || '');
   usersId = localStorage.getItem('usersUniqueID' || '')
@@ -59,6 +60,10 @@ export class HomePageComponent {
 
   ngOnInit() {
 
+    if(!this.token){
+      this.router.navigate(['/login']);
+    }
+
     // this.filteredItems = this.items
 
 
@@ -78,9 +83,9 @@ export class HomePageComponent {
         this.tempStorage = this.eventsArrayOfLoggedInUser
         // ===========================================
 
-        if (this.eventsArrayOfLoggedInUser.length == 0) {
-          this.router.navigate(['login']);
-        }
+        // if (this.eventsArrayOfLoggedInUser.length == 0) {
+        //   this.router.navigate(['login']);
+        // }
 
       });
     }, 2000);
@@ -203,6 +208,7 @@ export class HomePageComponent {
         localStorage.setItem('noOfMeetsAllowedPerDay', JSON.stringify(this.eventsArrayOfLoggedInUser[i].noOfMeetsAllowedPerDay))
         localStorage.setItem('startTimIncrements', JSON.stringify(this.eventsArrayOfLoggedInUser[i].startTimIncrements))
         localStorage.setItem('passEvDeets', this.eventsArrayOfLoggedInUser[i].pasEvntDeetsToRedirectPg)
+        localStorage.setItem('timeFormat', this.eventsArrayOfLoggedInUser[i].timeFormat)
       }
     }
     this.EvLink(this.evId)

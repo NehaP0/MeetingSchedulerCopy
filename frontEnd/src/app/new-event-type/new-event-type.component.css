@@ -214,6 +214,7 @@ h4{
 }
 .oneCard:hover{
     border: 1px solid #0069FF;
+    cursor: pointer;
 }
 img{
     width: 50px;
