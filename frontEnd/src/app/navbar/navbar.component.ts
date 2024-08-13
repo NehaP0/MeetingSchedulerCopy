@@ -37,7 +37,7 @@ ngOnInit(){
     
     
 
-    this.apiService.getEvents()
+    this.apiService.getEvents(this.loggedInEmailId)
 
     
     setTimeout(() => {
@@ -117,7 +117,7 @@ deleteEventCacelation(){
 
 deleteEvent(id : string){
   console.log("delete called id to be deleted ",id);   
-  this.apiService.deleteEvent(id)
+  this.apiService.deleteEvent(id, this.loggedInEmailId)
   // setTimeout(() => {
   //   this.apiService.eventsArray$.subscribe((eventsArray) => {
   //    console.log("events in ts ",eventsArray)

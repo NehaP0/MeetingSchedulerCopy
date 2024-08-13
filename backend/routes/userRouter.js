@@ -206,7 +206,6 @@ userRoute.patch("/updateContactsArr", async (req, res) => {
       { emailID: emailOfCalendarOwner },
       { $push: { contacts: contactObj } }
     );
-
     return res.send({ message: "Contacts Updated" });
   } catch (err) {
     console.log("error ", err);
@@ -462,7 +461,7 @@ userRoute.patch("/updatePoll/:emailId", async (req, res) => {
     let deets = req.body;
     const today = new Date();
     deets['pollCreationDate'] = today
-    deets["link"] = `http://localhost:3000/user/vs?shortId=${shortId}`;
+    deets["link"] = `http://localhost:3000/user/vs?emailId=${userEmailId}&shortId=${shortId}`;
     deets["uniqueId"] = shortId;
 
     console.log("userEmailId ", userEmailId, "deets ", deets);
@@ -489,9 +488,12 @@ userRoute.patch("/updatePoll/:emailId", async (req, res) => {
 
 //when user pastes the voting link in browser, redirects user to new app
 //working fine
+let calOwnerEmailId;
+
 userRoute.get("/vs", async (req, res) => {
   console.log("vs called ");
-  const { shortId } = req.query;
+  const { emailId, shortId } = req.query;
+  calOwnerEmailId = emailId
   shortIdvariable = shortId;
   res.redirect("http://localhost:4300/");
 });
@@ -501,10 +503,10 @@ userRoute.get("/getUserDeetsForVoting", async (req, res) => {
   console.log("/getUserDeetsForVoting called ");
   try {
     //change this (user)
-    let user = await User.findOne({ emailID: loggedInUserEmail });
+    let user = await User.findOne({ emailID: calOwnerEmailId });
     console.log("user sending ", user);
-    console.log("sending response ", { user: user, shortId: shortIdvariable });
-    res.send({ user: user, shortId: shortIdvariable });
+    console.log("sending response ", { user: user, shortId: shortIdvariable, emailId: calOwnerEmailId });
+    res.send({ user: user, shortId: shortIdvariable, emailId: calOwnerEmailId });
   } catch (error) {
     res.send({ err: error });
   }
@@ -512,7 +514,6 @@ userRoute.get("/getUserDeetsForVoting", async (req, res) => {
 
 //when some user selects his time from voting poll
 //goes to the user whose cal, and finds that particular event of voting and pushes the deets of what user has voted for
-//sends mail to user whose calendar (here i am sending to logged in user, so change that)
 //works fine
 userRoute.post("/getUserVoteSelection", async (req, res) => {
   console.log("received request ");
@@ -521,13 +522,14 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
   console.log("selectedTimes ", req.body.selectedTimes);
 
   try {
-    let user = await User.findOne({ emailID: loggedInUserEmail });
+    let user = await User.findOne({ emailID: calOwnerEmailId });
     console.log("user ", user);
     let nameOfCalOwner = user.name
     console.log('nameOfCalOwner ', nameOfCalOwner);
     let votingArr = user.voting;
     console.log("votingArr ", votingArr);
 
+    let loggedInUserEmail = calOwnerEmailId
     //variables req for mail sending start
     //loggedInUserEmail
     let duration = ''
@@ -677,7 +679,8 @@ userRoute.post("/getUserVoteSelection", async (req, res) => {
 userRoute.get("/getVotingEvents", async (req, res) => {
   console.log("/getVotingEvents called");
   try {
-    let user = await User.findOne({ emailID: loggedInUserEmail });
+    let { loggedInEmailId } = req.query
+    let user = await User.findOne({ emailID: loggedInEmailId });
     console.log("user found ", user);
     if (user.voting) {
       console.log("sending response ", { votingArr: user.voting });
@@ -697,24 +700,31 @@ userRoute.get("/getVotingEvents", async (req, res) => {
 //sends email to whose calendar and who all voted even for other times
 // Deletes that meeting from voting array
 
+
+
+
 userRoute.post("/votingMeetConfirmed", async (req, res) => {
   console.log("votingMeetConfirmed called ");
-  let { meetingId, detailObjId } = req.body;
+  let { meetingId, detailObjId, loggedInEmailId } = req.body;
   console.log("body ", meetingId, detailObjId);
   // body  {
   //   meetingId: '665cf00117f34bddb122f593',
   //   detailObjId: '665cf00117f34bddb122f594'
   // }
   let myMeeting = { title: "", evType: "", start: "", end: "", otherEmails: [], user: "", userEmail: "", additionalInfo: "" };
+  // let myMeeting = { title: "", evType: "", start: "", end: "", otherEmails: [], user: "", userEmail: "", additionalInfo: "", questionsWdAnswers:"", emailOfCalendarOwner:"", userSurname:"" };
+
 
   try {
     let meetLink;
 
-    let importedloggedInUserEmail = loggedInUserEmail;
-    console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
+    let importedloggedInUserEmail = loggedInEmailId;
+    console.log("loggedInUsers EmailId is ", importedloggedInUserEmail);
 
 
     let loggedInUser = await User.findOne({ emailID: importedloggedInUserEmail });
+
+    let calendarOwnerUserName = loggedInUser['name']
     console.log("loggedInUser ", loggedInUser);
 
 
@@ -749,6 +759,31 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
     });
 
     console.log("myMeeting new", myMeeting);
+
+    //to get month, date, date, year separately starts
+    const stdate = new Date(myMeeting['start']);
+    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayOfWeek = stdate.getDay(); // like 0,1,2,3,4 etc
+    const dayOfWeekString = weekDays[dayOfWeek]; //sun, mon etc
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = stdate.getMonth(); // 0,1,2,3,4
+    const monthString = months[month]; // Jan,Feb,Mar  
+    console.log(monthString);
+
+    const dayOfMonth = stdate.getDate(); // 10, 22 etc
+
+    const year = stdate.getFullYear(); //2024
+    console.log(year);
+
+    const starthours = String(stdate.getHours()).padStart(2, '0');
+    const startminutes = String(stdate.getMinutes()).padStart(2, '0');
+    const startTime = `${starthours}:${startminutes}`
+
+    const enddate = new Date(myMeeting['end']);
+    const endhours = String(enddate.getHours()).padStart(2, '0');
+    const endminutes = String(enddate.getMinutes()).padStart(2, '0');
+    const endTime = `${endhours}:${endminutes}`
 
 
     // Delete this meeting from voting array now
@@ -871,13 +906,44 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
       meetLink = await createMeetingLink();
       console.log("Meeting link created:", meetLink);
 
+      // ============================
+      // calendarOwnerUserName,
+      // eventName,
+      // name: `${userWhoScheduled} ${userWhoScheduledSurname ? userWhoScheduledSurname : ''}`,
+      // userWhoScheduledEmail,
+      // otherEmails,
+      // startTime,
+      // dayOfWeekString,
+      // dayOfMonth,
+      // monthString,
+      // year,
+      // questionsWdAnswers,
+      // meetingLink
+      // ============================
       // Continue with nodemailer code
       await sendMail(
+        // meetLink,
+        // loggedInUserName,
+        // otherEmails,
+        // additionalInfo,
+
+        title,
         meetLink,
-        loggedInUserName,
+        calendarOwnerUserName,
         importedloggedInUserEmail,
         otherEmails,
-        additionalInfo
+        additionalInfo,
+        // questionsWdAnswers,
+        // newMeetId,
+        // user,
+        // userSurname,
+        // userEmail,
+        dayOfWeekString,
+        monthString,
+        dayOfMonth,
+        year,
+        startTime,
+        endTime
       );
 
       return res.status(200).json({
@@ -1001,10 +1067,47 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
 
   // ------------------------------
   async function sendMail(
-    meetingLink,
-    loggedInUserName,
-    importedloggedInUserEmail,
+    // meetingLink,
+    // loggedInUserName,
+    // importedloggedInUserEmail,
     // additionalInfo
+
+    // eventName,
+    // meetingLink,
+    // calendarOwnerUserName,
+    // emailOfCalendarOwner,
+    // otherEmails,
+    // additionalInfo,
+    // questionsWdAnswers,
+    // newMeetId,
+    // userWhoScheduled,
+    // userWhoScheduledSurname,
+    // userWhoScheduledEmail,
+    // dayOfWeekString,
+    // monthString,
+    // dayOfMonth,
+    // year,
+    // startTime,
+    // endTime
+
+
+    title,
+    meetLink,
+    calendarOwnerUserName,
+    importedloggedInUserEmail,
+    otherEmails,
+    additionalInfo,
+    // questionsWdAnswers,
+    // newMeetId,
+    // user,
+    // userSurname,
+    // userEmail,
+    dayOfWeekString,
+    monthString,
+    dayOfMonth,
+    year,
+    startTime,
+    endTime
   ) {
     // -------------------mail sending starts-----------------
     // initialize nodemailer
@@ -1039,43 +1142,54 @@ userRoute.post("/votingMeetConfirmed", async (req, res) => {
 
       const mailOptions2 = {
         from: '"My Company"', // sender address
-        template: "email2", // the name of the template file, i.e., email.handlebars
+        template: "hostsInv", // the name of the template file, i.e., email.handlebars
         // to: userFound.emailID,
         to: importedloggedInUserEmail,
         // subject: `Hi, ${userFound.name}`,
         subject: `Meeting Scheduled`,
         context: {
-          //   name: userFound.name,
-          name: loggedInUserName,
-          // company: user,
-          eventName: myMeeting.title,
-          // eventDecription: eventDecription,
-          // eventDate: eventDate,
-          eventStartTime: myMeeting.start,
-          eventEndTime: myMeeting.end,
-          meetingLink: meetingLink,
-          additionalInfo: myMeeting.additionalInfo,
+          calendarOwnerUserName,
+          eventName: title,
+          // name: `${userWhoScheduled} ${userWhoScheduledSurname ? userWhoScheduledSurname : ''}`,
+          // userWhoScheduledEmail,
+          otherEmails,
+          startTime,
+          dayOfWeekString,
+          dayOfMonth,
+          monthString,
+          year,
+          // questionsWdAnswers,
+          meetingLink: meetLink,
+          meetingIsFromVotingPage: true
         },
       };
       for (let i = 0; i < myMeeting.otherEmails.length; i++) {
         let mailOptions = {
           from: '"My Company"', // sender address
-          template: "email1", // the name of the template file, i.e., email.handlebars
+          template: "guestsInv", // the name of the template file, i.e., email.handlebars
           // to: userFound.emailID,
           to: myMeeting.otherEmails[i],
           // subject: `Hi, ${userFound.name}`,
-          subject: `Meeting Scheduled`,
+          subject: `Invitation: ${title} @ ${dayOfWeekString} ${monthString} ${dayOfMonth}, ${year} ${startTime} - ${endTime} (${myMeeting.otherEmails[i]})`,
           context: {
-            //   name: userFound.name,
-            // name: user,
-            company: loggedInUserName,
-            eventName: myMeeting.title,
-            // eventDecription: eventDecription,
-            // eventDate: eventDate,
-            eventStartTime: myMeeting.start,
-            eventEndTime: myMeeting.end,
-            meetingLink: meetingLink,
-            additionalInfo: myMeeting.additionalInfo,
+            // evId,
+            // meetId: newMeetId,
+            // receiversEmail: userEmail,
+            monthString,
+            dayOfMonth,
+            dayOfWeekString,
+            // name: `${userWhoScheduled} ${userWhoScheduledSurname ? userWhoScheduledSurname : ''}`,
+            // calendarOwnerUserName,
+            year,
+            startTime,
+            endTime,
+            emailOfCalendarOwner: importedloggedInUserEmail,
+            eventName: title,
+            meetingLink: meetLink,
+            // questionsWdAnswers,
+            calendarOwnerUserName,
+            otherEmails,
+            meetingIsFromVotingPage: true
           },
         };
         try {

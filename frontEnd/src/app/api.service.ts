@@ -257,6 +257,7 @@ export class APIService {
     );
   }
 
+
   setUserName(userName: string) {
     console.log('username set by link ', userName);
     this.userNameSubject.next(userName);
@@ -729,11 +730,11 @@ export class APIService {
     }
   }
 
-  async getEvents() {
+  async getEvents(loggedInEmailId) {
     console.log('get events called');
 
     const response = await this.httpClient
-      .get(`${this.API_URL}/event/getEvents`)
+      .get(`${this.API_URL}/event/getEvents?loggedInEmailId=${loggedInEmailId}`)
       .toPromise();
     console.log('events ', response['message']);
     const events = response['message'];
@@ -772,6 +773,7 @@ export class APIService {
     console.log('createNewEvtn called', eventName, hrs, min, location, evType);
 
     let event = {
+      loggedInEmailId: loggedInEmailId,
       evName: eventName,
       evType: evType,
       evDuration: { hrs: hrs, minutes: min },
@@ -810,11 +812,11 @@ export class APIService {
     }
   }
 
-  deleteEvent(id: string) {
+  deleteEvent(id: string, loggedInEmailId: string) {
     console.log('delete called in api');
 
     return this.httpClient
-      .delete(`${this.API_URL}/event/deleteEvent?id=${id}`, {
+      .delete(`${this.API_URL}/event/deleteEvent?id=${id}&loggedInEmailId=${loggedInEmailId}`, {
         headers: {
           // Authorization: `Bearer ${token}`
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -839,7 +841,8 @@ export class APIService {
     min: number,
     location: string,
     evType: string,
-    description: string
+    description: string,
+    loggedInEmailId: string
   ) {
     // let {evName, evType, evDuration, evLocation} = req.body
 
@@ -851,7 +854,8 @@ export class APIService {
       min,
       location,
       evType,
-      description
+      description,
+      loggedInEmailId
     );
 
     let event = {
@@ -860,7 +864,8 @@ export class APIService {
       evType: evType,
       evDuration: { hrs: hrs, minutes: min },
       evLocation: location,
-      description
+      description,
+      loggedInEmailId
     };
     // let event = {evName:"eventName", evType:"evType", evDuration:{"hrs": 0,"minutes":0}, evLocation: "location" }
 
@@ -881,12 +886,12 @@ export class APIService {
     }
   }
 
-  async editEventIfUserCanAddGuests(evId: string, allowInviteesToAddGuests: boolean, maxInviteesPerEvent: number, displayRemainingSPotsOrNot: boolean) {
+  async editEventIfUserCanAddGuests(evId: string, allowInviteesToAddGuests: boolean, maxInviteesPerEvent: number, displayRemainingSPotsOrNot: boolean, loggedInEmailId: string) {
 
-    console.log('editEventIfUserCanAddGuests called in apiService', evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot);
+    console.log('editEventIfUserCanAddGuests called in apiService', evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot, loggedInEmailId);
 
     let objToSend = {
-      evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot
+      evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot, loggedInEmailId
     }
 
     const response = await this.httpClient
@@ -1404,7 +1409,7 @@ export class APIService {
       link: '',
       location: 'Google Meet',
       details: this.timesForVotingSubject.value,
-      duration : selectedDuration
+      duration: selectedDuration
     };
     console.log('deets ', deets);
 
@@ -1428,9 +1433,9 @@ export class APIService {
     // }
   }
 
-  async getVotingArrOfloggedInUser() {
+  async getVotingArrOfloggedInUser(loggedInEmailId) {
     const response = await this.httpClient
-      .get(`${this.API_URL}/user/getVotingEvents`)
+      .get(`${this.API_URL}/user/getVotingEvents?loggedInEmailId=${loggedInEmailId}`)
       .toPromise();
 
     const responseMsg = response['msg'];
@@ -1442,10 +1447,12 @@ export class APIService {
     }
   }
 
-  meetingByPollConfirmed(meetingId: string, detailObjId: string) {
-    console.log('meetingByPollConfirmed functn called and meet details ids', meetingId, detailObjId);
-    let body = { meetingId, detailObjId };
-    return this.httpClient.post(`${this.API_URL}/user/votingMeetConfirmed`, body).toPromise();
+  async meetingByPollConfirmed(meetingId: string, detailObjId: string, loggedInEmailId:string) {
+    console.log('meetingByPollConfirmed functn called and meet details ids', meetingId, detailObjId, loggedInEmailId);
+    let body = { meetingId, detailObjId, loggedInEmailId };
+    const response = await  this.httpClient.post(`${this.API_URL}/user/votingMeetConfirmed`, body).toPromise();
+    alert(response['message'])
+    return response['message']
   }
 
   // async addQuestionToMeeting(question, isRequired, showThisQuestion, loggedInEmailId, eventId){    
@@ -1520,7 +1527,7 @@ export class APIService {
     return this.httpClient
       .patch(
         `${this.API_URL}/event/editEventFollowUp`,
-        { loggedInEmailId, evId, finalsendFollowupEmailObj},
+        { loggedInEmailId, evId, finalsendFollowupEmailObj },
       )
       .subscribe(
         (response) => {

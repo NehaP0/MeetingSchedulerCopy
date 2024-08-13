@@ -33,7 +33,7 @@ export class ListAllEventTypesComponent {
 
     console.log('calling getEvents ');
 
-    this.apiService.getEvents();
+    this.apiService.getEvents(this.loggedInEmailId);
 
     setTimeout(() => {
       this.apiService.eventsArray$.subscribe((eventsArray) => {

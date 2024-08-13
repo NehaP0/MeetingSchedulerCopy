@@ -17,11 +17,11 @@ const eventRoute = express.Router();
 
 eventRoute.post("/createEvent", auth, async (req, res) => {
   console.log("createEvent called");
-  let importedloggedInUserEmail = getLoggedInUserEmail();
+  // let importedloggedInUserEmail = getLoggedInUserEmail();
   // let importedloggedInUserEmail = "nehaphadtare334@gmail.com"
-  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
+  // console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
-  let { evName, evType, evDuration, evLocation, inviteesPerEvent, displayRemainingSpots } = req.body;
+  let {importedloggedInUserEmail, evName, evType, evDuration, evLocation, inviteesPerEvent, displayRemainingSpots } = req.body;
 
   let evLinkEnd = evName
   if (evLinkEnd.includes(" ")) {
@@ -243,7 +243,9 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
 eventRoute.get("/getEvents", async (req, res) => {
   console.log("getEvents called ");
 
-  let importedloggedInUserEmail = getLoggedInUserEmail();
+  // let importedloggedInUserEmail = getLoggedInUserEmail();
+  let importedloggedInUserEmail = req.query.loggedInEmailId
+
   console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
 
   try {
@@ -262,8 +264,10 @@ eventRoute.get("/getEvents", async (req, res) => {
 });
 
 eventRoute.delete("/deleteEvent", auth, async (req, res) => {
-  const { id } = req.query;
-  let importedloggedInUserEmail = getLoggedInUserEmail();
+  const { id  } = req.query;
+    // let importedloggedInUserEmail = getLoggedInUserEmail();
+    let importedloggedInUserEmail = req.query.loggedInEmailId
+  // let importedloggedInUserEmail = getLoggedInUserEmail();
 
   console.log("delete called ", id);
   try {
@@ -337,11 +341,13 @@ eventRoute.delete("/deleteEvent", auth, async (req, res) => {
 
 eventRoute.patch("/editEvent", auth, async (req, res) => {
   console.log("editEvent called");
-  let importedloggedInUserEmail = getLoggedInUserEmail();
+  // let importedloggedInUserEmail = getLoggedInUserEmail();
+  
   // let importedloggedInUserEmail = "nehaphadtare334@gmail.com"
-  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
+  let importedloggedInUserEmail = req.body.loggedInEmailId
   let { evId, evName, evType, evDuration, evLocation, description } = req.body;
+  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
 
   console.log("gotten body data", req.body);
 
@@ -402,10 +408,13 @@ eventRoute.patch("/editEvent", auth, async (req, res) => {
 
 eventRoute.patch("/editEventIfUserCanAddGuests", auth, async (req, res) => {
   console.log("editEventIfUserCanAddGuests called");
-  let importedloggedInUserEmail = getLoggedInUserEmail();
-  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
+  // let importedloggedInUserEmail = getLoggedInUserEmail();
+  // console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
   let { evId, allowInviteesToAddGuests, maxInviteesPerEvent, displayRemainingSPotsOrNot } = req.body;
+
+  let importedloggedInUserEmail = req.body.loggedInEmailId
+  console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
 
   console.log("gotten body data", req.body);
 

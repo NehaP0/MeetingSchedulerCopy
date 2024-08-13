@@ -274,7 +274,7 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                              console.log("I'll send mail to ", userEmail);
                          const mailOptions1 = {
                              from: '"My Company"', // sender address
-                             template: "email1", // the name of the template file, i.e., email.handlebars
+                             template: "guestsInv", // the name of the template file, i.e., email.handlebars
                              // to: userFound.emailID,
                              to: userEmail,
                              // subject: `Hi, ${userFound.name}`,
@@ -288,12 +288,13 @@ async function sendMail(meetingLink, loggedInUserName, importedloggedInUserEmail
                              // eventDate: eventDate, 
                              eventStartTime: StartTime,
                              eventEndTime: EndTime,
-                             meetingLink : meetingLink
+                             meetingLink : meetingLink,
+                             meetingIsFromVotingPage : false
                              },
                          };
                          const mailOptions2 = {
                             from: '"My Company"', // sender address
-                            template: "email2", // the name of the template file, i.e., email.handlebars
+                            template: "hostsInv", // the name of the template file, i.e., email.handlebars
                             // to: userFound.emailID,
                             to: importedloggedInUserEmail,
                             // subject: `Hi, ${userFound.name}`,

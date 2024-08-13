@@ -32,7 +32,7 @@ interface NewEditObj {
 export class PollCalendarComponent {
 
   token = localStorage.getItem('token')
-
+  loggedInEmailId = localStorage.getItem('emailID' || '');
   makeDurationDisabled = false
 
   calendarApi: any
@@ -447,6 +447,7 @@ export class PollCalendarComponent {
       this.calendarApi.unselect(); // Clear any previous selections
   
       // Iterate over each calendar event
+      // loggedInEmailId
       this.calendarApi.getEvents().forEach((calevent) => {
         // Iterate over each newly selected event
         this.newlySelectedEvents.forEach((event) => {

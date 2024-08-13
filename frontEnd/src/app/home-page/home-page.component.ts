@@ -14,7 +14,8 @@ export class HomePageComponent {
   loggedInName = localStorage.getItem('userLoggedInName' || '');
   loggedInEmailId = localStorage.getItem('emailID' || '');
   usersId = localStorage.getItem('usersUniqueID' || '')
-  firstChar = this.loggedInName[0];
+  // firstChar = this.loggedInName[0];
+  firstChar
   eventsArrayOfLoggedInUser = [];
   eventLink = ""
   evId = ""
@@ -60,6 +61,9 @@ export class HomePageComponent {
 
   ngOnInit() {
 
+    this.firstChar = this.loggedInName[0];
+
+
     if(!this.token){
       this.router.navigate(['/login']);
     }
@@ -70,7 +74,7 @@ export class HomePageComponent {
     console.log('calling getEvents ');
 
 
-    this.apiService.getEvents();
+    this.apiService.getEvents(this.loggedInEmailId);
     this.getEventLinksArr()
 
     this.getImage();
@@ -276,7 +280,7 @@ export class HomePageComponent {
 
   deleteEvent(id: string) {
     console.log('delete called id to be deleted ', id);
-    this.apiService.deleteEvent(id);
+    this.apiService.deleteEvent(id, this.loggedInEmailId);
     // setTimeout(() => {
     //   this.apiService.eventsArray$.subscribe((eventsArray) => {
     //    console.log("events in ts ",eventsArray)

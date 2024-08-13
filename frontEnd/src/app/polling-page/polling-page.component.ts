@@ -14,6 +14,7 @@ export class PollingPageComponent implements OnInit {
   selectedMeetingIndex: number | null = null;
   selectedDetailIndex: number | null = null;
   token = localStorage.getItem('token')
+  loggedInEmailId = localStorage.getItem('emailID')
 
   constructor(private apiService: APIService, private route: ActivatedRoute, private router: Router) { }
   private subscription: Subscription;
@@ -24,7 +25,7 @@ export class PollingPageComponent implements OnInit {
       this.router.navigate(['/login']);
     }
 
-    this.apiService.getVotingArrOfloggedInUser();
+    this.apiService.getVotingArrOfloggedInUser(this.loggedInEmailId);
 
     this.subscription = this.apiService.votingArr$.subscribe((votingArr) => {
       console.log('Voting Meetings in ts :', votingArr);
@@ -58,11 +59,15 @@ export class PollingPageComponent implements OnInit {
     }
   }
 
-  confirmBookSlot(meetingId: string, detailObjId: string): void {
+  confirmBookSlot(meetingId: string, detailObjId: string){
     console.log("confirmBookSlot called in ts meetingId, detailObjId ", meetingId, detailObjId);
-    let response = this.apiService.meetingByPollConfirmed(meetingId, detailObjId)
-    alert("Thankyou for confirming. You and attendees will receive a mail for the meeting link.")
-    this.router.navigate(['/home'])
+    let response = this.apiService.meetingByPollConfirmed(meetingId, detailObjId, this.loggedInEmailId)
+    // if(response["message"] == "Meeting scheduled successfully. A calendar invitation has been mailed to the attendees."){
+      alert("Thankyou for confirming. You and attendees will receive a mail for the meeting link.")
+      this.router.navigate(['/home'])
+    // }
+      // "message": "Meeting scheduled successfully. A calendar invitation has been mailed to the attendees."
+
 
     // console.log("response ", response);
     

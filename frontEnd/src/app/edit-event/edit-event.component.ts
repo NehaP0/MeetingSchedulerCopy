@@ -270,7 +270,7 @@ export class EditEventComponent {
 
   ngOnInit() {
 
-    if(!this.token){
+    if (!this.token) {
       this.router.navigate(['/login']);
     }
 
@@ -617,7 +617,7 @@ export class EditEventComponent {
       console.log("input text ", this.descriptionText);
 
 
-      this.apiService.editEvent(this.evId, this.eventN, this.evDurHrs, this.evDurMins, location, this.evT, this.descriptionText)
+      this.apiService.editEvent(this.evId, this.eventN, this.evDurHrs, this.evDurMins, location, this.evT, this.descriptionText, this.loggedInEmailId)
       setTimeout(() => {
         this.showEventDetailsSlider = false
         this.getAllEventEditings()
@@ -662,22 +662,21 @@ export class EditEventComponent {
     this.allowInviteesCheckedOrNot = !this.allowInviteesCheckedOrNot
     console.log("allowInviteesCheckedOrNot ", this.allowInviteesCheckedOrNot);
   }
+  
 
-
-  continueInviteesFunctn() {
+  continueInviteesFunctn(){
     console.log("continueInviteesFunctn called ");
     console.log("evId ", this.evId, "allowInviteesCheckedOrNot ", this.allowInviteesCheckedOrNot);
     console.log(this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot);
     if (this.evT == 'Group') {
       if (this.maxInviteesPerEvent > 1) {
-        this.apiService.editEventIfUserCanAddGuests(this.evId, this.allowInviteesCheckedOrNot, this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot)
+        this.apiService.editEventIfUserCanAddGuests(this.evId, this.allowInviteesCheckedOrNot, this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot, this.loggedInEmailId)
       }
     }
     else {
-      this.apiService.editEventIfUserCanAddGuests(this.evId, this.allowInviteesCheckedOrNot, this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot)
+      this.apiService.editEventIfUserCanAddGuests(this.evId, this.allowInviteesCheckedOrNot, this.maxInviteesPerEvent, this.displayRemainingSPotsOrNot, this.loggedInEmailId)
     }
     setTimeout(() => {
-
       this.getAllEventEditings()
     }, 1000)
   }
@@ -1227,7 +1226,7 @@ export class EditEventComponent {
 
 
   continueEmailFollowUpFunctn() {
-    
+
     // this.finalsendFollowupEmail['emailSubject'] = this.followupEmailSubject
     // this.finalsendFollowupEmail['emailBody'] = this.followupEmailTemplate
     // console.log("followupEmailSubject", this.followupEmailSubject);

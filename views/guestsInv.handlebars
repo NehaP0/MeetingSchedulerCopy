@@ -11,15 +11,22 @@
 
   <div style="display: flex; border:1px solid rgb(189, 187, 187); font-size:15px">
     <div style="border-right:1px solid rgb(189, 187, 187); background-color: #f6f6f5; width : 20%">
-      <div style="width:40%;height:fit-content; margin: auto; border-radius: 5px; border:1px solid rgb(189, 187, 187); text-align:center; margin-top:5%">
-        <p style="margin: 0px; padding: 2px; background-color: #468afb; color: white; font-weight:bold">{{monthString}}</p>
+      <div
+        style="width:40%;height:fit-content; margin: auto; border-radius: 5px; border:1px solid rgb(189, 187, 187); text-align:center; margin-top:5%">
+        <p style="margin: 0px; padding: 2px; background-color: #468afb; color: white; font-weight:bold">{{monthString}}
+        </p>
         <p style="margin: 0px; padding: 2px; font-size: 20px; font-weight: bold;">{{dayOfMonth}}</p>
-        <p style="margin: 0px; padding: 2px; font-weight: bold; border-top:1px solid rgb(189, 187, 187)">{{dayOfWeekString}}</p>
+        <p style="margin: 0px; padding: 2px; font-weight: bold; border-top:1px solid rgb(189, 187, 187)">
+          {{dayOfWeekString}}</p>
       </div>
     </div>
     <div style="padding-left: 10px;">
       <div>
+        {{#unless meetingIsFromVotingPage}}
         <p style="font-weight: bold;">{{name}} and {{calendarOwnerUserName}}</p>
+        {{else}}
+        <p style="font-weight: bold;">{{eventName}}</p>
+        {{/unless}}
       </div>
       <div>
         <p>
@@ -37,6 +44,8 @@
   <div style="border:1px solid rgb(189, 187, 187); padding:10px; border-radius: 10px; margin-top: 30px; font-size:15px">
     <p>Event Name: {{eventName}}</p>
     <a href={{meetingLink}}>Meeting link</a>
+    {{#unless meetingIsFromVotingPage}} 
+    {{!-- i.e if meet is not from voting page --}}
     <div>
       {{#each questionsWdAnswers}}
       {{#if this.answer}}
@@ -47,11 +56,27 @@
       {{/if}}
       {{/each}}
     </div>
+    {{/unless}}
 
+    {{!-- {{#if !meetingIsFromVotingPage}}
     <p>Need to make changes to this event?</p>
-    {{!-- <span>Cancel: &#32;</span><a href=`http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}`>http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&whoseCalendar={{emailOfCalendarOwner}}&eventId={{evId}}&meetId={{meetId}}</a> --}}
-    <span>Cancel: &#32;</span><a href="http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&amp;whoseCalendar={{emailOfCalendarOwner}}&amp;eventId={{evId}}&amp;meetId={{meetId}}">Cancel</a>
- 
+    <span>Cancel: &#32;</span><a
+      href="http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&amp;whoseCalendar={{emailOfCalendarOwner}}&amp;eventId={{evId}}&amp;meetId={{meetId}}">Cancel</a>
+    {{else}}
+    <p>If you need to make changes to this event, contact your event organizer</p>
+    {{/if}} --}}
+
+    {{!-- ==================================================== --}}
+    {{#unless meetingIsFromVotingPage}}
+    <p>Need to make changes to this event?</p>
+    <span>Cancel: &#32;</span><a
+      href="http://localhost:3000/calendarLink/redirectToCancellation?whoCanceled={{receiversEmail}}&amp;whoseCalendar={{emailOfCalendarOwner}}&amp;eventId={{evId}}&amp;meetId={{meetId}}">Cancel</a>
+    {{else}}
+    <p>If you need to make changes to this event, contact your event organizer</p>
+    {{/unless}}
+
+    {{!-- ==================================================== --}}
+
     <p>Powered by Clodura.AI</p>
 
     <p style="font-weight: bold">When</p>
