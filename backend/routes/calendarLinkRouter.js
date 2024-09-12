@@ -613,6 +613,12 @@ calendarLinkRoute.post("/postMeetFromMeetPage", async (req, res) => {
                 "Meeting scheduled successfully. A calendar invitation will be mailed to the attendees.",
             });
         }
+        res
+        .status(200)
+        .json({
+          message:
+            "Meeting scheduled successfully. A calendar invitation will be mailed to the attendees.",
+        });
       } catch (err) {
         console.log("meeting of emailsOfUsersFoundInDb not updated.", err);
       }

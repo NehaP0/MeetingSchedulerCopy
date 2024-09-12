@@ -21,8 +21,12 @@ eventRoute.post("/createEvent", auth, async (req, res) => {
   // let importedloggedInUserEmail = "nehaphadtare334@gmail.com"
   // console.log("loggedInUsers imported EmailId is ", importedloggedInUserEmail);
   console.log("reqBody", req.body);
-  let {importedloggedInUserEmail, evName, evType, evDuration, evLocation, inviteesPerEvent, displayRemainingSpots } = req.body;
+  let {evName, evType, evDuration, evLocation, inviteesPerEvent, displayRemainingSpots } = req.body;
 
+  let importedloggedInUserEmail = req.body.loggedInEmailId
+
+  console.log('importedloggedInUserEmail ', importedloggedInUserEmail);
+  
   let evLinkEnd = evName
   if (evLinkEnd.includes(" ")) {
     evLinkEnd = evLinkEnd.replace(/ /g, "-"); //g means global, i.e all spaces in string wioll be replaced with -
